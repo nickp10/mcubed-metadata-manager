@@ -35,7 +35,7 @@ namespace mCubed.Core {
 		/// <param name="paths">The paths to generate media for</param>
 		/// <param name="destLibrary">The destination library for the media, or null to create a "Now Playing" library</param>
 		public static void GenerateMediaFromDragDrop(IEnumerable<string> paths, Library destLibrary) {
-			GenerateMediaFromPaths(paths, destLibrary, true);
+			GenerateMediaFromPaths(paths, destLibrary, destLibrary.CopyOnDragDrop);
 		}
 
 		/// <summary>
@@ -49,7 +49,8 @@ namespace mCubed.Core {
 			if (paths == null) {
 				return;
 			}
-			paths = paths.Where(s => !string.IsNullOrEmpty(s));
+			string[] validExtensions = Utilities.ExtensionsMusic;
+			paths = paths.Where(s => !string.IsNullOrEmpty(s) && validExtensions.Contains(Path.GetExtension(s).ToLower()));
 			if (!paths.Any()) {
 				return;
 			}
@@ -117,6 +118,7 @@ namespace mCubed.Core {
 			Select(s => s.ToReadableString()).ToArray();
 		private bool _autoRenameOnUpdates;
 		private readonly ColumnSettings _columnSettings = new ColumnSettings();
+		private bool _copyOnDragDrop;
 		private string _displayName;
 		private IEnumerable<string> _directories = Enumerable.Empty<string>();
 		private string _filenameForumla = "%FirstAlbumPerformer?FirstPerformer%" + Path.DirectorySeparatorChar + "%Album%" + Path.DirectorySeparatorChar + "%Track:pad-left,2,0% %Title%";
@@ -150,6 +152,14 @@ namespace mCubed.Core {
 		/// Get the column settings for this library for how the media will be grouped, sorted, and displayed [Bindable]
 		/// </summary>
 		public ColumnSettings ColumnSettings { get { return _columnSettings; } }
+		
+		/// <summary>
+		/// Get/set whether or not the files should be copied to the first directory in this library when files are dragged and dropped into the library [Bindable]
+		/// </summary>
+		public bool CopyOnDragDrop {
+			get { return _copyOnDragDrop; }
+			set { this.SetAndNotify(ref _copyOnDragDrop, value, "CopyOnDragDrop"); }
+		}
 
 		/// <summary>
 		/// Get the list of directories that make up this library [Bindable]

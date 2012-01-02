@@ -381,24 +381,55 @@ namespace mCubed.Controls {
 		}
 
 		/// <summary>
+		/// Event that handles when media is begin dragged over the library viewer
+		/// </summary>
+		/// <param name="sender">The sender object</param>
+		/// <param name="e">The event arguments</param>
+		private void OnMediaFileDragOver(object sender, DragEventArgs e) {
+			if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+				e.Effects = DragDropEffects.Copy;
+			} else {
+				e.Effects = DragDropEffects.None;
+			}
+			e.Handled = true;
+		}
+
+		/// <summary>
 		/// Event that handles when media is dragged and dropped into the library viewer
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
 		private void OnMediaFileDrop(object sender, DragEventArgs e) {
-			// Read the data
-			var data = e.Data.GetData(DataFormats.FileDrop);
-			var files = data as string[];
-			if (files == null) {
-				var tempFiles = data as FileInfo[];
-				if (tempFiles != null) {
-					files = tempFiles.Select(f => f.FullName).ToArray();
+			// Make sure directories/files are being dropped
+			if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+				// Read the data
+				var files = new List<string>();
+				var data = e.Data.GetData(DataFormats.FileDrop);
+				var paths = data as string[];
+				if (paths != null) {
+					// Iterate over the paths (including directories, subdirectories, and files)
+					var stack = new Stack<string>(paths);
+					while (stack.Count > 0) {
+						var path = stack.Pop();
+						if (!string.IsNullOrEmpty(path)) {
+							if (Directory.Exists(path)) {
+								foreach (var subdirectory in Directory.GetDirectories(path)) {
+									stack.Push(subdirectory);
+								}
+								foreach (var file in Directory.GetFiles(path)) {
+									files.Add(file);
+								}
+							} else if (File.Exists(path)) {
+								files.Add(path);
+							}
+						}
+					}
 				}
-			}
 
-			// Generate the media
-			if (files != null) {
-				Library.GenerateMediaFromDragDrop(files);
+				// Generate the media
+				if (files != null && files.Any()) {
+					Library.GenerateMediaFromDragDrop(files);
+				}
 			}
 		}
 

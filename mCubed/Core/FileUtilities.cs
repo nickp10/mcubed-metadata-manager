@@ -63,6 +63,24 @@ namespace mCubed.Core {
 			return subDirectory;
 		}
 
+		/// <summary>
+		/// Get the non-system subdirectories of the given directory
+		/// </summary>
+		/// <param name="directory">The directory to retrieve the non-system subdirectories for</param>
+		/// <returns>The enumerable of non-system subdirectories for the given directory</returns>
+		private static IEnumerable<DirectoryInfo> GetNonSystemDirectories(this DirectoryInfo directory) {
+			return directory.GetDirectories().Where(sub => (sub.Attributes & FileAttributes.System) == 0);
+		}
+
+		/// <summary>
+		/// Get the non-system files of the given directory
+		/// </summary>
+		/// <param name="directory">The directory to retrieve the non-system files for</param>
+		/// <returns>The enumerable of non-system files for the given directory</returns>
+		private static IEnumerable<FileInfo> GetNonSystemFiles(this DirectoryInfo directory) {
+			return directory.GetFiles().Where(file => (file.Attributes & FileAttributes.System) == 0);
+		}
+
 		#endregion
 
 		#region Static File Members
@@ -354,10 +372,10 @@ namespace mCubed.Core {
 			DirectoryInfo deleteDir = null;
 
 			// Recurse up the directory structure deleting all EMPTY directories up until the source directory
-			if (!curDirectory.DirEquals(srcDirectory) && curDirectory.GetDirectories().Length == 0 && curDirectory.GetFiles().All(filePath.FileEquals)) {
+			if (!curDirectory.DirEquals(srcDirectory) && !curDirectory.GetNonSystemDirectories().Any() && curDirectory.GetNonSystemFiles().All(filePath.FileEquals)) {
 				deleteDir = curDirectory;
 				curDirectory = curDirectory.Parent;
-				while (!curDirectory.DirEquals(srcDirectory) && curDirectory.GetDirectories().All(deleteDir.DirEquals) && curDirectory.GetFiles().Length == 0) {
+				while (!curDirectory.DirEquals(srcDirectory) && curDirectory.GetNonSystemDirectories().All(deleteDir.DirEquals) && !curDirectory.GetNonSystemFiles().Any()) {
 					deleteDir = curDirectory;
 					curDirectory = curDirectory.Parent;
 				}
@@ -366,7 +384,7 @@ namespace mCubed.Core {
 			// Use Visual Basic to send to recycle bin or to permanently delete file
 			var recycleOption = sendToRecycleBin ? Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin : Microsoft.VisualBasic.FileIO.RecycleOption.DeletePermanently;
 			Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(filePath.FullName, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, recycleOption);
-			
+
 			// Delete the directory
 			if (deleteDir != null) {
 				deleteDir.Delete(true);

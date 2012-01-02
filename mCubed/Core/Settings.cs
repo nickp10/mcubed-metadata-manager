@@ -239,6 +239,7 @@ namespace mCubed.Core {
 				RepeatStatus = element.Parse("RepeatStatus", MediaRepeat.NoRepeat)
 			};
 			library.AutoRenameOnUpdates = element.Parse("AutoRenameOnUpdates", library.AutoRenameOnUpdates);
+			library.CopyOnDragDrop = element.Parse("CopyOnDragDrop", library.CopyOnDragDrop);
 			library.FilenameFormula = element.Parse("FilenameFormula", library.FilenameFormula);
 			library.LoadOnStartup = element.Parse("LoadOnStartup", library.LoadOnStartup);
 			library.MediaObject.Balance = element.Parse("MOBalance", library.MediaObject.Balance);
@@ -324,6 +325,7 @@ namespace mCubed.Core {
 		private XElement GenerateLibrary(Library library) {
 			return new XElement("Library",
 				new XAttribute("AutoRenameOnUpdates", library.AutoRenameOnUpdates),
+				new XAttribute("CopyOnDragDrop", library.CopyOnDragDrop),
 				new XAttribute("DisplayName", library.DisplayName ?? ""),
 				new XAttribute("FilenameFormula", library.FilenameFormula ?? ""),
 				new XAttribute("IsLoaded", library.IsLoaded),
