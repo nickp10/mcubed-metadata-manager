@@ -279,6 +279,7 @@ namespace mCubed.Core {
 
 		#region Data Store
 
+		private bool _doDisposeParent;
 		private MediaFile _mediaFile;
 		private string _value = "";
 
@@ -337,6 +338,7 @@ namespace mCubed.Core {
 				Type = MetaDataFormulaType.Custom
 			};
 			Parent.ValueChanged += new Action(ChangeValue);
+			_doDisposeParent = true;
 		}
 
 		public MDFFile(MetaDataFormula parent) {
@@ -508,6 +510,11 @@ namespace mCubed.Core {
 			// Unsubscribe others from its events
 			PropertyChanged = null;
 			PropertyChanging = null;
+
+			// Dispose all disposable references it created
+			if (_doDisposeParent && Parent != null) {
+				Parent.Dispose();
+			}
 		}
 
 		#endregion

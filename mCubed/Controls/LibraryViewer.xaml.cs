@@ -402,34 +402,40 @@ namespace mCubed.Controls {
 		private void OnMediaFileDrop(object sender, DragEventArgs e) {
 			// Make sure directories/files are being dropped
 			if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
-				// Read the data
-				var files = new List<string>();
-				var data = e.Data.GetData(DataFormats.FileDrop);
-				var paths = data as string[];
-				if (paths != null) {
-					// Iterate over the paths (including directories, subdirectories, and files)
-					var stack = new Stack<string>(paths);
-					while (stack.Count > 0) {
-						var path = stack.Pop();
-						if (!string.IsNullOrEmpty(path)) {
-							if (Directory.Exists(path)) {
-								foreach (var subdirectory in Directory.GetDirectories(path)) {
-									stack.Push(subdirectory);
+				// Start the import as a background process
+				Utilities.MainProcessManager.AddProcess(process =>
+				{
+					// Read the data
+					var files = new List<string>();
+					var data = e.Data.GetData(DataFormats.FileDrop);
+					var paths = data as string[];
+					if (paths != null) {
+						// Iterate over the paths (including directories, subdirectories, and files)
+						var stack = new Stack<string>(paths);
+						while (stack.Count > 0) {
+							var path = stack.Pop();
+							if (!string.IsNullOrEmpty(path)) {
+								if (Directory.Exists(path)) {
+									foreach (var subdirectory in Directory.GetDirectories(path)) {
+										stack.Push(subdirectory);
+									}
+									foreach (var file in Directory.GetFiles(path)) {
+										files.Add(file);
+									}
+								} else if (File.Exists(path)) {
+									files.Add(path);
 								}
-								foreach (var file in Directory.GetFiles(path)) {
-									files.Add(file);
-								}
-							} else if (File.Exists(path)) {
-								files.Add(path);
 							}
 						}
 					}
-				}
+					process.CompletedCount++;
 
-				// Generate the media
-				if (files != null && files.Any()) {
-					Library.GenerateMediaFromDragDrop(files);
-				}
+					// Generate the media
+					if (files != null && files.Any()) {
+						Library.GenerateMediaFromDragDrop(files);
+					}
+					process.CompletedCount++;
+				}, "Importing dropped files", 2);
 			}
 		}
 

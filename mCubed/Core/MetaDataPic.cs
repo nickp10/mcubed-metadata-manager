@@ -348,6 +348,7 @@ namespace mCubed.Core {
 			// Unsubscribe others from its events
 			PropertyChanged = null;
 			PropertyChanging = null;
+			EventListener = null;
 		}
 
 		#endregion

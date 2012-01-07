@@ -452,6 +452,13 @@ namespace mCubed.Core {
 			PropertyChanged = null;
 			PropertyChanging = null;
 
+			// Dispose all disposable references it created
+			if (Pictures != null) {
+				foreach (var pic in Pictures) {
+					pic.Dispose();
+				}
+			}
+
 			// Ensure no cyclic references
 			Parent = null;
 		}

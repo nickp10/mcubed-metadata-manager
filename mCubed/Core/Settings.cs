@@ -411,7 +411,7 @@ namespace mCubed.Core {
 			{
 				IsLoaded = true;
 				p.CompletedCount++;
-			}, "Finalizing startup...", 1);
+			}, "Finalizing startup", 1);
 		}
 
 		/// <summary>

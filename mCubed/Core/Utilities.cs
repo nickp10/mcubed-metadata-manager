@@ -5,8 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace mCubed.Core {
 	public static class Utilities {

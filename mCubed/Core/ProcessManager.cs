@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 
 namespace mCubed.Core {
 	public class ProcessManager : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
@@ -76,21 +77,24 @@ namespace mCubed.Core {
 		/// <param name="description">The descriptoin of the process</param>
 		/// <param name="totalCount">The total number of steps within the process</param>
 		public void AddProcess(Action<Process> handler, string description, int totalCount) {
-			// Initialize
-			BackgroundWorker worker = new BackgroundWorker { WorkerReportsProgress = true };
-			Process process = new Process(worker) { Description = description, TotalCount = totalCount };
+			ThreadPool.QueueUserWorkItem(delegate
+			{
+				// Initialize
+				BackgroundWorker worker = new BackgroundWorker { WorkerReportsProgress = true };
+				Process process = new Process(worker) { Description = description, TotalCount = totalCount };
 
-			// Add the event handlers
-			worker.DoWork += (sender, e) => handler(process);
-			worker.ProgressChanged += (sender, e) => OnProgressChanged();
-			worker.RunWorkerCompleted += (sender, e) => PerformAvailableProcess();
+				// Add the event handlers
+				worker.DoWork += (sender, e) => handler(process);
+				worker.ProgressChanged += (sender, e) => OnProgressChanged();
+				worker.RunWorkerCompleted += (sender, e) => PerformAvailableProcess();
 
-			// Add the process
-			Processes = Processes.Concat(new[] { process });
+				// Add the process
+				Processes = Processes.Concat(new[] { process });
 
-			// Check if a process is running before continuing
-			if (!IsProcessActive)
-				PerformAvailableProcess();
+				// Check if a process is running before continuing
+				if (!IsProcessActive)
+					PerformAvailableProcess();
+			});
 		}
 
 		/// <summary>
