@@ -418,7 +418,7 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Resets the given item within the list, re-placing it in its appropriate group and sort order
 		/// </summary>
-		/// <param name="item">The item that will be reset, only if the list already contains the item</param>
+		/// <param name="item">The item that will be reset, only if the list already contains the item and if there is a group or sort by currently added</param>
 		public void Reset(T item) {
 			PerformAction(list =>
 			{
@@ -429,8 +429,13 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Resets the given item within the list, re-placing it in its appropriate group and sort order, used for internal purposes
 		/// </summary>
-		/// <param name="item">The item that will be reset, only if the list already contains the item</param>
+		/// <param name="item">The item that will be reset, only if the list already contains the item and if there is a group or sort by currently added</param>
 		private void ResetInternal(T item) {
+			// Make sure there's a group or sort by
+			if (_groupBys.Count == 0 && _sortBys.Count == 0) {
+				return;
+			}
+
 			// Find its current location
 			GroupList<T> currentGroup = FindItemsCurrentGroup(item);
 			if (currentGroup != null) {
