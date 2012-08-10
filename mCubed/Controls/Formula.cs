@@ -123,6 +123,18 @@ namespace mCubed.Controls
 
 		#endregion
 
+		#region Constructors
+
+		/// <summary>
+		/// Construct a new formula instance.
+		/// </summary>
+		public Formula()
+			: base()
+		{
+		}
+
+		#endregion
+
 		#region Properties
 
 		/// <summary>
