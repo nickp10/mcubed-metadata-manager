@@ -4,8 +4,10 @@ using System.Windows;
 using System.Windows.Input;
 using mCubed.Core;
 
-namespace mCubed {
-	public partial class mCubedWindow : Window {
+namespace mCubed
+{
+	public partial class mCubedWindow : Window
+	{
 		#region Data Store
 
 		private Rect _fullPos = new Rect(double.NaN, double.NaN, 1000, 800);
@@ -18,7 +20,8 @@ namespace mCubed {
 		/// <summary>
 		/// Create a new mCubed window
 		/// </summary>
-		public mCubedWindow() {
+		public mCubedWindow()
+		{
 			// Initialize
 			InitializeComponent();
 
@@ -42,15 +45,23 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="key">The event arguments</param>
-		private void OnGlobalKeyDown(object sender, Key key) {
+		private void OnGlobalKeyDown(object sender, Key key)
+		{
 			MediaAction? action = null;
-			if (key == Key.MediaNextTrack) {
+			if (key == Key.MediaNextTrack)
+			{
 				action = MediaAction.Next;
-			} else if (key == Key.MediaPreviousTrack) {
+			}
+			else if (key == Key.MediaPreviousTrack)
+			{
 				action = MediaAction.Prev;
-			} else if (key == Key.MediaStop) {
+			}
+			else if (key == Key.MediaStop)
+			{
 				action = MediaAction.Stop;
-			} else if (key == Key.MediaPlayPause) {
+			}
+			else if (key == Key.MediaPlayPause)
+			{
 				action = MediaAction.PlayPause;
 			}
 			if (action.HasValue)
@@ -62,19 +73,29 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnKeyDown(object sender, KeyEventArgs e) {
+		private void OnKeyDown(object sender, KeyEventArgs e)
+		{
 			MediaAction? action = null;
 			bool controlDown = (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
 			bool shiftDown = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
-			if (controlDown && e.Key == Key.I) {
+			if (controlDown && e.Key == Key.I)
+			{
 				action = MediaAction.ToggleMDI;
-			} else if (controlDown && e.Key == Key.R) {
+			}
+			else if (controlDown && e.Key == Key.R)
+			{
 				action = MediaAction.Restart;
-			} else if (controlDown && e.Key == Key.T) {
+			}
+			else if (controlDown && e.Key == Key.T)
+			{
 				Utilities.MainSettings.LibraryCurrent.ToggleRepeat(!shiftDown);
-			} else if (controlDown && e.Key == Key.O) {
+			}
+			else if (controlDown && e.Key == Key.O)
+			{
 				Utilities.MainSettings.LibraryCurrent.ToggleMediaOrders(!shiftDown);
-			} else if (controlDown && e.Key == Key.H) {
+			}
+			else if (controlDown && e.Key == Key.H)
+			{
 				action = MediaAction.ToggleShuffle;
 			}
 			if (action.HasValue)
@@ -86,14 +107,21 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnClosing(object sender, CancelEventArgs e) {
-			if (Utilities.MainProcessManager.IsProcessActive && 
-				!mCubedError.ShowConfirm("There is currently one or more processes running. Closing the application now may corrupt data. Continue?")) {
+		private void OnClosing(object sender, CancelEventArgs e)
+		{
+			if (Utilities.MainProcessManager.IsProcessActive &&
+				!mCubedError.ShowConfirm("There is currently one or more processes running. Closing the application now may corrupt data. Continue?"))
+			{
 				e.Cancel = true;
-			} else {
-				if (Utilities.MainSettings.ShowMini) {
+			}
+			else
+			{
+				if (Utilities.MainSettings.ShowMini)
+				{
 					Utilities.MainSettings.MiniLocation = new Point(Left / SystemParameters.VirtualScreenWidth, Top / SystemParameters.VirtualScreenHeight);
-				} else {
+				}
+				else
+				{
 					Utilities.MainSettings.MiniLocation = null;
 				}
 				Utilities.MainSettings.Save();
@@ -105,10 +133,14 @@ namespace mCubed {
 		/// Event that handles when a log has been sent
 		/// </summary>
 		/// <param name="log">The log that has been sent</param>
-		private void OnLogSent(Log log) {
-			if (Dispatcher.CheckAccess()) {
+		private void OnLogSent(Log log)
+		{
+			if (Dispatcher.CheckAccess())
+			{
 				mCubedError.ShowDisplay(log.ToStringMessageOnly());
-			} else {
+			}
+			else
+			{
 				Dispatcher.Invoke(new Action<Log>(OnLogSent), log);
 			}
 		}
@@ -116,9 +148,11 @@ namespace mCubed {
 		/// <summary>
 		/// Update the window state and positioning to accommodate for the change in showing the mini/full player
 		/// </summary>
-		private void OnShowMiniChanged() {
+		private void OnShowMiniChanged()
+		{
 			// Show the mini player fixing the window state and positioning
-			if (Utilities.MainSettings.ShowMini) {
+			if (Utilities.MainSettings.ShowMini)
+			{
 				_fullState = WindowState;
 				_fullPos = RestoreBounds;
 				if (_fullPos == Rect.Empty)
@@ -127,7 +161,8 @@ namespace mCubed {
 				WindowState = WindowState.Normal;
 				SizeToContent = SizeToContent.WidthAndHeight;
 				ResizeMode = ResizeMode.NoResize;
-				if (Utilities.MainSettings.MiniLocation.HasValue) {
+				if (Utilities.MainSettings.MiniLocation.HasValue)
+				{
 					Top = Utilities.MainSettings.MiniLocation.Value.Y * SystemParameters.VirtualScreenHeight;
 					Left = Utilities.MainSettings.MiniLocation.Value.X * SystemParameters.VirtualScreenWidth;
 					Utilities.MainSettings.MiniLocation = null;
@@ -135,13 +170,15 @@ namespace mCubed {
 			}
 
 			// Show the full player fixing the window state and positioning
-			else {
+			else
+			{
 				ResizeMode = ResizeMode.CanResize;
 				SizeToContent = SizeToContent.Manual;
 				WindowState = _fullState;
 				Width = _fullPos.Width;
 				Height = _fullPos.Height;
-				if (_fullState == WindowState.Normal) {
+				if (_fullState == WindowState.Normal)
+				{
 					Top = _fullPos.Top;
 					Left = _fullPos.Left;
 				}
@@ -153,7 +190,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnClose(object sender, RoutedEventArgs e) {
+		private void OnClose(object sender, RoutedEventArgs e)
+		{
 			Close();
 		}
 
@@ -162,10 +200,12 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnLibraryReloaded(object sender, MouseButtonEventArgs e) {
+		private void OnLibraryReloaded(object sender, MouseButtonEventArgs e)
+		{
 			var element = sender as FrameworkElement;
 			var library = element == null ? null : element.DataContext as Library;
-			if (library != null) {
+			if (library != null)
+			{
 				library.Reload();
 			}
 		}
@@ -175,7 +215,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnShowSecondary(object sender, RoutedEventArgs e) {
+		private void OnShowSecondary(object sender, RoutedEventArgs e)
+		{
 			new mCubedSecondary { Owner = this }.Show();
 		}
 

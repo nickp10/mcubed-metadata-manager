@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -9,11 +8,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using mCubed.Core;
 
-namespace mCubed.Controls {
-	public class ProgressSlider : Slider, IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging {
+namespace mCubed.Controls
+{
+	public class ProgressSlider : Slider, IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging
+	{
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -23,7 +25,8 @@ namespace mCubed.Controls {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -38,7 +41,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private static void OnSeekingChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		private static void OnSeekingChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
 			var slider = sender as ProgressSlider;
 			if (slider != null)
 				slider.OnSeekingChanged();
@@ -46,7 +50,8 @@ namespace mCubed.Controls {
 
 		private static readonly DependencyPropertyKey IsSeekingProperty =
 			DependencyProperty.RegisterReadOnly("IsSeeking", typeof(bool), typeof(ProgressSlider), new PropertyMetadata(false, new PropertyChangedCallback(OnSeekingChanged)));
-		public bool IsSeeking {
+		public bool IsSeeking
+		{
 			get { return (bool)GetValue(IsSeekingProperty.DependencyProperty); }
 			private set { SetValue(IsSeekingProperty, value); }
 		}
@@ -57,7 +62,8 @@ namespace mCubed.Controls {
 
 		public static readonly DependencyProperty ProgressMaximumProperty =
 			DependencyProperty.Register("ProgressMaximum", typeof(double), typeof(ProgressSlider), new UIPropertyMetadata(0.0));
-		public double ProgressMaximum {
+		public double ProgressMaximum
+		{
 			get { return (double)GetValue(ProgressMaximumProperty); }
 			set { SetValue(ProgressMaximumProperty, value); }
 		}
@@ -68,7 +74,8 @@ namespace mCubed.Controls {
 
 		public static readonly DependencyProperty ProgressValueProperty =
 			DependencyProperty.Register("ProgressValue", typeof(double), typeof(ProgressSlider), new UIPropertyMetadata(0.0));
-		public double ProgressValue {
+		public double ProgressValue
+		{
 			get { return (double)GetValue(ProgressValueProperty); }
 			set { SetValue(ProgressValueProperty, value); }
 		}
@@ -79,7 +86,8 @@ namespace mCubed.Controls {
 
 		private static readonly DependencyPropertyKey SeekValueProperty =
 			DependencyProperty.RegisterReadOnly("SeekValue", typeof(double), typeof(ProgressSlider), new PropertyMetadata(0.0));
-		public double SeekValue {
+		public double SeekValue
+		{
 			get { return (double)GetValue(SeekValueProperty.DependencyProperty); }
 			private set { SetValue(SeekValueProperty, value); }
 		}
@@ -100,10 +108,8 @@ namespace mCubed.Controls {
 
 		#region Constructor
 
-		public ProgressSlider() {
-			// Set up the resources
-			Resources.Source = new Uri("pack://application:,,,/Resources/Resources.xaml");
-
+		public ProgressSlider()
+		{
 			// Set the background to a progress bar
 			ProgressBar sliderProgress = new ProgressBar { Minimum = 0, Maximum = 1, DataContext = this };
 			sliderProgress.SetBinding(ProgressBar.WidthProperty, new Binding { Path = new PropertyPath(Slider.ActualWidthProperty) });
@@ -140,10 +146,13 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnKeyDown(object sender, KeyEventArgs e) {
-			if ((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.Control) {
+		private void OnKeyDown(object sender, KeyEventArgs e)
+		{
+			if ((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.Control)
+			{
 				int value = e.Key == Key.Left ? -1 : (e.Key == Key.Right ? 1 : 0);
-				if (value != 0) {
+				if (value != 0)
+				{
 					SeekTo(ProgressValue + (value * .05), true);
 					e.Handled = true;
 				}
@@ -155,16 +164,20 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMouseClickCaptured(object sender, MouseButtonEventArgs e) {
+		private void OnMouseClickCaptured(object sender, MouseButtonEventArgs e)
+		{
 			// Check if there is current media playing
-			if (ProgressMaximum > 0) {
+			if (ProgressMaximum > 0)
+			{
 				// Start seeking
 				IsSeeking = true;
 
 				// Update properties
 				_sliderToolTip.VerticalOffset = 0 - _sliderToolTip.ActualHeight;
 				CaptureMouse();
-			} else {
+			}
+			else
+			{
 				e.Handled = true;
 			}
 		}
@@ -174,9 +187,11 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMouseClickReleased(object sender, MouseButtonEventArgs e) {
+		private void OnMouseClickReleased(object sender, MouseButtonEventArgs e)
+		{
 			// Check if we're seeking
-			if (ProgressMaximum > 0 && IsSeeking) {
+			if (ProgressMaximum > 0 && IsSeeking)
+			{
 				// End seeking
 				IsSeeking = false;
 
@@ -194,9 +209,11 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMouseMoved(object sender, MouseEventArgs e) {
+		private void OnMouseMoved(object sender, MouseEventArgs e)
+		{
 			// Check if we're seeking
-			if (ProgressMaximum > 0 && IsSeeking) {
+			if (ProgressMaximum > 0 && IsSeeking)
+			{
 				// Update the seek value
 				SeekTo(Mouse.GetPosition(this).X / ActualWidth, false);
 
@@ -208,7 +225,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Event that handles when the slider should seek to the new value
 		/// </summary>
-		private void OnSeek() {
+		private void OnSeek()
+		{
 			if (Seek != null)
 				Seek(SeekValue);
 		}
@@ -216,12 +234,16 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Event that handles when the seeking status changed
 		/// </summary>
-		private void OnSeekingChanged() {
+		private void OnSeekingChanged()
+		{
 			// Update the value binding
 			var binding = new Binding { Source = this, Mode = BindingMode.OneWay };
-			if (IsSeeking) {
+			if (IsSeeking)
+			{
 				binding.Path = new PropertyPath("SeekValue");
-			} else {
+			}
+			else
+			{
 				binding.Path = new PropertyPath("ProgressValue");
 			}
 			SetBinding(ProgressSlider.ValueProperty, binding);
@@ -239,7 +261,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="value">The value to seek to</param>
 		/// <param name="invokeSeek">True if the seek event should be invoked, or false otherwise</param>
-		public void SeekTo(double value, bool invokeSeek) {
+		public void SeekTo(double value, bool invokeSeek)
+		{
 			// Update the seek value
 			value = value > Maximum ? Maximum : value;
 			value = value < Minimum ? Minimum : value;

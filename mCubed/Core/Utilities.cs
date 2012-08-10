@@ -8,8 +8,10 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Xml.Linq;
 
-namespace mCubed.Core {
-	public static class Utilities {
+namespace mCubed.Core
+{
+	public static class Utilities
+	{
 		#region Data Store
 
 		private static readonly string[] _byteUnits = { "B", "KB", "MB", "GB", "TB", "PB" };
@@ -21,7 +23,8 @@ namespace mCubed.Core {
 
 		#region Static Constructor
 
-		static Utilities() {
+		static Utilities()
+		{
 			MainSettings.Load();
 		}
 
@@ -42,22 +45,26 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get a list of all the valid image extensions allowable
 		/// </summary>
-		public static string[] ExtensionsImage {
+		public static string[] ExtensionsImage
+		{
 			get { return new[] { ".bmp", ".gif", ".jpeg", ".jpg", ".png" }; }
 		}
 
 		/// <summary>
 		/// Get a list of all the valid music extensions allowable
 		/// </summary>
-		public static string[] ExtensionsMusic {
+		public static string[] ExtensionsMusic
+		{
 			get { return new[] { ".aac", ".aif", ".aifc", ".aiff", ".flac", ".m4a", ".mp3", ".ogg", ".wav", ".wma", ".wv" }; }
 		}
 
 		/// <summary>
 		/// Get a filter for image files in a file dialog
 		/// </summary>
-		public static string FilterImage {
-			get {
+		public static string FilterImage
+		{
+			get
+			{
 				return "Bitmap (.bmp)|*.bmp|GIF (.gif)|*.gif|JPEG (.jpg, jpeg)|*.jpg;*.jpeg|PNG Image (.png)|*.png|" +
 					"All Supported Images (*.*)|" + ExtensionsImage.Select(s => "*" + s).Aggregate((s1, s2) => s1 += ";" + s2);
 			}
@@ -66,8 +73,10 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get a filter for music files in a file dialog
 		/// </summary>
-		public static string FilterMusic {
-			get {
+		public static string FilterMusic
+		{
+			get
+			{
 				return "Advanced Audio Coding (.aac)|*.aac|Apple AIFF (.aif, .aifc, .aiff)|*.aif;*.aifc;*.aiff|" +
 					"Free Lossless Audio Codec (.flac)|*.flac|MP3 (.mp3)|*.mp3|MPEG-4 Audio (.m4a)|*.m4a|OGG Vorbis (.ogg)|*.ogg|" +
 					"Waveform Audio File (.wav, .wv)|*.wav;*.wv|Windows Media Audio (.wma)|*.wma|" +
@@ -94,10 +103,14 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="bytes">The number of bytes that should be formatted into a string</param>
 		/// <returns>The string that represents the number of bytes</returns>
-		public static string FormatBytesToString(long bytes) {
-			if (bytes <= 0) {
+		public static string FormatBytesToString(long bytes)
+		{
+			if (bytes <= 0)
+			{
 				return bytes + ByteUnits[0];
-			} else {
+			}
+			else
+			{
 				int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
 				double num = bytes / Math.Pow(1024, place);
 				return string.Format("{0:0.##} {1}", num, ByteUnits[place]);
@@ -109,7 +122,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="type">The IEnumerable generic type</param>
 		/// <returns>The element/item type</returns>
-		public static Type EnumerableType(Type type) {
+		public static Type EnumerableType(Type type)
+		{
 			// Check the type
 			if (type == null || type == typeof(string))
 				return typeof(object);
@@ -127,7 +141,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="type">The type to check against</param>
 		/// <returns>True if the type is an IEnumerable, or false otherwise</returns>
-		public static bool IsTypeIEnumerable(Type type) {
+		public static bool IsTypeIEnumerable(Type type)
+		{
 			return type != null && type != typeof(string) && (type.FullName == "System.Collections.IEnumerable" || type.GetInterface("IEnumerable") != null);
 		}
 
@@ -140,7 +155,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="type">The enum type to convert</param>
 		/// <returns>The readable string for the given enum type</returns>
-		public static string ToReadableString(this Enum type) {
+		public static string ToReadableString(this Enum type)
+		{
 			return type == null ? string.Empty : type.ToString().ToReadableString();
 		}
 
@@ -149,7 +165,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="type">The enum type as a string to convert</param>
 		/// <returns>The readable string for the given enum type</returns>
-		public static string ToReadableString(this string type) {
+		public static string ToReadableString(this string type)
+		{
 			return Regex.Replace(type, "([A-Z][a-z]*)", "$1 ").Trim();
 		}
 
@@ -159,7 +176,8 @@ namespace mCubed.Core {
 		/// <typeparam name="T">The type of enum to parse the string into</typeparam>
 		/// <param name="type">The readable string to convert</param>
 		/// <returns>The enum type for the given string</returns>
-		public static T ToEnumType<T>(this string type) {
+		public static T ToEnumType<T>(this string type)
+		{
 			return type == null ? default(T) : type.Replace(" ", "").Parse<T>();
 		}
 
@@ -174,7 +192,8 @@ namespace mCubed.Core {
 		/// <param name="list">The list to iterate through</param>
 		/// <param name="func">The function that will aggregate the given list</param>
 		/// <returns>The aggregated value based on the function applied to the given list</returns>
-		public static T AggregateIfAny<T>(this IEnumerable<T> list, Func<T, T, T> func) {
+		public static T AggregateIfAny<T>(this IEnumerable<T> list, Func<T, T, T> func)
+		{
 			return AggregateIfAny(list, func, default(T));
 		}
 
@@ -186,7 +205,8 @@ namespace mCubed.Core {
 		/// <param name="func">The function that will aggregate the given list</param>
 		/// <param name="defaultValue">The value that will be returned if there are no elements in the list</param>
 		/// <returns>The aggregated value based on the function applied to the given list</returns>
-		public static T AggregateIfAny<T>(this IEnumerable<T> list, Func<T, T, T> func, T defaultValue) {
+		public static T AggregateIfAny<T>(this IEnumerable<T> list, Func<T, T, T> func, T defaultValue)
+		{
 			if (list.Any())
 				return list.Aggregate(func);
 			else
@@ -199,9 +219,11 @@ namespace mCubed.Core {
 		/// <typeparam name="T">The type of elements to iterate through</typeparam>
 		/// <param name="list">The list to iterate through</param>
 		/// <returns>The distinct list of elements</returns>
-		public static IEnumerable<T> DistinctEquals<T>(this IEnumerable<T> list) where T : IEquatable<T> {
+		public static IEnumerable<T> DistinctEquals<T>(this IEnumerable<T> list) where T : IEquatable<T>
+		{
 			List<T> result = new List<T>();
-			foreach (T item in list) {
+			foreach (T item in list)
+			{
 				if (!result.Any(obj => obj.Equals(item)))
 					result.Add(item);
 			}
@@ -216,7 +238,8 @@ namespace mCubed.Core {
 		/// <param name="element">The element to find the next element after</param>
 		/// <param name="loop">True to continue at the beginning of the list, or false otherwise</param>
 		/// <returns>The next element in the collection</returns>
-		public static T ElementAfter<T>(this IEnumerable<T> list, T element, bool loop) {
+		public static T ElementAfter<T>(this IEnumerable<T> list, T element, bool loop)
+		{
 			var elementsAfter = list.ElementsAfter(element);
 			if (elementsAfter.Any())
 				return elementsAfter.First();
@@ -232,12 +255,17 @@ namespace mCubed.Core {
 		/// <param name="list">The list to iterate through</param>
 		/// <param name="element">The element to find the next elements after</param>
 		/// <returns>The list of elements that are after the given element</returns>
-		public static IEnumerable<T> ElementsAfter<T>(this IEnumerable<T> list, T element) {
+		public static IEnumerable<T> ElementsAfter<T>(this IEnumerable<T> list, T element)
+		{
 			bool foundElement = false;
-			foreach (T item in list) {
-				if (!foundElement && item.Equals(element)) {
+			foreach (T item in list)
+			{
+				if (!foundElement && item.Equals(element))
+				{
 					foundElement = true;
-				} else if (foundElement) {
+				}
+				else if (foundElement)
+				{
 					yield return item;
 				}
 			}
@@ -251,7 +279,8 @@ namespace mCubed.Core {
 		/// <param name="element">The element to find the previous element before</param>
 		/// <param name="loop">True to continue at the end of the list, or false otherwise</param>
 		/// <returns>The previous element in the collection</returns>
-		public static T ElementBefore<T>(this IEnumerable<T> list, T element, bool loop) {
+		public static T ElementBefore<T>(this IEnumerable<T> list, T element, bool loop)
+		{
 			var elementsBefore = list.ElementsBefore(element);
 			if (elementsBefore.Any())
 				return elementsBefore.Last();
@@ -267,12 +296,17 @@ namespace mCubed.Core {
 		/// <param name="list">The list to iterate through</param>
 		/// <param name="element">The element to find the previous elements before</param>
 		/// <returns>The list of elements that are before the given element</returns>
-		public static IEnumerable<T> ElementsBefore<T>(this IEnumerable<T> list, T element) {
+		public static IEnumerable<T> ElementsBefore<T>(this IEnumerable<T> list, T element)
+		{
 			bool foundElement = false;
-			foreach (T item in list) {
-				if (!foundElement && item.Equals(element)) {
+			foreach (T item in list)
+			{
+				if (!foundElement && item.Equals(element))
+				{
 					foundElement = true;
-				} else if (!foundElement) {
+				}
+				else if (!foundElement)
+				{
 					yield return item;
 				}
 			}
@@ -284,9 +318,12 @@ namespace mCubed.Core {
 		/// <typeparam name="T">The type of elements to iterate through</typeparam>
 		/// <param name="list">The list to iterate through</param>
 		/// <param name="func">The function to perform on each of the elements</param>
-		public static void Perform<T>(this IEnumerable<T> list, Action<T> func) {
-			if (func != null && list != null) {
-				foreach (T item in list) {
+		public static void Perform<T>(this IEnumerable<T> list, Action<T> func)
+		{
+			if (func != null && list != null)
+			{
+				foreach (T item in list)
+				{
 					func(item);
 				}
 			}
@@ -300,8 +337,10 @@ namespace mCubed.Core {
 		/// <param name="replaceItem">The item that should be replaced in the list</param>
 		/// <param name="replaceWith">The item that will be replacing the item in the list</param>
 		/// <returns>The original list with the item marked to be replaced, replaced with the item marked to be the one doing the replacing</returns>
-		public static IEnumerable<T> Replace<T>(this IEnumerable<T> list, T replaceItem, T replaceWith) {
-			foreach (T item in list) {
+		public static IEnumerable<T> Replace<T>(this IEnumerable<T> list, T replaceItem, T replaceWith)
+		{
+			foreach (T item in list)
+			{
 				if (item.Equals(replaceItem))
 					yield return replaceWith;
 				else
@@ -314,7 +353,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="pics">The collection of items that should be copied from an item</param>
 		/// <param name="paste">The object that is essentially being pasted into each of the items in the collection</param>
-		public static void CopyEachFrom<T>(this IEnumerable<T> list, T paste) where T : ICopiable<T> {
+		public static void CopyEachFrom<T>(this IEnumerable<T> list, T paste) where T : ICopiable<T>
+		{
 			foreach (T item in list)
 				item.CopyFrom(paste);
 		}
@@ -324,7 +364,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="list">The list of strings to iterate through</param>
 		/// <returns>The distinct list of strings in alphabetical order</returns>
-		public static IEnumerable<string> DistinctOrdered(this IEnumerable<string> list) {
+		public static IEnumerable<string> DistinctOrdered(this IEnumerable<string> list)
+		{
 			return list.DistinctUnordered().OrderBy(s => s);
 		}
 
@@ -333,7 +374,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="list">The list of strings to iterate through</param>
 		/// <returns>The distinct list of strings in the original order</returns>
-		public static IEnumerable<string> DistinctUnordered(this IEnumerable<string> list) {
+		public static IEnumerable<string> DistinctUnordered(this IEnumerable<string> list)
+		{
 			return list.Where(s => !String.IsNullOrEmpty(s)).Distinct();
 		}
 
@@ -343,7 +385,8 @@ namespace mCubed.Core {
 		/// <typeparam name="T">The type of elements to the enumerable will contain</typeparam>
 		/// <param name="list">The enumerable that should be wrapped up</param>
 		/// <returns>A new enumerable instance that guarantees the given enumerable will not be modified</returns>
-		public static IEnumerable<T> WrapEnumerable<T>(this IEnumerable<T> list) {
+		public static IEnumerable<T> WrapEnumerable<T>(this IEnumerable<T> list)
+		{
 			foreach (T item in list)
 				yield return item;
 		}
@@ -360,7 +403,8 @@ namespace mCubed.Core {
 		/// <param name="field">The field that will be changing</param>
 		/// <param name="value">The new value for the field</param>
 		/// <returns>True if the field's value changed, or false otherwise</returns>
-		public static bool Set<T>(this object sender, ref T field, T value) {
+		public static bool Set<T>(this object sender, ref T field, T value)
+		{
 			return Set(sender, ref field, value, null, null);
 		}
 
@@ -374,7 +418,8 @@ namespace mCubed.Core {
 		/// <param name="before">The action that should be performed before the value is set</param>
 		/// <param name="after">The action that should be performed after the value is set</param>
 		/// <returns>True if the field's value changed, or false otherwise</returns>
-		public static bool Set<T>(this object sender, ref T field, T value, Action before, Action after) {
+		public static bool Set<T>(this object sender, ref T field, T value, Action before, Action after)
+		{
 			// Check if the value is changing
 			if (Object.Equals(field, value))
 				return false;
@@ -400,7 +445,8 @@ namespace mCubed.Core {
 		/// <param name="field">The field that will be changing</param>
 		/// <param name="value">The new value for the field</param>
 		/// <param name="properties">The property names of the properties that have changed</param>
-		public static void SetAndNotify<T>(this IExternalNotifyPropertyChanged sender, ref T field, T value, params string[] properties) {
+		public static void SetAndNotify<T>(this IExternalNotifyPropertyChanged sender, ref T field, T value, params string[] properties)
+		{
 			SetAndNotify(sender, ref field, value, null, null, properties);
 		}
 
@@ -414,7 +460,8 @@ namespace mCubed.Core {
 		/// <param name="before">The action that should be performed before the value is set</param>
 		/// <param name="after">The action that should be performed after the value is set</param>
 		/// <param name="properties">The property names of the properties that have changed</param>
-		public static void SetAndNotify<T>(this IExternalNotifyPropertyChanged sender, ref T field, T value, Action before, Action after, params string[] properties) {
+		public static void SetAndNotify<T>(this IExternalNotifyPropertyChanged sender, ref T field, T value, Action before, Action after, params string[] properties)
+		{
 			if (sender != null && sender.Set(ref field, value, before, after))
 				sender.OnPropertyChanged(properties);
 		}
@@ -424,20 +471,24 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The object that the properties have changed on</param>
 		/// <param name="properties">The property names of the properties that have changed</param>
-		public static void OnPropertyChanged(this IExternalNotifyPropertyChanged sender, params string[] properties) {
+		public static void OnPropertyChanged(this IExternalNotifyPropertyChanged sender, params string[] properties)
+		{
 			// Check the sender
-			if (sender == null) {
+			if (sender == null)
+			{
 				return;
 			}
 
 			// Get the event handler
 			var handler = sender.PropertyChangedHandler;
-			if (handler == null) {
+			if (handler == null)
+			{
 				return;
 			}
 
 			// Invoke each property changed by using the event handler
-			foreach (var property in properties.Select(p => new PropertyChangedEventArgs(p))) {
+			foreach (var property in properties.Select(p => new PropertyChangedEventArgs(p)))
+			{
 				handler(sender, property);
 			}
 		}
@@ -447,30 +498,37 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The object that the properties have changed on</param>
 		/// <param name="properties">The property names of the properties that have changed</param>
-		public static void OnPropertyChanged(this INotifyPropertyChanged sender, params string[] properties) {
+		public static void OnPropertyChanged(this INotifyPropertyChanged sender, params string[] properties)
+		{
 			// Check the sender
-			if (sender == null) {
+			if (sender == null)
+			{
 				return;
 			}
 
 			// Get the event field
 			Type eventType = sender.GetType();
 			FieldInfo eventField = null;
-			while (eventType != null && (eventField = eventType.GetField("PropertyChanged", BindingFlags.Instance | BindingFlags.NonPublic)) == null) {
+			while (eventType != null && (eventField = eventType.GetField("PropertyChanged", BindingFlags.Instance | BindingFlags.NonPublic)) == null)
+			{
 				eventType = eventType.BaseType;
 			}
 
 			// Check the event and get the invocation information
-			if (eventType == null || eventField == null) {
+			if (eventType == null || eventField == null)
+			{
 				return;
 			}
 			var eventDelegate = eventField.GetValue(sender) as MulticastDelegate;
 			var invocationList = (eventDelegate == null) ? null : eventDelegate.GetInvocationList();
 
 			// Invoke each property changed on each event listener
-			if (invocationList != null && invocationList.Length > 0) {
-				foreach (var property in properties.Select(p => new PropertyChangedEventArgs(p))) {
-					foreach (var handler in invocationList) {
+			if (invocationList != null && invocationList.Length > 0)
+			{
+				foreach (var property in properties.Select(p => new PropertyChangedEventArgs(p)))
+				{
+					foreach (var handler in invocationList)
+					{
 						handler.Method.Invoke(handler.Target, new object[] { sender, property });
 					}
 				}
@@ -486,7 +544,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="ts">The TimeSpan specifying the time to format</param>
 		/// <returns>Returns the TimeSpan in mm:ss format.</returns>
-		public static string Format(this TimeSpan ts) {
+		public static string Format(this TimeSpan ts)
+		{
 			string ret = "";
 			if (ts.Hours > 0)
 				ret += ts.Hours.ToString("0") + ":";
@@ -498,8 +557,10 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="type">The type to check to see if it is a numeric type or not</param>
 		/// <returns>True if the given type is a numeric type, or false otherwise</returns>
-		public static bool IsNumericType(this Type type) {
-			if (numericTypes == null) {
+		public static bool IsNumericType(this Type type)
+		{
+			if (numericTypes == null)
+			{
 				numericTypes = new[] { typeof(byte), typeof(decimal), typeof(double), typeof(float), typeof(int), 
 					typeof(long), typeof(sbyte), typeof(short), typeof(uint), typeof(ulong), typeof(ushort) };
 			}
@@ -511,7 +572,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="data">The array of bytes to get the mime-type from</param>
 		/// <returns>The image mime-type representing the data</returns>
-		public static string MimeTypeFromBytes(this byte[] data) {
+		public static string MimeTypeFromBytes(this byte[] data)
+		{
 			// Check PNG
 			if (data.Length >= 4 &&
 				data[1] == 'P' &&
@@ -546,7 +608,8 @@ namespace mCubed.Core {
 		/// <typeparam name="T">The type to convert to</typeparam>
 		/// <param name="obj">The object to attempt to convert</param>
 		/// <returns>The converted object, or the default value for the type</returns>
-		public static T TryParse<T>(this object obj) {
+		public static T TryParse<T>(this object obj)
+		{
 			// Attempt to parse the value
 			if (obj is IEnumerable && !(obj is string) && Utilities.IsTypeIEnumerable(typeof(T)))
 				return (T)((IEnumerable)obj).OfType<object>().Select(o => o.ToString()).Parse(Utilities.EnumerableType(typeof(T)));
@@ -562,7 +625,8 @@ namespace mCubed.Core {
 		/// <param name="element">The element that contains the attribute</param>
 		/// <param name="attributeName">The name of the attribute witin the element</param>
 		/// <returns>The value within the attribute of the element, or the default for the given type</returns>
-		public static T Parse<T>(this XElement element, string attributeName) {
+		public static T Parse<T>(this XElement element, string attributeName)
+		{
 			return element.Parse(attributeName, default(T));
 		}
 
@@ -574,9 +638,11 @@ namespace mCubed.Core {
 		/// <param name="attributeName">The name of the attribute witin the element</param>
 		/// <param name="defaultValue">The value to default to when the attribute does not exist</param>
 		/// <returns>The value within the attribute of the element, or the default for the given type</returns>
-		public static T Parse<T>(this XElement element, string attributeName, T defaultValue) {
+		public static T Parse<T>(this XElement element, string attributeName, T defaultValue)
+		{
 			T retValue = defaultValue;
-			if (element != null && element.Attribute(attributeName) != null) {
+			if (element != null && element.Attribute(attributeName) != null)
+			{
 				retValue = element.Attribute(attributeName).Value.Parse<T>();
 			}
 			return retValue;
@@ -588,7 +654,8 @@ namespace mCubed.Core {
 		/// <param name="str">The string value to convert</param>
 		/// <param name="type">The type to convert the string into</param>
 		/// <returns>The string converted into the type, or the default value for the type</returns>
-		public static object Parse(this string str, Type type) {
+		public static object Parse(this string str, Type type)
+		{
 			return str.Parse(type, null);
 		}
 
@@ -599,7 +666,8 @@ namespace mCubed.Core {
 		/// <param name="type">The type to convert the string into</param>
 		/// <param name="defaultValue">The default or fallback value if the conversion fails</param>
 		/// <returns>The string converted into the type, or the given default value</returns>
-		public static object Parse(this string str, Type type, object defaultValue) {
+		public static object Parse(this string str, Type type, object defaultValue)
+		{
 			bool success;
 			return str.Parse(type, defaultValue, out success);
 		}
@@ -612,7 +680,8 @@ namespace mCubed.Core {
 		/// <param name="defaultValue">The default or fallback value if the conversion fails</param>
 		/// <param name="success">True if the parse succeeded, or false if it failed and the default value had to be returned</param>
 		/// <returns>The string converted into the type, or the given default value</returns>
-		public static object Parse(this string str, Type type, object defaultValue, out bool success) {
+		public static object Parse(this string str, Type type, object defaultValue, out bool success)
+		{
 			// Get the parse method
 			success = false;
 			var method = typeof(Utilities).GetMethods().
@@ -636,7 +705,8 @@ namespace mCubed.Core {
 		/// <typeparam name="T">The type to convert the string into</typeparam>
 		/// <param name="str">The string value to convert</param>
 		/// <returns>The string converted into the type, or the default value for the type</returns>
-		public static T Parse<T>(this string str) {
+		public static T Parse<T>(this string str)
+		{
 			return str.Parse(default(T));
 		}
 
@@ -647,7 +717,8 @@ namespace mCubed.Core {
 		/// <param name="str">The string value to convert</param>
 		/// <param name="defaultValue">The default or fallback value if the conversion failed</param>
 		/// <returns>The string converted into the type, or the given default value</returns>
-		public static T Parse<T>(this string str, T defaultValue) {
+		public static T Parse<T>(this string str, T defaultValue)
+		{
 			bool success;
 			return str.Parse(defaultValue, out success);
 		}
@@ -660,7 +731,8 @@ namespace mCubed.Core {
 		/// <param name="defaultValue">The default or fallback value if the conversion failed</param>
 		/// <param name="success">True if the parse succeeded, or false if it failed and the default value had to be returned</param>
 		/// <returns>The string converted into the type, or the given default value</returns>
-		public static T Parse<T>(this string str, T defaultValue, out bool success) {
+		public static T Parse<T>(this string str, T defaultValue, out bool success)
+		{
 			// Check the input
 			success = false;
 			if (str == null)
@@ -668,7 +740,8 @@ namespace mCubed.Core {
 
 			// Attempt to convert
 			success = true;
-			try {
+			try
+			{
 				// Attempt to keep it the same
 				if (str is T)
 					return (T)(object)str;
@@ -684,13 +757,15 @@ namespace mCubed.Core {
 					return (T)(object)Enum.Parse(type, str);
 
 				// Attempt to get the nullable parse method
-				if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+				if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+				{
 					bool nullableSuccess;
 					T val = (T)Parse(str, new NullableConverter(type).UnderlyingType, null, out nullableSuccess);
 					if (nullableSuccess)
 						return val;
 				}
-			} catch { }
+			}
+			catch { }
 			success = false;
 			return defaultValue;
 		}
@@ -701,7 +776,8 @@ namespace mCubed.Core {
 		/// <param name="strs">The collection of string values to convert</param>
 		/// <param name="type">The type to convert each string into</param>
 		/// <returns>A collection of strings that have been converted into the type</returns>
-		public static IEnumerable Parse(this IEnumerable<string> strs, Type type) {
+		public static IEnumerable Parse(this IEnumerable<string> strs, Type type)
+		{
 			// Get the parse method
 			var method = typeof(Utilities).GetMethod("Parse", new[] { typeof(IEnumerable<string>) });
 			if (method == null)
@@ -717,7 +793,8 @@ namespace mCubed.Core {
 		/// <typeparam name="T">The type to convert each string into</typeparam>
 		/// <param name="strs">The collection of string values to convert</param>
 		/// <returns>A collection of strings that have been converted into the type</returns>
-		public static IEnumerable<T> Parse<T>(this IEnumerable<string> strs) {
+		public static IEnumerable<T> Parse<T>(this IEnumerable<string> strs)
+		{
 			return strs == null ? null : strs.Select(s => Parse<T>(s)).ToArray();
 		}
 
@@ -733,11 +810,16 @@ namespace mCubed.Core {
 		/// will give the element focus immediately.
 		/// </summary>
 		/// <param name="element">The element to forcefully give focus to.</param>
-		public static void ForceFocus(this UIElement element) {
-			if (element != null) {
-				if (element.IsVisible) {
+		public static void ForceFocus(this UIElement element)
+		{
+			if (element != null)
+			{
+				if (element.IsVisible)
+				{
 					element.Focus();
-				} else {
+				}
+				else
+				{
 					DependencyPropertyChangedEventHandler onVisibleChanged = null;
 					onVisibleChanged = new DependencyPropertyChangedEventHandler((s, e) =>
 					{
@@ -767,22 +849,27 @@ namespace mCubed.Core {
 	public enum MetaDataStatus { None, Loaded, Edit }
 	public enum MetaDataValueStatus { Read, ReadEdit, Edit }
 	public enum TabOption { Application, Library, Keyboard, Formulas, About, Credits, Help }
-	public interface ICopiable<T> where T : ICopiable<T> {
+	public interface ICopiable<T> where T : ICopiable<T>
+	{
 		void CopyFrom(T obj);
 	}
-	public interface IListener<T> {
+	public interface IListener<T>
+	{
 		void OnSpeakerDeleting(T speaker);
 		void OnSpeakerDeleted(T speaker);
 		void OnSpeakerChanging(T speaker);
 		void OnSpeakerChanged(T speaker);
 	}
-	public interface IExternalNotifyPropertyChanged : INotifyPropertyChanged {
+	public interface IExternalNotifyPropertyChanged : INotifyPropertyChanged
+	{
 		PropertyChangedEventHandler PropertyChangedHandler { get; }
 	}
-	public interface IExternalNotifyPropertyChanging : INotifyPropertyChanging {
+	public interface IExternalNotifyPropertyChanging : INotifyPropertyChanging
+	{
 		PropertyChangingEventHandler PropertyChangingHandler { get; }
 	}
-	public class ExternalPropertyChangedEventArgs<T> : PropertyChangedEventArgs {
+	public class ExternalPropertyChangedEventArgs<T> : PropertyChangedEventArgs
+	{
 		/// <summary>
 		/// Get/set the original value
 		/// </summary>
@@ -798,10 +885,12 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="propertyName">The name of the property that has changed</param>
 		public ExternalPropertyChangedEventArgs(string propertyName)
-			: base(propertyName) {
+			: base(propertyName)
+		{
 		}
 	}
-	public class ExternalPropertyChangingEventArgs<T> : PropertyChangingEventArgs {
+	public class ExternalPropertyChangingEventArgs<T> : PropertyChangingEventArgs
+	{
 		/// <summary>
 		/// Get/set the original value
 		/// </summary>
@@ -817,7 +906,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="propertyName">The name of the property that is changing</param>
 		public ExternalPropertyChangingEventArgs(string propertyName)
-			: base(propertyName) {
+			: base(propertyName)
+		{
 		}
 	}
 }

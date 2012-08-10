@@ -8,11 +8,14 @@ using System.Windows.Data;
 using System.Windows.Input;
 using mCubed.Core;
 
-namespace mCubed.MetaData {
-	public partial class MDIValue : UserControl {
+namespace mCubed.MetaData
+{
+	public partial class MDIValue : UserControl
+	{
 		#region MDIValueSelection
 
-		public struct MDIValueSelection {
+		public struct MDIValueSelection
+		{
 			public int SelectionLength { get; set; }
 			public int SelectionStart { get; set; }
 			public string Value { get; set; }
@@ -34,7 +37,8 @@ namespace mCubed.MetaData {
 
 		public static readonly DependencyProperty AlternativesProperty =
 			DependencyProperty.Register("Alternatives", typeof(IEnumerable<MDIValueContainer>), typeof(MDIValue), new UIPropertyMetadata(null));
-		public IEnumerable<MDIValueContainer> Alternatives {
+		public IEnumerable<MDIValueContainer> Alternatives
+		{
 			get { return (IEnumerable<MDIValueContainer>)GetValue(AlternativesProperty); }
 			set { SetValue(AlternativesProperty, value); }
 		}
@@ -45,7 +49,8 @@ namespace mCubed.MetaData {
 
 		public static readonly DependencyProperty IsAutoCompleteOpenProperty =
 			DependencyProperty.Register("IsAutoCompleteOpen", typeof(bool), typeof(MDIValue), new UIPropertyMetadata(false));
-		public bool IsAutoCompleteOpen {
+		public bool IsAutoCompleteOpen
+		{
 			get { return (bool)GetValue(IsAutoCompleteOpenProperty); }
 			set { SetValue(IsAutoCompleteOpenProperty, value); }
 		}
@@ -56,7 +61,8 @@ namespace mCubed.MetaData {
 
 		public static readonly DependencyProperty IsReadOnlyProperty =
 			DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(MDIValue), new UIPropertyMetadata(false));
-		public bool IsReadOnly {
+		public bool IsReadOnly
+		{
 			get { return (bool)GetValue(IsReadOnlyProperty); }
 			set { SetValue(IsReadOnlyProperty, value); }
 		}
@@ -70,7 +76,8 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private static void OnSelectedAutoCompleteItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		private static void OnSelectedAutoCompleteItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
 			MDIValue value = sender as MDIValue;
 			if (value != null)
 				value.OnSelectedAutoCompleteItemChanged((MDIValueContainer)e.OldValue, (MDIValueContainer)e.NewValue);
@@ -78,7 +85,8 @@ namespace mCubed.MetaData {
 
 		public static readonly DependencyProperty SelectedAutoCompleteItemProperty =
 		    DependencyProperty.Register("SelectedAutoCompleteItem", typeof(MDIValueContainer), typeof(MDIValue), new UIPropertyMetadata(null, new PropertyChangedCallback(OnSelectedAutoCompleteItemChanged)));
-		public MDIValueContainer SelectedAutoCompleteItem {
+		public MDIValueContainer SelectedAutoCompleteItem
+		{
 			get { return (MDIValueContainer)GetValue(SelectedAutoCompleteItemProperty); }
 			set { SetValue(SelectedAutoCompleteItemProperty, value); }
 		}
@@ -92,7 +100,8 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private static void OnStatusChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		private static void OnStatusChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
 			MDIValue value = sender as MDIValue;
 			if (value != null)
 				value.OnStatusChanged((MetaDataValueStatus)e.OldValue);
@@ -100,7 +109,8 @@ namespace mCubed.MetaData {
 
 		public static readonly DependencyProperty StatusProperty =
 			DependencyProperty.Register("Status", typeof(MetaDataValueStatus), typeof(MDIValue), new UIPropertyMetadata(MetaDataValueStatus.Read, new PropertyChangedCallback(OnStatusChanged)));
-		public MetaDataValueStatus Status {
+		public MetaDataValueStatus Status
+		{
 			get { return (MetaDataValueStatus)GetValue(StatusProperty); }
 			set { if (!IsReadOnly) SetValue(StatusProperty, value); }
 		}
@@ -111,7 +121,8 @@ namespace mCubed.MetaData {
 
 		public static readonly DependencyProperty ValueProperty =
 			DependencyProperty.Register("Value", typeof(MDIValueContainer), typeof(MDIValue), new UIPropertyMetadata(null));
-		public MDIValueContainer Value {
+		public MDIValueContainer Value
+		{
 			get { return (MDIValueContainer)GetValue(ValueProperty); }
 			set { SetValue(ValueProperty, value); }
 		}
@@ -123,8 +134,10 @@ namespace mCubed.MetaData {
 		/// <summary>
 		/// Get the auto-complete items collectoin view from the collection view source resource
 		/// </summary>
-		public ICollectionView AutoCompleteView {
-			get {
+		public ICollectionView AutoCompleteView
+		{
+			get
+			{
 				var viewSource = AutoCompleteViewSource;
 				return viewSource == null ? null : viewSource.View;
 			}
@@ -133,9 +146,12 @@ namespace mCubed.MetaData {
 		/// <summary>
 		/// Get the auto-complete items collection view source resource
 		/// </summary>
-		public CollectionViewSource AutoCompleteViewSource {
-			get {
-				if (_autoCompleteViewSource == null) {
+		public CollectionViewSource AutoCompleteViewSource
+		{
+			get
+			{
+				if (_autoCompleteViewSource == null)
+				{
 					_autoCompleteViewSource = ChildGrid.Resources["AutoCompleteViewSource"] as CollectionViewSource;
 				}
 				return _autoCompleteViewSource;
@@ -154,7 +170,8 @@ namespace mCubed.MetaData {
 
 		#region Constructor
 
-		public MDIValue() {
+		public MDIValue()
+		{
 			// Hook up event handlers
 			GotKeyboardFocus += new KeyboardFocusChangedEventHandler(OnGotKeyboardFocus);
 			LostKeyboardFocus += new KeyboardFocusChangedEventHandler(OnLostKeyboardFocus);
@@ -174,9 +191,11 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnFilterAutoCompleteItem(object sender, FilterEventArgs e) {
+		private void OnFilterAutoCompleteItem(object sender, FilterEventArgs e)
+		{
 			var item = e.Item as MDIValueContainer;
-			if (item != null) {
+			if (item != null)
+			{
 				e.Accepted = ValueTextBox.Text.Split(' ').All(p => item.Value.IndexOf(p, StringComparison.CurrentCultureIgnoreCase) >= 0);
 			}
 		}
@@ -186,10 +205,12 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnAutoCompleteItemEntered(object sender, MouseEventArgs e) {
+		private void OnAutoCompleteItemEntered(object sender, MouseEventArgs e)
+		{
 			var element = sender as FrameworkElement;
 			var item = element == null ? null : element.DataContext as MDIValueContainer;
-			if (item != null) {
+			if (item != null)
+			{
 				SelectedAutoCompleteItem = item;
 			}
 		}
@@ -199,7 +220,8 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnAutoCompleteItemSelected(object sender, MouseButtonEventArgs e) {
+		private void OnAutoCompleteItemSelected(object sender, MouseButtonEventArgs e)
+		{
 			var element = sender as FrameworkElement;
 			var item = element == null ? null : element.DataContext as MDIValueContainer;
 			OnAutoCompleteItemSelected(item, true);
@@ -210,11 +232,14 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="autoCompleteItem">The auto-complete item that was selected</param>
 		/// <param name="selectItem">True to select all the text in the textbox after selecting the item, or false to continue without selecting it</param>
-		private void OnAutoCompleteItemSelected(MDIValueContainer autoCompleteItem, bool selectItem) {
-			if (autoCompleteItem != null) {
+		private void OnAutoCompleteItemSelected(MDIValueContainer autoCompleteItem, bool selectItem)
+		{
+			if (autoCompleteItem != null)
+			{
 				Value.Value = autoCompleteItem.Value;
 				CloseAutoComplete();
-				if (selectItem) {
+				if (selectItem)
+				{
 					OnStatusChanged(MetaDataValueStatus.Edit);
 					SelectAll();
 				}
@@ -224,7 +249,8 @@ namespace mCubed.MetaData {
 		/// <summary>
 		/// Event that handles when the text has changed so the filtering of the auto-complete items needs to change as well
 		/// </summary>
-		private void OnAutoCompleteTextChanged() {
+		private void OnAutoCompleteTextChanged()
+		{
 			RefreshAutoComplete();
 		}
 
@@ -233,15 +259,20 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="oldValue">The value that was previously selected</param>
 		/// <param name="newValue">The value that is newly selected</param>
-		private void OnSelectedAutoCompleteItemChanged(MDIValueContainer oldValue, MDIValueContainer newValue) {
-			if (oldValue != null) {
+		private void OnSelectedAutoCompleteItemChanged(MDIValueContainer oldValue, MDIValueContainer newValue)
+		{
+			if (oldValue != null)
+			{
 				oldValue.IsSelected = false;
 			}
-			if (newValue != null) {
+			if (newValue != null)
+			{
 				newValue.IsSelected = true;
-				if (IsAutoCompleteOpen) {
+				if (IsAutoCompleteOpen)
+				{
 					var element = AutoCompleteItems.ItemContainerGenerator.ContainerFromItem(newValue) as FrameworkElement;
-					if (element != null) {
+					if (element != null)
+					{
 						element.BringIntoView();
 					}
 				}
@@ -257,11 +288,16 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e) {
-			if (Mouse.LeftButton == MouseButtonState.Released && !_customSelect) {
-				if (e.OldFocus != null) {
+		private void OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+		{
+			if (Mouse.LeftButton == MouseButtonState.Released && !_customSelect)
+			{
+				if (e.OldFocus != null)
+				{
 					ValueTextBox.SelectAll();
-				} else if (ValueTextBox.Text.Length > 0) {
+				}
+				else if (ValueTextBox.Text.Length > 0)
+				{
 					ValueTextBox.ScrollToHorizontalOffset(_scrollOffset);
 				}
 			}
@@ -272,7 +308,8 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e) {
+		private void OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+		{
 			_scrollOffset = ValueTextBox.HorizontalOffset;
 		}
 
@@ -281,7 +318,8 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnLoaded(object sender, RoutedEventArgs e) {
+		private void OnLoaded(object sender, RoutedEventArgs e)
+		{
 			// Setup the value status binding
 			var binding = new MultiBinding { Converter = new MDIValueStatusConverter() };
 			binding.Bindings.Add(new Binding { Source = this, Path = new PropertyPath("IsMouseOver") });
@@ -293,7 +331,8 @@ namespace mCubed.MetaData {
 			ValueTextBox.TextChanged += new TextChangedEventHandler(OnValueTextBoxChanged);
 
 			// Select text
-			if (_customSelect) {
+			if (_customSelect)
+			{
 				Select(_selectionStart, _selectionLength);
 				_customSelect = false;
 			}
@@ -304,33 +343,53 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMDIKeyDown(object sender, KeyEventArgs e) {
+		private void OnMDIKeyDown(object sender, KeyEventArgs e)
+		{
 			// Setup a temporary handled check
 			bool handled = true;
 
 			// Sort through the keyboard shortcuts
-			if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && !IsReadOnly) {
-				if (e.Key == Key.Space) {
+			if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && !IsReadOnly)
+			{
+				if (e.Key == Key.Space)
+				{
 					ShowAutoComplete();
-				} else if (e.Key == Key.D) {
+				}
+				else if (e.Key == Key.D)
+				{
 					OnValueDeleted(null, null);
-				} else {
+				}
+				else
+				{
 					handled = false;
 				}
-			} else if (IsAutoCompleteOpen) {
-				if (e.Key == Key.Escape) {
+			}
+			else if (IsAutoCompleteOpen)
+			{
+				if (e.Key == Key.Escape)
+				{
 					CloseAutoComplete();
-				} else if (e.Key == Key.Up) {
+				}
+				else if (e.Key == Key.Up)
+				{
 					SelectedAutoCompleteItem = AutoCompleteView.OfType<MDIValueContainer>().ElementBefore(SelectedAutoCompleteItem, true);
-				} else if (e.Key == Key.Down) {
+				}
+				else if (e.Key == Key.Down)
+				{
 					SelectedAutoCompleteItem = AutoCompleteView.OfType<MDIValueContainer>().ElementAfter(SelectedAutoCompleteItem, true);
-				} else if (e.Key == Key.Enter || e.Key == Key.Tab) {
+				}
+				else if (e.Key == Key.Enter || e.Key == Key.Tab)
+				{
 					OnAutoCompleteItemSelected(SelectedAutoCompleteItem, false);
 					handled = e.Key == Key.Enter;
-				} else {
+				}
+				else
+				{
 					handled = false;
 				}
-			} else {
+			}
+			else
+			{
 				handled = false;
 			}
 
@@ -344,14 +403,16 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnValueTextBoxChanged(object sender, TextChangedEventArgs e) {
+		private void OnValueTextBoxChanged(object sender, TextChangedEventArgs e)
+		{
 			OnValueChanged();
 		}
 
 		/// <summary>
 		/// Event that handles when the status changed
 		/// </summary>
-		private void OnStatusChanged(MetaDataValueStatus prevStatus) {
+		private void OnStatusChanged(MetaDataValueStatus prevStatus)
+		{
 			CloseAutoComplete();
 			if (StatusChanged != null)
 				StatusChanged(this);
@@ -362,7 +423,8 @@ namespace mCubed.MetaData {
 		/// <summary>
 		/// Event that handles when the value changed
 		/// </summary>
-		private void OnValueChanged() {
+		private void OnValueChanged()
+		{
 			if (ValueChanged != null)
 				ValueChanged(this);
 			OnAutoCompleteTextChanged();
@@ -373,7 +435,8 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnValueDeleted(object sender, MouseButtonEventArgs e) {
+		private void OnValueDeleted(object sender, MouseButtonEventArgs e)
+		{
 			if (ValueDeleted != null)
 				ValueDeleted(this);
 		}
@@ -386,7 +449,8 @@ namespace mCubed.MetaData {
 		/// Popuplate a value selection for this value control
 		/// </summary>
 		/// <returns>A current value selection for this value control</returns>
-		public MDIValueSelection PopulateValueSelection() {
+		public MDIValueSelection PopulateValueSelection()
+		{
 			return new MDIValueSelection
 			{
 				SelectionLength = ValueTextBox.SelectionLength,
@@ -399,14 +463,16 @@ namespace mCubed.MetaData {
 		/// Select the text from a value selection
 		/// </summary>
 		/// <param name="selection">The value selection to select text from</param>
-		public void SelectFromValueSelection(MDIValueSelection selection) {
+		public void SelectFromValueSelection(MDIValueSelection selection)
+		{
 			Select(selection.SelectionStart, selection.SelectionLength);
 		}
 
 		/// <summary>
 		/// Select all the text in the textbox and give it keyboard focus
 		/// </summary>
-		public void SelectAll() {
+		public void SelectAll()
+		{
 			Select(0, -1);
 		}
 
@@ -415,14 +481,18 @@ namespace mCubed.MetaData {
 		/// </summary>
 		/// <param name="start">The index at which to start the selection</param>
 		/// <param name="length">The length the selection will be, or -1 to select all</param>
-		public void Select(int start, int length) {
-			if (IsLoaded) {
+		public void Select(int start, int length)
+		{
+			if (IsLoaded)
+			{
 				if (length == -1)
 					ValueTextBox.SelectAll();
 				else
 					ValueTextBox.Select(start, length);
 				ValueTextBox.ForceFocus();
-			} else {
+			}
+			else
+			{
 				_customSelect = true;
 				_selectionStart = start;
 				_selectionLength = length;
@@ -432,10 +502,13 @@ namespace mCubed.MetaData {
 		/// <summary>
 		/// Closes the auto-complete box and de-selects the current item
 		/// </summary>
-		public void CloseAutoComplete() {
-			if (IsAutoCompleteOpen) {
+		public void CloseAutoComplete()
+		{
+			if (IsAutoCompleteOpen)
+			{
 				var currentItem = SelectedAutoCompleteItem;
-				if (currentItem != null) {
+				if (currentItem != null)
+				{
 					currentItem.IsSelected = false;
 				}
 				IsAutoCompleteOpen = false;
@@ -445,8 +518,10 @@ namespace mCubed.MetaData {
 		/// <summary>
 		/// Display the auto-complete box if there are any suggestions to display
 		/// </summary>
-		public void ShowAutoComplete() {
-			if (!IsAutoCompleteOpen && !IsReadOnly) {
+		public void ShowAutoComplete()
+		{
+			if (!IsAutoCompleteOpen && !IsReadOnly)
+			{
 				IsAutoCompleteOpen = true;
 				RefreshAutoComplete();
 			}
@@ -455,16 +530,19 @@ namespace mCubed.MetaData {
 		/// <summary>
 		/// Refreshes the auto-complete view to contain the correct items with the selected item being brought into view
 		/// </summary>
-		private void RefreshAutoComplete() {
+		private void RefreshAutoComplete()
+		{
 			AutoCompleteView.Refresh();
 			var currentItem = SelectedAutoCompleteItem;
 			if (currentItem == null || AutoCompleteView.OfType<MDIValueContainer>().All(c => c != currentItem))
 				currentItem = AutoCompleteView.OfType<MDIValueContainer>().FirstOrDefault();
 			SelectedAutoCompleteItem = currentItem;
-			if (currentItem != null) {
+			if (currentItem != null)
+			{
 				currentItem.IsSelected = true;
 				var element = AutoCompleteItems.ItemContainerGenerator.ContainerFromItem(currentItem) as FrameworkElement;
-				if (element != null) {
+				if (element != null)
+				{
 					element.BringIntoView();
 				}
 			}

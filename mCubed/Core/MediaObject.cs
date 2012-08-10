@@ -3,11 +3,14 @@ using System.ComponentModel;
 using System.Timers;
 using System.Windows.Media;
 
-namespace mCubed.Core {
-	public class MediaObject : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+namespace mCubed.Core
+{
+	public class MediaObject : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region MediaObjectState
 
-		public class MediaObjectState {
+		public class MediaObjectState
+		{
 			public string Path { get; set; }
 			public double Progress { get; set; }
 			public MediaState State { get; set; }
@@ -37,7 +40,8 @@ namespace mCubed.Core {
 		/// Get/set the balance of the left and right speakers between -1 and 1 [Bindable]
 		/// </summary>
 		[MetaData("The balance of the media playback for the library.")]
-		public double Balance {
+		public double Balance
+		{
 			get { return _balance; }
 			set { this.SetAndNotify(ref _balance, value, null, OnBalanceChanged, "Balance"); }
 		}
@@ -45,7 +49,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the length/duration of the current loaded media [Bindable]
 		/// </summary>
-		public TimeSpan Length {
+		public TimeSpan Length
+		{
 			get { return _length; }
 			private set { this.SetAndNotify(ref _length, value, "Length", "LengthString", "Progress"); }
 		}
@@ -59,7 +64,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the filepath of the media to load [Bindable]
 		/// </summary>
-		public string Path {
+		public string Path
+		{
 			get { return _path; }
 			set { this.SetAndNotify(ref _path, value, null, OnPathChanged, "Path"); }
 		}
@@ -68,7 +74,8 @@ namespace mCubed.Core {
 		/// Get/set the playback speed ratio of the media between 0 and infinity where 1 is the normal speed [Bindable]
 		/// </summary>
 		[MetaData("The playback speed of the media for the library.")]
-		public double PlaybackSpeed {
+		public double PlaybackSpeed
+		{
 			get { return _playbackSpeed; }
 			set { this.SetAndNotify(ref _playbackSpeed, value, null, OnPlaybackSpeedChanged, "PlaybackSpeed"); }
 		}
@@ -76,7 +83,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the current position of the media [Bindable]
 		/// </summary>
-		public TimeSpan Position {
+		public TimeSpan Position
+		{
 			get { return _position; }
 			private set { this.SetAndNotify(ref _position, value, "Position", "PositionString", "Progress"); }
 		}
@@ -96,7 +104,8 @@ namespace mCubed.Core {
 		/// Get/set the current state of the media file [Bindable]
 		/// </summary>
 		[MetaData("The playback state of the current media (Play/Pause/Stop).")]
-		public MediaState State {
+		public MediaState State
+		{
 			get { return _state; }
 			set { OnStateChanged(value); }
 		}
@@ -105,7 +114,8 @@ namespace mCubed.Core {
 		/// Get/set the volume of the media object between 0 and 1 [Bindable]
 		/// </summary>
 		[MetaData("The volume level of the playback for the library.")]
-		public double Volume {
+		public double Volume
+		{
 			get { return _volume; }
 			set { this.SetAndNotify(ref _volume, value, null, OnVolumeChanged, "Volume"); }
 		}
@@ -121,7 +131,8 @@ namespace mCubed.Core {
 
 		#region Constructor
 
-		public MediaObject() {
+		public MediaObject()
+		{
 			// Set up event handlers
 			_timer.Elapsed += new ElapsedEventHandler(OnTimerElapsed);
 			_player.MediaEnded += new EventHandler(OnMediaEnded);
@@ -136,7 +147,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the media has ended, notifying all those who want to know
 		/// </summary>
-		private void OnMediaEnded() {
+		private void OnMediaEnded()
+		{
 			if (MediaEnded != null)
 				MediaEnded();
 		}
@@ -146,7 +158,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaEnded(object sender, EventArgs e) {
+		private void OnMediaEnded(object sender, EventArgs e)
+		{
 			OnMediaEnded();
 		}
 
@@ -155,7 +168,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaFailed(object sender, ExceptionEventArgs e) {
+		private void OnMediaFailed(object sender, ExceptionEventArgs e)
+		{
 			if (MediaFailed != null)
 				MediaFailed(e.ErrorException.Message);
 		}
@@ -165,11 +179,13 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaOpened(object sender, EventArgs e) {
-			var timespan =  _player.NaturalDuration;
+		private void OnMediaOpened(object sender, EventArgs e)
+		{
+			var timespan = _player.NaturalDuration;
 			if (timespan.HasTimeSpan)
 				Length = timespan.TimeSpan;
-			if (_seekValue != 0) {
+			if (_seekValue != 0)
+			{
 				Seek(_seekValue);
 				_seekValue = 0;
 			}
@@ -178,14 +194,18 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the media file path has changed
 		/// </summary>
-		private void OnPathChanged() {
+		private void OnPathChanged()
+		{
 			// Load the media through the UI thread
 			PerformAction(delegate(MediaPlayer player)
 			{
-				if (string.IsNullOrEmpty(Path)) {
+				if (string.IsNullOrEmpty(Path))
+				{
 					player.Close();
 					Length = TimeSpan.FromMilliseconds(0);
-				} else {
+				}
+				else
+				{
 					player.Open(new Uri(Path));
 				}
 			});
@@ -202,7 +222,8 @@ namespace mCubed.Core {
 		/// Event that handles when state of the media object has changed
 		/// </summary>
 		/// <param name="newState">The media state the file should be updated to</param>
-		private void OnStateChanged(MediaState newState) {
+		private void OnStateChanged(MediaState newState)
+		{
 			// Check if there's media first
 			if (string.IsNullOrEmpty(Path) && newState != MediaState.Stop)
 				return;
@@ -213,7 +234,8 @@ namespace mCubed.Core {
 			// Retrieve the new state details
 			Action<MediaPlayer> action = null;
 			bool startTimer = false;
-			switch (State) {
+			switch (State)
+			{
 				case MediaState.Pause:
 					action = player => player.Pause();
 					break;
@@ -244,28 +266,32 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnTimerElapsed(object sender, ElapsedEventArgs e) {
+		private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+		{
 			UpdatePosition();
 		}
 
 		/// <summary>
 		/// Event that handles when the balance changed
 		/// </summary>
-		private void OnBalanceChanged() {
+		private void OnBalanceChanged()
+		{
 			PerformAction(player => player.Balance = Balance);
 		}
 
 		/// <summary>
 		/// Event that handles when the playback speed changed
 		/// </summary>
-		private void OnPlaybackSpeedChanged() {
+		private void OnPlaybackSpeedChanged()
+		{
 			PerformAction(player => player.SpeedRatio = PlaybackSpeed);
 		}
 
 		/// <summary>
 		/// Event that handles when the volume changed
 		/// </summary>
-		private void OnVolumeChanged() {
+		private void OnVolumeChanged()
+		{
 			PerformAction(player => player.Volume = Volume);
 		}
 
@@ -277,13 +303,19 @@ namespace mCubed.Core {
 		/// Seek to a position in the media file
 		/// </summary>
 		/// <param name="value">The position in the file to seek to</param>
-		public void Seek(double value) {
+		public void Seek(double value)
+		{
 			// Check if there is a source
-			if (value >= 1) {
+			if (value >= 1)
+			{
 				OnMediaEnded();
-			} else if (value < 0) {
+			}
+			else if (value < 0)
+			{
 				Seek(0);
-			} else if (!string.IsNullOrEmpty(Path)) {
+			}
+			else if (!string.IsNullOrEmpty(Path))
+			{
 				PerformAction(player => player.Position = TimeSpan.FromMilliseconds(value * Length.TotalMilliseconds));
 				UpdatePosition();
 			}
@@ -292,7 +324,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Update the media position information
 		/// </summary>
-		private void UpdatePosition() {
+		private void UpdatePosition()
+		{
 			// Check if there is a source, and update the position accordingly
 			if (!string.IsNullOrEmpty(Path))
 				PerformAction(player => Position = player.Position);
@@ -307,7 +340,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Restore the state of the media file that was being played
 		/// </summary>
-		public void RestoreState() {
+		public void RestoreState()
+		{
 			// Restore the saved state
 			RestoreState(_savedState);
 
@@ -319,9 +353,11 @@ namespace mCubed.Core {
 		/// Restore the state of the media file that was previously unloaded
 		/// </summary>
 		/// <param name="state">The state of the file that was previously unloaded</param>
-		public void RestoreState(MediaObjectState state) {
+		public void RestoreState(MediaObjectState state)
+		{
 			// Check if the state has a value
-			if (state != null) {
+			if (state != null)
+			{
 				RestoreState(state.Path, state.State, state.Progress);
 			}
 		}
@@ -332,10 +368,12 @@ namespace mCubed.Core {
 		/// <param name="path">The path to the media file to restore</param>
 		/// <param name="state">The state of which to restore it to</param>
 		/// <param name="progress">The progress of which to seek in the file</param>
-		public void RestoreState(string path, MediaState state, double progress) {
+		public void RestoreState(string path, MediaState state, double progress)
+		{
 			// Seek appropriately
 			bool postSeek = true;
-			if (string.IsNullOrEmpty(Path)) {
+			if (string.IsNullOrEmpty(Path))
+			{
 				_seekValue = progress;
 				postSeek = false;
 			}
@@ -345,7 +383,8 @@ namespace mCubed.Core {
 			State = state;
 
 			// Post seek appropriately
-			if (postSeek) {
+			if (postSeek)
+			{
 				Seek(progress);
 			}
 		}
@@ -353,7 +392,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Save the state of the media file that is currently being played
 		/// </summary>
-		public void SaveState() {
+		public void SaveState()
+		{
 			_savedState = UnlockFile();
 		}
 
@@ -361,7 +401,8 @@ namespace mCubed.Core {
 		/// Unlocks the file that is currently playing so it can be reloaded
 		/// </summary>
 		/// <returns>The state of the file that is currently playing so it can be reloaded</returns>
-		public MediaObjectState UnlockFile() {
+		public MediaObjectState UnlockFile()
+		{
 			return UnlockFile(Path);
 		}
 
@@ -370,7 +411,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="path">The file path that will be unlocked</param>
 		/// <returns>The state of the file so it can be reloaded or null if the file is not locked</returns>
-		public MediaObjectState UnlockFile(string path) {
+		public MediaObjectState UnlockFile(string path)
+		{
 			// Check if the file is locked
 			if (path != Path)
 				return null;
@@ -394,10 +436,14 @@ namespace mCubed.Core {
 		/// Perform an action on the media player through the UI thread
 		/// </summary>
 		/// <param name="action">The action that needs to be performed</param>
-		private void PerformAction(Action<MediaPlayer> action) {
-			if (_player.Dispatcher.CheckAccess()) {
+		private void PerformAction(Action<MediaPlayer> action)
+		{
+			if (_player.Dispatcher.CheckAccess())
+			{
 				action(_player);
-			} else {
+			}
+			else
+			{
 				_player.Dispatcher.Invoke(action, _player);
 			}
 		}
@@ -406,7 +452,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -416,7 +463,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -429,7 +477,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the media object appropriately
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe others from its events
 			PropertyChanged = null;
 			PropertyChanging = null;

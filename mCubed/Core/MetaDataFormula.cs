@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
 
-namespace mCubed.Core {
-	public class MetaDataFormula : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+namespace mCubed.Core
+{
+	public class MetaDataFormula : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Static: Formula Population
 
 		/// <summary>
@@ -22,14 +23,16 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get a collection of all the formula properties that are for meta-data properties
 		/// </summary>
-		public static IEnumerable<MetaDataAttribute> MetaDataProperties {
+		public static IEnumerable<MetaDataAttribute> MetaDataProperties
+		{
 			get { return FormulaProperties.Where(f => f.Priority == 1); }
 		}
 
 		/// <summary>
 		/// Grab all the properties at runtime for the meta-data formulas
 		/// </summary>
-		static MetaDataFormula() {
+		static MetaDataFormula()
+		{
 			FormulaPrefixes = new Dictionary<string, string>()
 			{
 				{ "File.", "MetaData" },
@@ -40,12 +43,16 @@ namespace mCubed.Core {
 				new { Type = typeof(MediaObject), Path = "MediaObject", Priority = 2 },
 			};
 			var properties = new List<MetaDataAttribute>();
-			foreach (var type in types) {
-				foreach (var property in type.Type.GetProperties()) {
+			foreach (var type in types)
+			{
+				foreach (var property in type.Type.GetProperties())
+				{
 					var attributes = property.GetCustomAttributes(typeof(MetaDataAttribute), false);
-					if (property.CanRead && attributes.Length == 1) {
+					if (property.CanRead && attributes.Length == 1)
+					{
 						var attribute = attributes[0] as MetaDataAttribute;
-						if (attribute != null) {
+						if (attribute != null)
+						{
 							var attFormula = (string.IsNullOrEmpty(attribute.Formula) ? property.Name : attribute.Formula);
 							attribute.DisplayFormula = attFormula;
 							attribute.Formula = attFormula.ToUpper();
@@ -76,7 +83,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the fallback value if the media file is null [Bindable]
 		/// </summary>
-		public string FallbackValue {
+		public string FallbackValue
+		{
 			get { return _fallbackValue; }
 			set { this.SetAndNotify(ref _fallbackValue, value, null, OnFallbackValueChanged, "FallbackValue"); }
 		}
@@ -84,7 +92,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the forumla that will be used to generate a value [Bindable]
 		/// </summary>
-		public string Formula {
+		public string Formula
+		{
 			get { return _formula; }
 			set { this.SetAndNotify(ref _formula, value, null, OnFormulaChanged, "Formula"); }
 		}
@@ -92,7 +101,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the name that is used to describe this formula [Bindable]
 		/// </summary>
-		public string Name {
+		public string Name
+		{
 			get { return _name; }
 			set { this.SetAndNotify(ref _name, CoerceNameValue(value), "Name"); }
 		}
@@ -100,7 +110,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the type that this formula represents [Bindable]
 		/// </summary>
-		public MetaDataFormulaType Type {
+		public MetaDataFormulaType Type
+		{
 			get { return _type; }
 			set { this.SetAndNotify(ref _type, value, "Type", "TypeString"); }
 		}
@@ -108,7 +119,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the type that this formula represents as a readable string [Bindable]
 		/// </summary>
-		public string TypeString {
+		public string TypeString
+		{
 			get { return _type.ToReadableString(); }
 			set { Type = value.ToEnumType<MetaDataFormulaType>(); }
 		}
@@ -127,7 +139,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the fallback value changed
 		/// </summary>
-		private void OnFallbackValueChanged() {
+		private void OnFallbackValueChanged()
+		{
 			if (ValueChanged != null)
 				ValueChanged();
 		}
@@ -135,7 +148,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the formula has changed
 		/// </summary>
-		private void OnFormulaChanged() {
+		private void OnFormulaChanged()
+		{
 			// Notify that the values generated from this formula will change
 			if (ValueChanged != null)
 				ValueChanged();
@@ -154,7 +168,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="name">The name value that should be coerced</param>
 		/// <returns>An acceptable string value for the name</returns>
-		private string CoerceNameValue(string name) {
+		private string CoerceNameValue(string name)
+		{
 			if (name == null)
 				return string.Empty;
 			return Regex.Replace(name, "[^A-Za-z0-9 _]", "");
@@ -164,7 +179,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -174,7 +190,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -187,7 +204,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the meta-data formula properly
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe others from its events
 			FormulaChanged = null;
 			PropertyChanged = null;
@@ -198,7 +216,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class MDFFile : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+	public class MDFFile : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Static Members
 
 		/// <summary>
@@ -207,8 +226,10 @@ namespace mCubed.Core {
 		/// <param name="formula">The formula to retrieve the value for</param>
 		/// <param name="file">The file to retrieve information out of</param>
 		/// <returns>The value of a formula being applied to a given file</returns>
-		public static string GetValue(string formula, MediaFile file) {
-			using (MDFFile mdf = new MDFFile(formula)) {
+		public static string GetValue(string formula, MediaFile file)
+		{
+			using (MDFFile mdf = new MDFFile(formula))
+			{
 				mdf.MediaFile = file;
 				return mdf.Value;
 			}
@@ -220,8 +241,10 @@ namespace mCubed.Core {
 		/// <param name="formula">The formula to retrieve the value for</param>
 		/// <param name="file">The file to retrieve information out of</param>
 		/// <returns>The value of a formula being applied to a given file</returns>
-		public static string GetValue(MetaDataFormula formula, MediaFile file) {
-			using (MDFFile mdf = new MDFFile(formula)) {
+		public static string GetValue(MetaDataFormula formula, MediaFile file)
+		{
+			using (MDFFile mdf = new MDFFile(formula))
+			{
 				mdf.MediaFile = file;
 				return mdf.Value;
 			}
@@ -290,7 +313,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the media file that will be used for this formula file [Bindable]
 		/// </summary>
-		public MediaFile MediaFile {
+		public MediaFile MediaFile
+		{
 			get { return _mediaFile; }
 			set { this.SetAndNotify(ref _mediaFile, value, OnMediaFileChanging, OnMediaFileChanged, "MediaFile"); }
 		}
@@ -298,7 +322,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the generated value from this formula file [Bindable]
 		/// </summary>
-		public string Value {
+		public string Value
+		{
 			get { return _value; }
 			private set { this.SetAndNotify(ref _value, value, "Value"); }
 		}
@@ -310,14 +335,16 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the media object that will be used for this formula
 		/// </summary>
-		public MediaObject MediaObject {
+		public MediaObject MediaObject
+		{
 			get { return MediaFile == null ? null : MediaFile.Parent.MediaObject; }
 		}
 
 		/// <summary>
 		/// Get the meta-data information that will be used for this formula
 		/// </summary>
-		public MetaDataInfo MetaData {
+		public MetaDataInfo MetaData
+		{
 			get { return MediaFile == null ? null : MediaFile.MetaData; }
 		}
 
@@ -330,7 +357,8 @@ namespace mCubed.Core {
 
 		#region Constructor
 
-		public MDFFile(string formula) {
+		public MDFFile(string formula)
+		{
 			Parent = new MetaDataFormula()
 			{
 				FallbackValue = "",
@@ -341,7 +369,8 @@ namespace mCubed.Core {
 			_doDisposeParent = true;
 		}
 
-		public MDFFile(MetaDataFormula parent) {
+		public MDFFile(MetaDataFormula parent)
+		{
 			Value = parent.FallbackValue;
 			Parent = parent;
 			Parent.ValueChanged += new Action(ChangeValue);
@@ -354,7 +383,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the media file is changing
 		/// </summary>
-		private void OnMediaFileChanging() {
+		private void OnMediaFileChanging()
+		{
 			if (MetaData != null)
 				MetaData.PropertyChanged -= OnPropertyChanged;
 			if (MediaObject != null)
@@ -364,7 +394,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the media file changed
 		/// </summary>
-		private void OnMediaFileChanged() {
+		private void OnMediaFileChanged()
+		{
 			if (MetaData != null)
 				MetaData.PropertyChanged += OnPropertyChanged;
 			if (MediaObject != null)
@@ -377,8 +408,10 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e) {
-			if (MediaFile != null && Parent.Formula != null) {
+		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (MediaFile != null && Parent.Formula != null)
+			{
 				if (e.PropertyName == null || MetaDataFormula.FormulaProperties.Select(p => p.Property.Name).Contains(e.PropertyName))
 					ChangeValue();
 			}
@@ -393,12 +426,16 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="formula">The formula to retrieve a value for</param>
 		/// <returns>The value of the formula</returns>
-		private string GetValue(string formula) {
+		private string GetValue(string formula)
+		{
 			string retValue = null;
-			if (formula != null) {
+			if (formula != null)
+			{
 				var items = MetaDataFormula.FormulaProperties;
-				foreach (var p in MetaDataFormula.FormulaPrefixes) {
-					if (formula.StartsWith(p.Key, StringComparison.CurrentCultureIgnoreCase)) {
+				foreach (var p in MetaDataFormula.FormulaPrefixes)
+				{
+					if (formula.StartsWith(p.Key, StringComparison.CurrentCultureIgnoreCase))
+					{
 						items = items.Where(f => f.Path == p.Value);
 						formula = formula.Substring(p.Key.Length);
 						break;
@@ -406,7 +443,8 @@ namespace mCubed.Core {
 				}
 				var formulaParts = formula.Split(':');
 				var attribute = items.FirstOrDefault(f => f.Formula.Equals(formulaParts[0], StringComparison.CurrentCultureIgnoreCase));
-				if (attribute != null) {
+				if (attribute != null)
+				{
 					retValue = GetValue(attribute, formulaParts.Skip(1).ToArray());
 				}
 			}
@@ -419,20 +457,24 @@ namespace mCubed.Core {
 		/// <param name="property">The property to retrieve the initial value from</param>
 		/// <param name="methodCalls">The series of method calls to perfom on the initial value</param>
 		/// <returns>The value of the property after it has passed through all the method calls</returns>
-		private string GetValue(MetaDataAttribute property, string[] methodCalls) {
+		private string GetValue(MetaDataAttribute property, string[] methodCalls)
+		{
 			// Get the initial value
 			object obj = typeof(MDFFile).GetProperty(property.Path).GetValue(this, null);
 			object value = property.Property.GetValue(obj, null);
 			string retValue = (value == null ? "" : (value.ToString() ?? ""));
 
 			// Execute methods on the value
-			foreach (string methodCall in methodCalls) {
+			foreach (string methodCall in methodCalls)
+			{
 				string[] methodParts = methodCall.Split(',');
 				string methodName = methodParts[0];
 				string[] methodParams = methodParts.Skip(1).ToArray();
-				if (methods.ContainsKey(methodName)) {
+				if (methods.ContainsKey(methodName))
+				{
 					var method = methods[methodName];
-					if (method != null) {
+					if (method != null)
+					{
 						retValue = method(retValue, methodParams) ?? "";
 					}
 				}
@@ -444,21 +486,30 @@ namespace mCubed.Core {
 		/// Gets the new value that will be used for the formula
 		/// </summary>
 		/// <returns>The new value to be used for the formula</returns>
-		private string GetValue() {
-			if (MediaFile == null || Parent.Formula == null) {
+		private string GetValue()
+		{
+			if (MediaFile == null || Parent.Formula == null)
+			{
 				return Parent.FallbackValue;
-			} else {
+			}
+			else
+			{
 				string newValue = Parent.Formula;
-				foreach (var match in Regex.Matches(Parent.Formula, @"%([\w\.\?\:\-\,]*)%").OfType<Match>()) {
+				foreach (var match in Regex.Matches(Parent.Formula, @"%([\w\.\?\:\-\,]*)%").OfType<Match>())
+				{
 					var matchString = match.Value;
 					var replaceString = matchString;
 					var formulaProps = match.Groups[1].Value.Split('?');
-					foreach (var formulaProp in formulaProps) {
+					foreach (var formulaProp in formulaProps)
+					{
 						var tempString = GetValue(formulaProp);
-						if (!String.IsNullOrEmpty(tempString)) {
+						if (!String.IsNullOrEmpty(tempString))
+						{
 							replaceString = tempString;
 							break;
-						} else {
+						}
+						else
+						{
 							replaceString = "";
 						}
 					}
@@ -471,7 +522,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Regenerate the value using the formula and provided information
 		/// </summary>
-		private void ChangeValue() {
+		private void ChangeValue()
+		{
 			Value = GetValue();
 		}
 
@@ -479,7 +531,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -489,7 +542,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -502,7 +556,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Disposes the formula file properly
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe from delegates
 			OnMediaFileChanging();
 			Parent.ValueChanged -= new Action(ChangeValue);
@@ -512,7 +567,8 @@ namespace mCubed.Core {
 			PropertyChanging = null;
 
 			// Dispose all disposable references it created
-			if (_doDisposeParent && Parent != null) {
+			if (_doDisposeParent && Parent != null)
+			{
 				Parent.Dispose();
 			}
 		}

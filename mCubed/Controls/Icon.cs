@@ -3,9 +3,11 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace mCubed.Controls {
+namespace mCubed.Controls
+{
 	[MarkupExtensionReturnType(typeof(ImageSource))]
-	public class Icon : MarkupExtension {
+	public class Icon : MarkupExtension
+	{
 		#region IconType
 
 		public enum IconType { Accept, Add, Arrow_Down, Arrow_Up, Delete, Disk, Page_Copy, Pencil, Refresh }
@@ -25,8 +27,9 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="serviceProvider">The service provider</param>
 		/// <returns>The image source for the icon type</returns>
-		public override object ProvideValue(IServiceProvider serviceProvider) {
-			return new BitmapImage(new Uri("pack://application:,,,/Icons/" + Type.ToString().ToLower() + ".png"));
+		public override object ProvideValue(IServiceProvider serviceProvider)
+		{
+			return new BitmapImage(new Uri(string.Format("pack://application:,,,/Icons/{0}.png", Type.ToString().ToLower())));
 		}
 
 		#endregion

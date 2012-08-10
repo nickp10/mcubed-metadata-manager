@@ -4,19 +4,23 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
-namespace mCubed.Core {
-	public class Library : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+namespace mCubed.Core
+{
+	public class Library : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Static Members
 
 		/// <summary>
 		/// Generate the media for the given paths and places them in the "Now Playing" library
 		/// </summary>
 		/// <param name="paths">The paths to generate the media for</param>
-		public static void GenerateMediaFromCommandLine(IEnumerable<string> paths) {
+		public static void GenerateMediaFromCommandLine(IEnumerable<string> paths)
+		{
 			var destLibrary = Utilities.MainSettings.Libraries.FirstOrDefault(l => l.DisplayName == "Now Playing");
 			GenerateMediaFromPaths(paths, destLibrary, false);
 			var slctLibrary = Utilities.MainSettings.Libraries.FirstOrDefault(l => l.DisplayName == "Now Playing");
-			if (slctLibrary != null) {
+			if (slctLibrary != null)
+			{
 				Utilities.MainSettings.LibrarySelected = slctLibrary;
 			}
 		}
@@ -25,7 +29,8 @@ namespace mCubed.Core {
 		/// Generate the media for the given paths and places them in the selected library (using drag & drop business logic)
 		/// </summary>
 		/// <param name="paths">The paths to generate media for</param>
-		public static void GenerateMediaFromDragDrop(IEnumerable<string> paths) {
+		public static void GenerateMediaFromDragDrop(IEnumerable<string> paths)
+		{
 			GenerateMediaFromDragDrop(paths, Utilities.MainSettings.LibrarySelected);
 		}
 
@@ -34,7 +39,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="paths">The paths to generate media for</param>
 		/// <param name="destLibrary">The destination library for the media, or null to create a "Now Playing" library</param>
-		public static void GenerateMediaFromDragDrop(IEnumerable<string> paths, Library destLibrary) {
+		public static void GenerateMediaFromDragDrop(IEnumerable<string> paths, Library destLibrary)
+		{
 			GenerateMediaFromPaths(paths, destLibrary, destLibrary.CopyOnDragDrop);
 		}
 
@@ -44,20 +50,24 @@ namespace mCubed.Core {
 		/// <param name="paths">The paths to generate media for</param>
 		/// <param name="destLibrary">The destination library for the meida, or null to create a "Now Playing" library</param>
 		/// <param name="copyTo">True if the files should be copied to the library's first directory, or false otherwise</param>
-		private static void GenerateMediaFromPaths(IEnumerable<string> paths, Library destLibrary, bool copyTo) {
+		private static void GenerateMediaFromPaths(IEnumerable<string> paths, Library destLibrary, bool copyTo)
+		{
 			// Ensure we have paths first
-			if (paths == null) {
+			if (paths == null)
+			{
 				return;
 			}
 			string[] validExtensions = Utilities.ExtensionsMusic;
 			paths = paths.Where(s => !string.IsNullOrEmpty(s) && validExtensions.Contains(Path.GetExtension(s).ToLower()));
-			if (!paths.Any()) {
+			if (!paths.Any())
+			{
 				return;
 			}
 
 			// Fix the library so one exists
 			var addedLibrary = false;
-			if (destLibrary == null) {
+			if (destLibrary == null)
+			{
 				destLibrary = new Library
 				{
 					DisplayName = "Now Playing",
@@ -71,26 +81,34 @@ namespace mCubed.Core {
 			var addedMedia = false;
 			var addMedia = new List<MediaFile>();
 			var files = paths.Select(p => destLibrary.GenerateMedia(p, 0)).Where(p => p != null);
-			if (copyTo && destLibrary.Directories.Any()) {
+			if (copyTo && destLibrary.Directories.Any())
+			{
 				// Setup the copy
 				var destDirectory = destLibrary.Directories.First();
 
 				// Copy all the files, and add all the files that aren't added by the Copy utility
-				foreach (var file in files) {
+				foreach (var file in files)
+				{
 					var location = FileUtilities.Copy(file, destLibrary, destDirectory);
-					if (FileUtilities.FileEquals(file.MetaData.FilePath, location)) {
+					if (FileUtilities.FileEquals(file.MetaData.FilePath, location))
+					{
 						addMedia.Add(file);
-					} else {
+					}
+					else
+					{
 						destLibrary.PrepareRemove(file);
 						addedMedia = true;
 					}
 				}
-			} else {
+			}
+			else
+			{
 				addMedia.AddRange(files);
 			}
 
 			// Check to make sure media was added
-			if (addedMedia || addMedia.Any()) {
+			if (addedMedia || addMedia.Any())
+			{
 				// Add the media
 				destLibrary.AddMedia(destLibrary.GenerateMedia(addMedia));
 
@@ -98,13 +116,15 @@ namespace mCubed.Core {
 				destLibrary.IsLoaded = true;
 
 				// Change the state
-				if (destLibrary.MediaObject.State == MediaState.Stop) {
+				if (destLibrary.MediaObject.State == MediaState.Stop)
+				{
 					destLibrary.MediaObject.State = MediaState.Play;
 				}
 			}
 
 			// Otherwise, remove the library if we added it
-			else if (addedLibrary) {
+			else if (addedLibrary)
+			{
 				Utilities.MainSettings.RemoveLibrary(destLibrary);
 			}
 		}
@@ -143,7 +163,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set whether or not updates to media files within this library will auto-rename the associated file [Bindable]
 		/// </summary>
-		public bool AutoRenameOnUpdates {
+		public bool AutoRenameOnUpdates
+		{
 			get { return _autoRenameOnUpdates; }
 			set { this.SetAndNotify(ref _autoRenameOnUpdates, value, "AutoRenameOnUpdates"); }
 		}
@@ -152,11 +173,12 @@ namespace mCubed.Core {
 		/// Get the column settings for this library for how the media will be grouped, sorted, and displayed [Bindable]
 		/// </summary>
 		public ColumnSettings ColumnSettings { get { return _columnSettings; } }
-		
+
 		/// <summary>
 		/// Get/set whether or not the files should be copied to the first directory in this library when files are dragged and dropped into the library [Bindable]
 		/// </summary>
-		public bool CopyOnDragDrop {
+		public bool CopyOnDragDrop
+		{
 			get { return _copyOnDragDrop; }
 			set { this.SetAndNotify(ref _copyOnDragDrop, value, "CopyOnDragDrop"); }
 		}
@@ -164,7 +186,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the list of directories that make up this library [Bindable]
 		/// </summary>
-		public IEnumerable<string> Directories {
+		public IEnumerable<string> Directories
+		{
 			get { return _directories; }
 			private set { this.SetAndNotify(ref _directories, (value ?? Enumerable.Empty<string>()).ToArray(), "Directories"); }
 		}
@@ -172,7 +195,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the display name for this library [Bindable]
 		/// </summary>
-		public string DisplayName {
+		public string DisplayName
+		{
 			get { return _displayName; }
 			set { this.SetAndNotify(ref _displayName, value, "DisplayName"); }
 		}
@@ -180,7 +204,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the formula that will be used to generate the filename for the media files in the library [Bindable]
 		/// </summary>
-		public string FilenameFormula {
+		public string FilenameFormula
+		{
 			get { return _filenameForumla; }
 			set { this.SetAndNotify(ref _filenameForumla, value, "FilenameFormula"); }
 		}
@@ -188,7 +213,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set whether or not this library is currently loaded [Bindable]
 		/// </summary>
-		public bool IsLoaded {
+		public bool IsLoaded
+		{
 			get { return _isLoaded; }
 			set { this.SetAndNotify(ref _isLoaded, value, null, OnLibraryLoadedChanged, "IsLoaded"); }
 		}
@@ -196,7 +222,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set whether or not the current media of this library is shuffled [Bindable]
 		/// </summary>
-		public bool IsShuffled {
+		public bool IsShuffled
+		{
 			get { return _isShuffled; }
 			set { this.SetAndNotify(ref _isShuffled, value, null, OnShuffleChanged, "IsShuffled"); }
 		}
@@ -204,7 +231,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set whether or not the library should be loaded on startup of the application [Bindable]
 		/// </summary>
-		public bool LoadOnStartup {
+		public bool LoadOnStartup
+		{
 			get { return _loadOnStartup; }
 			set { this.SetAndNotify(ref _loadOnStartup, value, "LoadOnStartup"); }
 		}
@@ -217,7 +245,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the current loaded media file [Bindable]
 		/// </summary>
-		public MediaFile MediaFileCurrent {
+		public MediaFile MediaFileCurrent
+		{
 			get { return _mediaFileCurrent; }
 			set { this.SetAndNotify(ref _mediaFileCurrent, value, OnMediaFileCurrentChanging, OnMediaFileCurrentChanged, "MediaFileCurrent"); }
 		}
@@ -230,7 +259,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the current list of media orders available for this library [Bindable]
 		/// </summary>
-		public IEnumerable<MediaOrder> MediaOrders {
+		public IEnumerable<MediaOrder> MediaOrders
+		{
 			get { return _mediaOrders; }
 			private set { this.SetAndNotify(ref _mediaOrders, (value ?? Enumerable.Empty<MediaOrder>()).ToArray(), "MediaOrders"); }
 		}
@@ -238,9 +268,11 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the media order that is currently being used for this library [Bindable]
 		/// </summary>
-		public MediaOrder MediaOrderCurrent {
+		public MediaOrder MediaOrderCurrent
+		{
 			get { return _mediaOrderCurrent; }
-			set {
+			set
+			{
 				if (value != null && MediaOrders.Contains(value))
 					this.SetAndNotify(ref _mediaOrderCurrent, value, OnMediaOrderCurrentChanging, OnMediaOrderCurrentChanged, "MediaOrderCurrent");
 			}
@@ -249,7 +281,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the index for the next media file that is added to the library [Bindable]
 		/// </summary>
-		public int NextMediaIndex {
+		public int NextMediaIndex
+		{
 			get { return _nextMediaIndex; }
 			private set { this.SetAndNotify(ref _nextMediaIndex, value, "NextMediaIndex"); }
 		}
@@ -257,7 +290,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the repeat status for this library [Bindable]
 		/// </summary>
-		public MediaRepeat RepeatStatus {
+		public MediaRepeat RepeatStatus
+		{
 			get { return _repeatStatus; }
 			set { this.SetAndNotify(ref _repeatStatus, value, null, OnRepeatStatusChanged, "RepeatStatus", "RepeatStatusString"); }
 		}
@@ -265,7 +299,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the repeat status for this library as a readable string [Bindable]
 		/// </summary>
-		public string RepeatStatusString {
+		public string RepeatStatusString
+		{
 			get { return RepeatStatus.ToReadableString(); }
 			set { RepeatStatus = value.ToEnumType<MediaRepeat>(); }
 		}
@@ -273,14 +308,16 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get a collection of all the available repeat status types [Bindable]
 		/// </summary>
-		public IEnumerable<string> RepeatTypes {
+		public IEnumerable<string> RepeatTypes
+		{
 			get { return Library._repeatTypes; }
 		}
 
 		/// <summary>
 		/// Get/set whether or not the library will be persisted when the application opens up again [Bindable]
 		/// </summary>
-		public bool SaveLibrary {
+		public bool SaveLibrary
+		{
 			get { return _saveLibrary; }
 			set { this.SetAndNotify(ref _saveLibrary, value, "SaveLibrary"); }
 		}
@@ -288,7 +325,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get whether or not selecting next media exists [Bindable]
 		/// </summary>
-		public bool SelectNextExists {
+		public bool SelectNextExists
+		{
 			get { return _selectNextExists; }
 			private set { this.SetAndNotify(ref _selectNextExists, value, "SelectNextExists"); }
 		}
@@ -296,7 +334,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get whether or not selecting previous media exists [Bindable]
 		/// </summary>
-		public bool SelectPrevExists {
+		public bool SelectPrevExists
+		{
 			get { return _selectPrevExists; }
 			private set { this.SetAndNotify(ref _selectPrevExists, value, "SelectPrevExists"); }
 		}
@@ -311,7 +350,8 @@ namespace mCubed.Core {
 
 		#region Constructor
 
-		public Library() {
+		public Library()
+		{
 			// Initializations
 			MediaOrders = new[] { new MediaOrder { Parent = this, Type = MediaOrderType.Sequential }, new MediaOrder { Parent = this, Type = MediaOrderType.Shuffle } };
 			MediaOrderCurrent = MediaOrders.First();
@@ -335,7 +375,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the library has been loaded or unloaded
 		/// </summary>
-		private void OnLibraryLoadedChanged() {
+		private void OnLibraryLoadedChanged()
+		{
 			// Update the current media file
 			if (MediaFileCurrent != null)
 				MediaFileCurrent.IsLoaded = IsLoaded;
@@ -345,10 +386,13 @@ namespace mCubed.Core {
 				MediaOrderCurrent.IsLoaded = IsLoaded;
 
 			// Update the media object
-			if (IsLoaded) {
+			if (IsLoaded)
+			{
 				Utilities.MainSettings.LibraryCurrent = this;
 				MediaObject.RestoreState();
-			} else {
+			}
+			else
+			{
 				MediaObject.SaveState();
 			}
 		}
@@ -358,19 +402,23 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaFilePropertyChanged(object sender, PropertyChangedEventArgs e) {
+		private void OnMediaFilePropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
 			// Retrieve the info that changed
 			MetaDataInfo info = sender as MetaDataInfo;
-			if (info != null && info.Parent != null) {
+			if (info != null && info.Parent != null)
+			{
 				// Ensure the property that changed is a valid-meta-data property
-				if (MetaDataFormula.MetaDataProperties.Any(p => p.Path == "MetaData" && p.Property.Name == e.PropertyName)) {
+				if (MetaDataFormula.MetaDataProperties.Any(p => p.Path == "MetaData" && p.Property.Name == e.PropertyName))
+				{
 					// Reset the file in the collection
 					MediaFiles.Reset(info.Parent);
 				}
 
 				// Send a notification to anyone listening
 				var tempHandler = MediaFilePropertyChanged;
-				if (tempHandler != null) {
+				if (tempHandler != null)
+				{
 					tempHandler(info.Parent, e.PropertyName);
 				}
 			}
@@ -379,7 +427,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the media files list changed
 		/// </summary>
-		private void OnMediaFilesChanged() {
+		private void OnMediaFilesChanged()
+		{
 			// Update the source, so the source is not null
 			if (MediaFileCurrent == null && MediaFiles.Count > 0)
 				MediaFileCurrent = FindMedia(MediaOrderCurrent.MediaIndexForOrderKey(0));
@@ -394,7 +443,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the current media file is changing
 		/// </summary>
-		private void OnMediaFileCurrentChanging() {
+		private void OnMediaFileCurrentChanging()
+		{
 			if (MediaFileCurrent != null)
 				MediaFileCurrent.IsLoaded = false;
 		}
@@ -402,12 +452,16 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the current media file has changed
 		/// </summary>
-		private void OnMediaFileCurrentChanged() {
+		private void OnMediaFileCurrentChanged()
+		{
 			// Update the properties
-			if (MediaFileCurrent != null) {
+			if (MediaFileCurrent != null)
+			{
 				MediaFileCurrent.IsLoaded = IsLoaded;
 				MediaObject.Path = MediaFileCurrent.MetaData.FilePath;
-			} else {
+			}
+			else
+			{
 				MediaObject.Path = null;
 			}
 
@@ -422,7 +476,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the current media order is changing
 		/// </summary>
-		private void OnMediaOrderCurrentChanging() {
+		private void OnMediaOrderCurrentChanging()
+		{
 			if (MediaOrderCurrent != null)
 				MediaOrderCurrent.IsLoaded = false;
 		}
@@ -430,13 +485,15 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the current media order has channged
 		/// </summary>
-		private void OnMediaOrderCurrentChanged() {
+		private void OnMediaOrderCurrentChanged()
+		{
 			// Load the order
 			MediaOrderCurrent.IsLoaded = IsLoaded;
 			MediaFiles.BeginTransaction();
 
 			// Move things around
-			foreach (MediaFile file in MediaFiles) {
+			foreach (MediaFile file in MediaFiles)
+			{
 				file.OrderKey = MediaOrderCurrent.OrderKeyForMediaIndex(file.Index) + 1;
 			}
 
@@ -451,13 +508,17 @@ namespace mCubed.Core {
 		/// Event that handles when a playback error has occurred
 		/// </summary>
 		/// <param name="error">The playback error</param>
-		private void OnPlaybackError(string error) {
+		private void OnPlaybackError(string error)
+		{
 			var batchLog = new BatchLog(LogLevel.Error, LogType.Playback, "The following file(s) have failed to play and have been automatically skipped:\n", 5, TimeSpan.FromSeconds(2));
 			Logger.BeginBatch(batchLog);
 			Logger.Log(LogLevel.Error, LogType.Playback, MediaFileCurrent.MetaData.FileName);
-			if (!Logger.IsBatchLimitReached(batchLog)) {
+			if (!Logger.IsBatchLimitReached(batchLog))
+			{
 				Select(MediaSelect.Next, RepeatStatus == MediaRepeat.RepeatMedia ? MediaRepeat.NoRepeat : RepeatStatus, true, true);
-			} else {
+			}
+			else
+			{
 				MediaObject.State = MediaState.Stop;
 				Logger.EndBatch(batchLog);
 			}
@@ -466,14 +527,16 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the repeat status of the library changed
 		/// </summary>
-		private void OnRepeatStatusChanged() {
+		private void OnRepeatStatusChanged()
+		{
 			UpdateSelects();
 		}
 
 		/// <summary>
 		/// Event that handles when the shuffle status of the libray changed
 		/// </summary>
-		private void OnShuffleChanged() {
+		private void OnShuffleChanged()
+		{
 			MediaOrderType type = IsShuffled ? MediaOrderType.Shuffle : MediaOrderType.Sequential;
 			MediaOrderCurrent = MediaOrders.FirstOrDefault(m => m.Type == type);
 		}
@@ -485,7 +548,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Update the select previous and next properties accordingly
 		/// </summary>
-		public void UpdateSelects() {
+		public void UpdateSelects()
+		{
 			SelectPrevExists = Select(MediaSelect.Previous, false, false);
 			SelectNextExists = Select(MediaSelect.Next, false, false);
 		}
@@ -499,7 +563,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="select">The select direction to check</param>
 		/// <returns>True if media existed in the select direction, or false otherwise</returns>
-		public bool Select(MediaSelect select) {
+		public bool Select(MediaSelect select)
+		{
 			return Select(select, RepeatStatus, true, false);
 		}
 
@@ -510,7 +575,8 @@ namespace mCubed.Core {
 		/// <param name="load">True if the found media should be loaded, or false otherwise</param>
 		/// <param name="stop">True if the current media should be stopped if no media is found, or false otherwise</param>
 		/// <returns>True if media existed in the select direction, or false otherwise</returns>
-		public bool Select(MediaSelect select, bool load, bool stop) {
+		public bool Select(MediaSelect select, bool load, bool stop)
+		{
 			return Select(select, RepeatStatus, load, stop);
 		}
 
@@ -522,7 +588,8 @@ namespace mCubed.Core {
 		/// <param name="load">True if the found media should be loaded, or false otherwise</param>
 		/// <param name="stop">True if the current media should be stopped if no media is found, or false otherwise</param>
 		/// <returns>True if media existed in the select direction, or false otherwise</returns>
-		public bool Select(MediaSelect select, MediaRepeat repeat, bool load, bool stop) {
+		public bool Select(MediaSelect select, MediaRepeat repeat, bool load, bool stop)
+		{
 			// If no current file or media order, then selection is impossible
 			if (MediaOrderCurrent == null || MediaFileCurrent == null)
 				return false;
@@ -530,7 +597,8 @@ namespace mCubed.Core {
 			// Calculate the new order key
 			int moveCount = repeat == MediaRepeat.RepeatMedia ? 0 : (select == MediaSelect.Next ? 1 : -1);
 			int newOrderKey = MediaOrderCurrent.OrderKeyForMediaIndex(MediaFileCurrent.Index) + moveCount;
-			if (repeat == MediaRepeat.RepeatLibrary && !MediaOrderCurrent.OrderKeyExists(newOrderKey) && MediaOrderCurrent.Count > 0) {
+			if (repeat == MediaRepeat.RepeatLibrary && !MediaOrderCurrent.OrderKeyExists(newOrderKey) && MediaOrderCurrent.Count > 0)
+			{
 				while (newOrderKey >= MediaOrderCurrent.Count)
 					newOrderKey -= MediaOrderCurrent.Count;
 				while (newOrderKey < 0)
@@ -539,13 +607,16 @@ namespace mCubed.Core {
 
 			// Retrieve the media and load, if necessary
 			bool selectExists = MediaOrderCurrent.OrderKeyExists(newOrderKey);
-			if (selectExists && load) {
+			if (selectExists && load)
+			{
 				var file = FindMedia(MediaOrderCurrent.MediaIndexForOrderKey(newOrderKey));
 				if (MediaFileCurrent != file)
 					MediaFileCurrent = file;
 				else
 					MediaObject.Seek(0);
-			} else if (!selectExists && stop) {
+			}
+			else if (!selectExists && stop)
+			{
 				MediaObject.State = MediaState.Stop;
 			}
 			return selectExists;
@@ -559,7 +630,8 @@ namespace mCubed.Core {
 		/// Adds the given directory to the list of directories for the library
 		/// </summary>
 		/// <param name="directory">The directory to add to the library</param>
-		public void AddDirectory(string directory) {
+		public void AddDirectory(string directory)
+		{
 			AddDirectory(new[] { directory });
 		}
 
@@ -567,9 +639,11 @@ namespace mCubed.Core {
 		/// Adds the given collection of directories to the list of directories for the library
 		/// </summary>
 		/// <param name="directories">The collection of directories to add</param>
-		public void AddDirectory(IEnumerable<string> directories) {
+		public void AddDirectory(IEnumerable<string> directories)
+		{
 			// Ensure directories are being added
-			if (directories != null) {
+			if (directories != null)
+			{
 				// Start a process
 				var tempDirs = directories.Distinct().Where(d => !Directories.Contains(d)).ToArray();
 				Utilities.MainProcessManager.AddProcess(process =>
@@ -579,15 +653,18 @@ namespace mCubed.Core {
 					MediaFiles.BeginTransaction();
 
 					// Iterate over the directories
-					foreach (var directory in tempDirs) {
+					foreach (var directory in tempDirs)
+					{
 						// Generate the media
 						var items = GenerateDirectoryMedia(directory);
-						if (items != null) {
+						if (items != null)
+						{
 							// Add the directory
 							addDirs.Add(directory);
 
 							// Add the media
-							foreach (var item in items) {
+							foreach (var item in items)
+							{
 								MediaFiles.Add(item);
 							}
 						}
@@ -605,7 +682,8 @@ namespace mCubed.Core {
 		/// Adds the given collection of directories to the directory list without generating media for it
 		/// </summary>
 		/// <param name="directories">The directories that should be added without generating media</param>
-		public void AddDirectories(IEnumerable<string> directories) {
+		public void AddDirectories(IEnumerable<string> directories)
+		{
 			Directories = Directories.Union(directories);
 		}
 
@@ -613,7 +691,8 @@ namespace mCubed.Core {
 		/// Removes the given directory from the list of directories for the library
 		/// </summary>
 		/// <param name="directory">The directory to remove from the library</param>
-		public void RemoveDirectory(string directory) {
+		public void RemoveDirectory(string directory)
+		{
 			RemoveDirectory(new[] { directory });
 		}
 
@@ -621,9 +700,11 @@ namespace mCubed.Core {
 		/// Removes the given collection of directories from the list of directories for the library
 		/// </summary>
 		/// <param name="directories">The collection of directories to remove</param>
-		public void RemoveDirectory(IEnumerable<string> directories) {
+		public void RemoveDirectory(IEnumerable<string> directories)
+		{
 			// Ensure directories are being removed
-			if (directories != null) {
+			if (directories != null)
+			{
 				// Start a process
 				var tempDirs = directories.Where(d => Directories.Contains(d)).ToArray();
 				Utilities.MainProcessManager.AddProcess(process =>
@@ -633,15 +714,18 @@ namespace mCubed.Core {
 					MediaFiles.BeginTransaction();
 
 					// Iterate over the directories
-					foreach (var directory in tempDirs) {
+					foreach (var directory in tempDirs)
+					{
 						// Remove the media
 						var items = PrepareRemoveDirectory(MediaFiles, directory);
-						if (items != null) {
+						if (items != null)
+						{
 							// Remove the directory
 							removeDirs.Add(directory);
 
 							// Remove the media
-							foreach (var item in items) {
+							foreach (var item in items)
+							{
 								MediaFiles.Remove(item);
 							}
 						}
@@ -659,10 +743,12 @@ namespace mCubed.Core {
 		/// Adds a directory to the library and its associated media files
 		/// </summary>
 		/// <param name="directory">The directory to add</param>
-		private IEnumerable<MediaFile> GenerateDirectoryMedia(string directory) {
+		private IEnumerable<MediaFile> GenerateDirectoryMedia(string directory)
+		{
 			// Check if the directory exists first
 			IEnumerable<MediaFile> items = null;
-			if (!String.IsNullOrEmpty(directory) && Directory.Exists(directory)) {
+			if (!String.IsNullOrEmpty(directory) && Directory.Exists(directory))
+			{
 				// Add all the directories recursively
 				items = Directory.GetDirectories(directory).
 					Select(GenerateDirectoryMedia).
@@ -687,10 +773,12 @@ namespace mCubed.Core {
 		/// <param name="list">The items in which to search which items to be removing</param>
 		/// <param name="directory">The directory to remove</param>
 		/// <returns>The list of items that need to be removed from the collection</returns>
-		private IEnumerable<MediaFile> PrepareRemoveDirectory(IEnumerable<MediaFile> list, string directory) {
+		private IEnumerable<MediaFile> PrepareRemoveDirectory(IEnumerable<MediaFile> list, string directory)
+		{
 			// Check the directory first
 			var items = Enumerable.Empty<MediaFile>();
-			if (!String.IsNullOrEmpty(directory)) {
+			if (!String.IsNullOrEmpty(directory))
+			{
 				// Prepare the media
 				items = list.Where(mf => mf.MetaData.FilePath.StartsWith(directory));
 				PrepareRemove(items);
@@ -707,7 +795,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="mediaIndex">The media index for the media to find</param>
 		/// <returns>The media object based on the index location</returns>
-		public MediaFile FindMedia(int mediaIndex) {
+		public MediaFile FindMedia(int mediaIndex)
+		{
 			return MediaFiles.FirstOrDefault(mediaFile => mediaFile.Index == mediaIndex);
 		}
 
@@ -715,7 +804,8 @@ namespace mCubed.Core {
 		/// Generate a list of new media files from an open file dialog box
 		/// </summary>
 		/// <returns>A list of media files that were selected</returns>
-		public IEnumerable<MediaFile> GenerateMedia() {
+		public IEnumerable<MediaFile> GenerateMedia()
+		{
 			// Open file dialog box to browse for file
 			var dlg = new Microsoft.Win32.OpenFileDialog
 			{
@@ -735,7 +825,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="files">The files from an outside library to use</param>
 		/// <returns>A list of media files for use in the library</returns>
-		public IEnumerable<MediaFile> GenerateMedia(IEnumerable<MediaFile> files) {
+		public IEnumerable<MediaFile> GenerateMedia(IEnumerable<MediaFile> files)
+		{
 			return GenerateMedia(files.Select(file => file.MetaData.FilePath));
 		}
 
@@ -744,7 +835,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="files">The paths to generate media for the library to use</param>
 		/// <returns>A list of media files for use in the library</returns>
-		public IEnumerable<MediaFile> GenerateMedia(IEnumerable<string> paths) {
+		public IEnumerable<MediaFile> GenerateMedia(IEnumerable<string> paths)
+		{
 			return paths.Select(p => GenerateMedia(p)).Where(p => p != null).ToArray();
 		}
 
@@ -753,12 +845,15 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="path">The path to the file to generate from</param>
 		/// <returns>The media file that is generated for the library</returns>
-		public MediaFile GenerateMedia(string path) {
+		public MediaFile GenerateMedia(string path)
+		{
 			// Check if the file exists first
 			MediaFile file = null;
-			if (File.Exists(path = Path.GetFullPath(path))) {
+			if (File.Exists(path = Path.GetFullPath(path)))
+			{
 				// Add the media to the media orders
-				foreach (MediaOrder mediaOrder in MediaOrders) {
+				foreach (MediaOrder mediaOrder in MediaOrders)
+				{
 					mediaOrder.AddMediaIndex(NextMediaIndex);
 				}
 
@@ -766,11 +861,15 @@ namespace mCubed.Core {
 				file = GenerateMedia(path, NextMediaIndex);
 
 				// Ensure one was created
-				if (file == null) {
-					foreach (MediaOrder mediaOrder in MediaOrders) {
+				if (file == null)
+				{
+					foreach (MediaOrder mediaOrder in MediaOrders)
+					{
 						mediaOrder.RemoveMediaIndex(NextMediaIndex);
 					}
-				} else {
+				}
+				else
+				{
 					file.MetaData.PropertyChanged += new PropertyChangedEventHandler(OnMediaFilePropertyChanged);
 					NextMediaIndex++;
 				}
@@ -784,10 +883,14 @@ namespace mCubed.Core {
 		/// <param name="path">The path to the file to generate from</param>
 		/// <param name="nextMediaIndex">The media index for the given file</param>
 		/// <returns>The media file that is generated for the library</returns>
-		private MediaFile GenerateMedia(string path, int mediaIndex) {
-			try {
+		private MediaFile GenerateMedia(string path, int mediaIndex)
+		{
+			try
+			{
 				return new MediaFile(path, mediaIndex, this);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Logger.Log(LogLevel.Error, LogType.Library, e, "This media file is corrupt. It cannot be played, nor " +
 					"can the meta-data information be modified; therefore, this file will not " +
 					"be added. The file that caused this error:\n\n\t" + path);
@@ -799,9 +902,11 @@ namespace mCubed.Core {
 		/// Add media to the current library
 		/// </summary>
 		/// <param name="media">The media that should be added to the library</param>
-		public void AddMedia(IEnumerable<MediaFile> media) {
+		public void AddMedia(IEnumerable<MediaFile> media)
+		{
 			MediaFiles.BeginTransaction();
-			foreach (MediaFile file in media) {
+			foreach (MediaFile file in media)
+			{
 				MediaFiles.Add(file);
 			}
 			MediaFiles.EndTransaction();
@@ -811,7 +916,8 @@ namespace mCubed.Core {
 		/// Remove media from the current library
 		/// </summary>
 		/// <param name="media">The media that should be removed from the library</param>
-		public void RemoveMedia(IEnumerable<MediaFile> media) {
+		public void RemoveMedia(IEnumerable<MediaFile> media)
+		{
 			MediaFiles.BeginTransaction();
 			PrepareRemove(media);
 			foreach (MediaFile file in media)
@@ -823,16 +929,19 @@ namespace mCubed.Core {
 		/// Prepare media to be removed from the library
 		/// </summary>
 		/// <param name="media">The media file to remove</param>
-		private void PrepareRemove(MediaFile media) {
+		private void PrepareRemove(MediaFile media)
+		{
 			// Check if this media is playing
-			if (media == MediaFileCurrent) {
+			if (media == MediaFileCurrent)
+			{
 				// Switch to the next or previous media
 				if (!Select(MediaSelect.Next, MediaRepeat.NoRepeat, true, false) && !Select(MediaSelect.Previous, MediaRepeat.NoRepeat, true, false))
 					MediaFileCurrent = null;
 			}
 
 			// Remove the media from the orders
-			foreach (MediaOrder order in MediaOrders) {
+			foreach (MediaOrder order in MediaOrders)
+			{
 				order.RemoveMediaIndex(media.Index);
 			}
 
@@ -844,10 +953,12 @@ namespace mCubed.Core {
 		/// Prepare media to be removed from the library
 		/// </summary>
 		/// <param name="files">A list of media files to remove</param>
-		private void PrepareRemove(IEnumerable<MediaFile> files) {
+		private void PrepareRemove(IEnumerable<MediaFile> files)
+		{
 			// Reorder the media and prepare to remove them all
 			files = files.OrderBy(file => file == MediaFileCurrent);
-			foreach (MediaFile file in files) {
+			foreach (MediaFile file in files)
+			{
 				PrepareRemove(file);
 			}
 		}
@@ -855,9 +966,11 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Clear the media contents
 		/// </summary>
-		public void ClearMedia() {
+		public void ClearMedia()
+		{
 			// Clear all the media orders
-			foreach (MediaOrder mediaOrder in MediaOrders) {
+			foreach (MediaOrder mediaOrder in MediaOrders)
+			{
 				mediaOrder.Clear();
 			}
 
@@ -877,7 +990,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Reloads the library, by re-adding all the directories in the library
 		/// </summary>
-		public void Reload() {
+		public void Reload()
+		{
 			// Setup
 			var tempDirs = Directories.ToArray();
 
@@ -892,18 +1006,22 @@ namespace mCubed.Core {
 				ClearMedia();
 
 				// Add all the media again
-				foreach (var directory in Directories) {
+				foreach (var directory in Directories)
+				{
 					var items = GenerateDirectoryMedia(directory);
-					if (items != null) {
+					if (items != null)
+					{
 						AddMedia(items);
 					}
 					process.CompletedCount++;
 				}
 
 				// Reload the state
-				if (state != null) {
+				if (state != null)
+				{
 					file = MediaFiles.FirstOrDefault(f => f.MetaData.FilePath == state.Path);
-					if (file != null) {
+					if (file != null)
+					{
 						MediaFileCurrent = file;
 						file.RestoreState(state);
 					}
@@ -914,7 +1032,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Reshuffle all the media orders marked with the type of shuffle
 		/// </summary>
-		public void Reshuffle() {
+		public void Reshuffle()
+		{
 			foreach (var order in MediaOrders)
 				Reshuffle(order);
 		}
@@ -923,8 +1042,10 @@ namespace mCubed.Core {
 		/// Reshuffle the given media order only if its type is shuffle
 		/// </summary>
 		/// <param name="order">The media order to reshuffle</param>
-		public void Reshuffle(MediaOrder order) {
-			if (order.Type == MediaOrderType.Shuffle) {
+		public void Reshuffle(MediaOrder order)
+		{
+			if (order.Type == MediaOrderType.Shuffle)
+			{
 				order.Shuffle();
 				if (order == MediaOrderCurrent)
 					OnMediaOrderCurrentChanged();
@@ -935,7 +1056,8 @@ namespace mCubed.Core {
 		/// Toggle through the media orders for this library
 		/// </summary>
 		/// <param name="forward">True if the next media order should be loaded, or false for the previous one</param>
-		public void ToggleMediaOrders(bool forward) {
+		public void ToggleMediaOrders(bool forward)
+		{
 			MediaOrderCurrent = forward ? MediaOrders.ElementAfter(MediaOrderCurrent, true) : MediaOrders.ElementBefore(MediaOrderCurrent, true);
 		}
 
@@ -943,7 +1065,8 @@ namespace mCubed.Core {
 		/// Toggle through the repeat status options for this library
 		/// </summary>
 		/// <param name="forward">True if the the next repeat status should be used, or false if the previous status should be used</param>
-		public void ToggleRepeat(bool forward) {
+		public void ToggleRepeat(bool forward)
+		{
 			var types = Enum.GetValues(typeof(MediaRepeat)).Cast<MediaRepeat>();
 			RepeatStatus = forward ? types.ElementAfter(RepeatStatus, true) : types.ElementBefore(RepeatStatus, true);
 		}
@@ -952,7 +1075,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -962,7 +1086,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -975,7 +1100,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the library properly
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe others from its events
 			MediaFilePropertyChanged = null;
 			PropertyChanged = null;
@@ -985,7 +1111,7 @@ namespace mCubed.Core {
 			foreach (MediaOrder order in MediaOrders)
 				order.Dispose();
 			foreach (MediaFile file in MediaFiles)
-				file.Dispose();			
+				file.Dispose();
 			MediaFiles.Dispose();
 			ColumnSettings.Dispose();
 			MediaObject.Dispose();

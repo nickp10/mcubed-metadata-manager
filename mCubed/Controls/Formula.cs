@@ -6,12 +6,15 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using mCubed.Core;
 
-namespace mCubed.Controls {
+namespace mCubed.Controls
+{
 	[MarkupExtensionReturnType(typeof(object))]
-	public class Formula : MarkupExtension {
+	public class Formula : MarkupExtension
+	{
 		#region FactoryHolder Class
 
-		private class FactoryHolder {
+		private class FactoryHolder
+		{
 			public MDFFile File { get; set; }
 			public DependencyProperty Property { get; set; }
 		}
@@ -29,14 +32,20 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private static void OnFormulaFileChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
-			if (sender != null) {
-				if (_dictionary.ContainsKey(sender)) {
+		private static void OnFormulaFileChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (sender != null)
+			{
+				if (_dictionary.ContainsKey(sender))
+				{
 					_dictionary[sender].MediaFile = GetFormulaFile(sender);
-				} else {
+				}
+				else
+				{
 					var element = sender as FrameworkElement;
 					var tag = element == null ? null : element.Tag as FactoryHolder;
-					if (tag != null) {
+					if (tag != null)
+					{
 						var binding = BindFormula(element, tag.File.Parent, null);
 						element.SetBinding(tag.Property, binding);
 						tag.File.Dispose();
@@ -50,7 +59,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="element">The element to get the formula file for</param>
 		/// <returns>The formula for the given element</returns>
-		public static MediaFile GetFormulaFile(DependencyObject element) {
+		public static MediaFile GetFormulaFile(DependencyObject element)
+		{
 			return (MediaFile)element.GetValue(FormulaFileProperty);
 		}
 
@@ -59,7 +69,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="element">The element to set the formula file on</param>
 		/// <param name="formulaFile">The formula file to set it to</param>
-		public static void SetFormulaFile(DependencyObject element, MediaFile formulaFile) {
+		public static void SetFormulaFile(DependencyObject element, MediaFile formulaFile)
+		{
 			element.SetValue(FormulaFileProperty, formulaFile);
 		}
 
@@ -68,8 +79,10 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="element">The element to subscribe to</param>
 		/// <param name="file">The file that is subscribing</param>
-		public static void Subscribe(FrameworkElement element, MDFFile file) {
-			if (element != null && file != null) {
+		public static void Subscribe(FrameworkElement element, MDFFile file)
+		{
+			if (element != null && file != null)
+			{
 				_dictionary.Add(element, file);
 				element.Unloaded += OnElementUnloaded;
 				file.MediaFile = GetFormulaFile(element);
@@ -82,7 +95,8 @@ namespace mCubed.Controls {
 		/// <param name="element">The element factory to subscribe to</param>
 		/// <param name="file">The file that is subscribing</param>
 		/// <param name="property">The dependency property that binding will be set on for each element in the factory</param>
-		public static void Subscribe(FrameworkElementFactory element, MDFFile file, DependencyProperty property) {
+		public static void Subscribe(FrameworkElementFactory element, MDFFile file, DependencyProperty property)
+		{
 			element.SetValue(FrameworkElement.TagProperty, new FactoryHolder { File = file, Property = property });
 		}
 
@@ -91,9 +105,11 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private static void OnElementUnloaded(object sender, RoutedEventArgs e) {
+		private static void OnElementUnloaded(object sender, RoutedEventArgs e)
+		{
 			var element = sender as DependencyObject;
-			if (element != null && _dictionary.ContainsKey(element)) {
+			if (element != null && _dictionary.ContainsKey(element))
+			{
 				_dictionary[element].Dispose();
 				_dictionary.Remove(element);
 			}
@@ -117,12 +133,17 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get the meta-data formula that will be used to perform the binding upon
 		/// </summary>
-		public MetaDataFormula MetaDataFormula {
-			get {
+		public MetaDataFormula MetaDataFormula
+		{
+			get
+			{
 				MetaDataFormula formula = null;
-				if (Type == MetaDataFormulaType.Custom) {
+				if (Type == MetaDataFormulaType.Custom)
+				{
 					formula = Utilities.MainSettings.Formulas.FirstOrDefault(f => f.Name == Name);
-				} else {
+				}
+				else
+				{
 					formula = Utilities.MainSettings.Formulas.FirstOrDefault(f => f.Type == Type);
 				}
 				return formula;
@@ -137,7 +158,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set the type of the meta-data formula that this formula markup will retrieve
 		/// </summary>
-		public MetaDataFormulaType Type {
+		public MetaDataFormulaType Type
+		{
 			get { return _type; }
 			set { _type = value; }
 		}
@@ -151,7 +173,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="serviceProvider">The service provider</param>
 		/// <returns>The formula binding for the formula type</returns>
-		public override object ProvideValue(IServiceProvider serviceProvider) {
+		public override object ProvideValue(IServiceProvider serviceProvider)
+		{
 			var service = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
 			var target = service.TargetObject as FrameworkElement;
 			var binding = ProvideBinding(target);
@@ -163,7 +186,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="targetElement">The element that this binding will be attached to</param>
 		/// <returns>The binding that will bind to the formula value</returns>
-		public BindingBase ProvideBinding(FrameworkElement targetElement) {
+		public BindingBase ProvideBinding(FrameworkElement targetElement)
+		{
 			var formula = MetaDataFormula;
 			var file = File;
 			if (targetElement != null && formula != null && file != null)
@@ -182,7 +206,8 @@ namespace mCubed.Controls {
 		/// <param name="formula">The formula that should be applied to the media file</param>
 		/// <param name="fileBinding">The binding that will be used to retrieve the media file</param>
 		/// <returns>The appropriate binding element to the value for the formula applied on the media file</returns>
-		public static BindingBase BindFormula(FrameworkElement targetElement, MetaDataFormula formula, BindingBase fileBinding) {
+		public static BindingBase BindFormula(FrameworkElement targetElement, MetaDataFormula formula, BindingBase fileBinding)
+		{
 			MDFFile file = new MDFFile(formula);
 			if (fileBinding != null)
 				BindingOperations.SetBinding(targetElement, Formula.FormulaFileProperty, fileBinding);
@@ -198,7 +223,8 @@ namespace mCubed.Controls {
 		/// <param name="fileBinding">The binding that will be used to retrieve the media file</param>
 		/// <param name="property">The dependency property that will be set on each element in the factory</param>
 		/// <returns>The appropriate binding element to the value for the formula applied on the media file</returns>
-		public static void BindFormula(FrameworkElementFactory targetFactory, MetaDataFormula formula, BindingBase fileBinding, DependencyProperty property) {
+		public static void BindFormula(FrameworkElementFactory targetFactory, MetaDataFormula formula, BindingBase fileBinding, DependencyProperty property)
+		{
 			MDFFile file = new MDFFile(formula);
 			targetFactory.SetBinding(Formula.FormulaFileProperty, fileBinding);
 			Formula.Subscribe(targetFactory, file, property);

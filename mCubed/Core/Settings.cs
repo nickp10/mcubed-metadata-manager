@@ -8,8 +8,10 @@ using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
 
-namespace mCubed.Core {
-	public class Settings : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+namespace mCubed.Core
+{
+	public class Settings : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Data Store
 
 		private string _path = Path.Combine(Utilities.ExecutionDirectory, "mCubed.xml");
@@ -54,9 +56,10 @@ namespace mCubed.Core {
 		public ObservableCollection<Command> Commands { get { return _commands; } }
 
 		/// <summary>
-		/// Get/set the default directory for media browsing
+		/// Get/set the default directory for media browsing [Bindable]
 		/// </summary>
-		public string DirectoryMediaDefault {
+		public string DirectoryMediaDefault
+		{
 			get { return _directoryMediaDefault; }
 			set { this.SetAndNotify(ref _directoryMediaDefault, value, "DirectoryMediaDefault"); }
 		}
@@ -64,7 +67,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the default directory for picture browsing [Bindable]
 		/// </summary>
-		public string DirectoryPictureDefault {
+		public string DirectoryPictureDefault
+		{
 			get { return _directoryPictureDefault; }
 			set { this.SetAndNotify(ref _directoryPictureDefault, value, "DirectoryPictureDefault"); }
 		}
@@ -77,7 +81,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get whether or not the settings have loaded or not [Bindable]
 		/// </summary>
-		public bool IsLoaded {
+		public bool IsLoaded
+		{
 			get { return _isLoaded; }
 			private set { this.SetAndNotify(ref _isLoaded, value, null, OnLoaded, "IsLoaded"); }
 		}
@@ -85,7 +90,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the current collection of libraries [Bindable]
 		/// </summary>
-		public IEnumerable<Library> Libraries {
+		public IEnumerable<Library> Libraries
+		{
 			get { return _libraries; }
 			private set { this.SetAndNotify(ref _libraries, (value ?? Enumerable.Empty<Library>()).ToArray(), "Libraries"); }
 		}
@@ -93,7 +99,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the current loaded library [Bindable]
 		/// </summary>
-		public Library LibraryCurrent {
+		public Library LibraryCurrent
+		{
 			get { return _libraryCurrent; }
 			set { this.SetAndNotify(ref _libraryCurrent, value, OnLibraryCurrentChanging, OnLibraryCurrentChanged, "LibraryCurrent"); }
 		}
@@ -101,7 +108,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the current selected library for visual purposes [Bindable]
 		/// </summary>
-		public Library LibrarySelected {
+		public Library LibrarySelected
+		{
 			get { return _librarySelected; }
 			set { this.SetAndNotify(ref _librarySelected, value, "LibrarySelected"); }
 		}
@@ -109,7 +117,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the location for the mini player for startup and closing purposes only [Bindable]
 		/// </summary>
-		public Point? MiniLocation {
+		public Point? MiniLocation
+		{
 			get { return _miniLocation; }
 			set { this.SetAndNotify(ref _miniLocation, value, "MiniLocation"); }
 		}
@@ -117,7 +126,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the selected tab within this window [Bindable]
 		/// </summary>
-		public int SelectedTab {
+		public int SelectedTab
+		{
 			get { return _selectedTab; }
 			set { this.SetAndNotify(ref _selectedTab, value, "SelectedTab", "SelectedTabEnum"); }
 		}
@@ -125,7 +135,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the selected tab within this window [Bindable]
 		/// </summary>
-		public TabOption SelectedTabEnum {
+		public TabOption SelectedTabEnum
+		{
 			get { return (TabOption)SelectedTab; }
 			set { SelectedTab = (int)value; }
 		}
@@ -133,7 +144,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get whether or not the MDI manager should be visible [Bindable]
 		/// </summary>
-		public bool ShowMDIManager {
+		public bool ShowMDIManager
+		{
 			get { return _showMDIManager; }
 			set { this.SetAndNotify(ref _showMDIManager, value, null, OnShowMDIManagerChanged, "ShowMDIManager"); }
 		}
@@ -141,7 +153,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get whether or not the application is in minituare mode [Bindable]
 		/// </summary>
-		public bool ShowMini {
+		public bool ShowMini
+		{
 			get { return _showMini; }
 			set { this.SetAndNotify(ref _showMini, value, null, OnShowMiniChanged, "ShowMini"); }
 		}
@@ -167,17 +180,22 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="element">The XML column detail to generate from</param>
 		/// <returns>The mCubed column detail that is generated</returns>
-		private ColumnDetail GenerateColumn(XElement element) {
+		private ColumnDetail GenerateColumn(XElement element)
+		{
 			// Attempt to reuse a created object
 			string key = element.Parse("Key", "");
 			ColumnType type = element.Parse("Type", ColumnType.Property);
 			ColumnDetail detail = AllColumns.FirstOrDefault(c => c.Key == key && c.Type == type);
 
 			// Create the instance if it wasn't found
-			if (detail == null) {
-				try {
+			if (detail == null)
+			{
+				try
+				{
 					detail = new ColumnDetail(type, key);
-				} catch {
+				}
+				catch
+				{
 					return null;
 				}
 			}
@@ -193,7 +211,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="element">The XML command to generate from</param>
 		/// <returns>The mCubed command that is generated</returns>
-		private Command GenerateCommand(XElement element) {
+		private Command GenerateCommand(XElement element)
+		{
 			return new Command
 			{
 				DisplayName = element.Parse<string>("DisplayName"),
@@ -206,11 +225,13 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="element">The XML formula to generate from</param>
 		/// <returns>The mCubed formula that is generated</returns>
-		private MetaDataFormula GenerateFormula(XElement element) {
+		private MetaDataFormula GenerateFormula(XElement element)
+		{
 			// Attempt to reuse a created object
 			MetaDataFormulaType type = element.Name.LocalName.Parse(MetaDataFormulaType.Custom);
 			MetaDataFormula formula = null;
-			if (type != MetaDataFormulaType.Custom) {
+			if (type != MetaDataFormulaType.Custom)
+			{
 				formula = Formulas.FirstOrDefault(f => f.Type == type);
 			}
 
@@ -230,7 +251,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="element">The XML library to generate from</param>
 		/// <returns>The mCubed library that is generated</returns>
-		private Library GenerateLibrary(XElement element) {
+		private Library GenerateLibrary(XElement element)
+		{
 			var library = new Library
 			{
 				DisplayName = element.Parse<string>("DisplayName"),
@@ -257,7 +279,8 @@ namespace mCubed.Core {
 		/// Generate from XML settings to the main settings
 		/// </summary>
 		/// <param name="element">The XML settings to generate from</param>
-		private void GenerateRoot(XElement element) {
+		private void GenerateRoot(XElement element)
+		{
 			if (element.Element("Formulas") != null)
 				element.Element("Formulas").Elements().Select(GenerateFormula).Where(e => e != null && !Formulas.Contains(e)).Perform(e => Formulas.Add(e));
 			if (element.Element("Columns") != null)
@@ -284,7 +307,8 @@ namespace mCubed.Core {
 		/// <param name="column">The mCubed column detail to generate from</param>
 		/// <param name="id">The numerical identification for the given column detail</param>
 		/// <returns>The XML column detail that is generated</returns>
-		private XElement GenerateColumn(ColumnDetail column, int id) {
+		private XElement GenerateColumn(ColumnDetail column, int id)
+		{
 			return new XElement("Column",
 				new XAttribute("ID", id),
 				new XAttribute("Display", column.Display),
@@ -298,7 +322,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="command">The mCubed command to generate from</param>
 		/// <returns>The XML command that is generated</returns>
-		private XElement GenerateCommand(Command command) {
+		private XElement GenerateCommand(Command command)
+		{
 			return new XElement("Command",
 				new XAttribute("DisplayName", command.DisplayName ?? ""),
 				new XAttribute("Value", command.Value ?? ""));
@@ -309,7 +334,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="library">The mCubed formula to generate from</param>
 		/// <returns>The XML formula that is generated</returns>
-		private XElement GenerateFormula(MetaDataFormula formula) {
+		private XElement GenerateFormula(MetaDataFormula formula)
+		{
 			return new XElement(formula.Type.ToString(),
 				new XAttribute("Formula", formula.Formula ?? ""),
 				new XAttribute("FallbackValue", formula.FallbackValue ?? ""),
@@ -322,7 +348,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="library">The mCubed library to generate from</param>
 		/// <returns>The XML library that is generated</returns>
-		private XElement GenerateLibrary(Library library) {
+		private XElement GenerateLibrary(Library library)
+		{
 			return new XElement("Library",
 				new XAttribute("AutoRenameOnUpdates", library.AutoRenameOnUpdates),
 				new XAttribute("CopyOnDragDrop", library.CopyOnDragDrop),
@@ -344,7 +371,8 @@ namespace mCubed.Core {
 		/// Generate from the main settings to XML settings
 		/// </summary>
 		/// <returns>The XML settings that are generated</returns>
-		private XElement GenerateRoot() {
+		private XElement GenerateRoot()
+		{
 			int id = 1;
 			return new XElement("mCubed",
 				new XAttribute("ShowMDIManager", ShowMDIManager),
@@ -368,11 +396,15 @@ namespace mCubed.Core {
 		/// Test to see if the settings file is valid
 		/// </summary>
 		/// <returns>True if the settings file is valid, or false otherwise</returns>
-		private bool ValidSettingsFile() {
-			try {
+		private bool ValidSettingsFile()
+		{
+			try
+			{
 				_document = XDocument.Load(_path);
 				return _document.Root != null;
-			} catch {
+			}
+			catch
+			{
 				return false;
 			}
 		}
@@ -380,9 +412,11 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Load the settings file
 		/// </summary>
-		public void Load() {
+		public void Load()
+		{
 			// Setup the columns
-			foreach (var property in MetaDataFormula.MetaDataProperties) {
+			foreach (var property in MetaDataFormula.MetaDataProperties)
+			{
 				AllColumns.Add(new ColumnDetail(property));
 			}
 
@@ -417,7 +451,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Save the settings file
 		/// </summary>
-		public void Save() {
+		public void Save()
+		{
 			_document = new XDocument { Declaration = new XDeclaration("1.0", "utf8", "yes") };
 			_document.Add(GenerateRoot());
 			_document.Save(_path);
@@ -431,8 +466,10 @@ namespace mCubed.Core {
 		/// Perform an action on the current playing media object
 		/// </summary>
 		/// <param name="action">The action to perform on the media object</param>
-		public void PerformAction(MediaAction action) {
-			switch (action) {
+		public void PerformAction(MediaAction action)
+		{
+			switch (action)
+			{
 				case MediaAction.Play:
 					LibraryCurrent.MediaObject.State = MediaState.Play;
 					break;
@@ -476,11 +513,16 @@ namespace mCubed.Core {
 		/// Performs the specified action when the settings have been loaded, or is already loaded
 		/// </summary>
 		/// <param name="action">The action to perform when the settings are loaded</param>
-		public void PerformWhenLoaded(Action action) {
-			if (action != null) {
-				if (IsLoaded) {
+		public void PerformWhenLoaded(Action action)
+		{
+			if (action != null)
+			{
+				if (IsLoaded)
+				{
 					action();
-				} else {
+				}
+				else
+				{
 					Loaded += action;
 				}
 			}
@@ -494,8 +536,10 @@ namespace mCubed.Core {
 		/// Add a library to the collection of libraries
 		/// </summary>
 		/// <param name="library">The library to add to the collection of libraries</param>
-		public void AddLibrary(Library library) {
-			if (library != null) {
+		public void AddLibrary(Library library)
+		{
+			if (library != null)
+			{
 				library.MediaFiles.PropertyChanged += (s, e) => OnLibraryMediaCollectionChanged(library, s, e);
 				library.MediaFilePropertyChanged += OnMediaFilePropertyChanged;
 				Libraries = Libraries.Concat(new[] { library });
@@ -506,7 +550,8 @@ namespace mCubed.Core {
 		/// Generate a default library that may be used
 		/// </summary>
 		/// <returns>A default library that may be used</returns>
-		public Library GenerateDefaultLibrary() {
+		public Library GenerateDefaultLibrary()
+		{
 			Library library = new Library { DisplayName = "Default Library" };
 			library.AddDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
 			return library;
@@ -516,8 +561,10 @@ namespace mCubed.Core {
 		/// Remove a library from the collection of libraries
 		/// </summary>
 		/// <param name="library">The library to remove from the collection</param>
-		public void RemoveLibrary(Library library) {
-			if (library != null) {
+		public void RemoveLibrary(Library library)
+		{
+			if (library != null)
+			{
 				var newLibraryCurrent = Libraries.OrderByDescending(l => l.IsLoaded).FirstOrDefault(l => l != library);
 				if (newLibraryCurrent == null)
 					AddLibrary(newLibraryCurrent = GenerateDefaultLibrary());
@@ -535,7 +582,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Invoke the show MDI manager and mini changed event handlers
 		/// </summary>
-		public void InvokeEvents() {
+		public void InvokeEvents()
+		{
 			OnShowMDIManagerChanged();
 			OnShowMiniChanged();
 		}
@@ -543,7 +591,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the current loaded library is changing
 		/// </summary>
-		private void OnLibraryCurrentChanging() {
+		private void OnLibraryCurrentChanging()
+		{
 			if (LibraryCurrent != null)
 				LibraryCurrent.IsLoaded = false;
 		}
@@ -551,15 +600,19 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the current loaded library has changed
 		/// </summary>
-		private void OnLibraryCurrentChanged() {
+		private void OnLibraryCurrentChanged()
+		{
 			// Load the new library
-			if (LibraryCurrent != null) {
+			if (LibraryCurrent != null)
+			{
 				LibraryCurrent.IsLoaded = true;
 
 				// Send some events
 				OnMediaObjectChanged(LibraryCurrent.MediaObject);
 				OnNowPlayingChanged(LibraryCurrent.MediaFileCurrent);
-			} else {
+			}
+			else
+			{
 				// Send some events
 				OnMediaObjectChanged(null);
 				OnNowPlayingChanged(null);
@@ -572,9 +625,11 @@ namespace mCubed.Core {
 		/// <param name="sender">The library whose media files property has changed</param>
 		/// <param name="library">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnLibraryMediaCollectionChanged(Library library, object sender, PropertyChangedEventArgs e) {
+		private void OnLibraryMediaCollectionChanged(Library library, object sender, PropertyChangedEventArgs e)
+		{
 			var tempHandler = LibraryMediaCollectionChanged;
-			if (tempHandler != null && library.MediaFiles == sender && e.PropertyName == "Items") {
+			if (tempHandler != null && library.MediaFiles == sender && e.PropertyName == "Items")
+			{
 				tempHandler(library);
 			}
 		}
@@ -584,9 +639,11 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="file">The file whose property has changed</param>
 		/// <param name="property">The name of the property that has changed</param>
-		private void OnMediaFilePropertyChanged(MediaFile file, string property) {
+		private void OnMediaFilePropertyChanged(MediaFile file, string property)
+		{
 			var tempHandler = MediaFilePropertyChanged;
-			if (tempHandler != null) {
+			if (tempHandler != null)
+			{
 				tempHandler(file, property);
 			}
 		}
@@ -594,7 +651,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the settings have loaded
 		/// </summary>
-		private void OnLoaded() {
+		private void OnLoaded()
+		{
 			var tempHandler = Loaded;
 			if (IsLoaded && tempHandler != null)
 				tempHandler();
@@ -606,7 +664,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnAllColumnsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+		private void OnAllColumnsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
 			this.OnPropertyChanged("AllColumns");
 		}
 
@@ -615,15 +674,20 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnFormulasCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+		private void OnFormulasCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
 			// Remove each of the removed formula columns from each of the column collections
-			if (e.Action == NotifyCollectionChangedAction.Remove) {
-				foreach (var formula in e.OldItems.OfType<MetaDataFormula>()) {
+			if (e.Action == NotifyCollectionChangedAction.Remove)
+			{
+				foreach (var formula in e.OldItems.OfType<MetaDataFormula>())
+				{
 					var column = AllColumns.FirstOrDefault(c => c.Type == ColumnType.Formula && c.Key == formula.Name);
-					if (column != null) {
+					if (column != null)
+					{
 						column.Dispose();
 						AllColumns.Remove(column);
-						foreach (var library in Libraries) {
+						foreach (var library in Libraries)
+						{
 							library.ColumnSettings.Remove(column);
 						}
 					}
@@ -631,8 +695,10 @@ namespace mCubed.Core {
 			}
 
 			// Add a formula column for each of the added items
-			else if (e.Action == NotifyCollectionChangedAction.Add) {
-				foreach (var formula in e.NewItems.OfType<MetaDataFormula>()) {
+			else if (e.Action == NotifyCollectionChangedAction.Add)
+			{
+				foreach (var formula in e.NewItems.OfType<MetaDataFormula>())
+				{
 					AllColumns.Add(new ColumnDetail(formula));
 				}
 			}
@@ -642,7 +708,8 @@ namespace mCubed.Core {
 		/// Event that handles when the media object has changed
 		/// </summary>
 		/// <param name="mediaObject">The new media object</param>
-		private void OnMediaObjectChanged(MediaObject mediaObject) {
+		private void OnMediaObjectChanged(MediaObject mediaObject)
+		{
 			if (MediaObjectChanged != null)
 				MediaObjectChanged(mediaObject);
 		}
@@ -651,7 +718,8 @@ namespace mCubed.Core {
 		/// Event that handles when the now playing media has changed
 		/// </summary>
 		/// <param name="file">The media that is now playing</param>
-		public void OnNowPlayingChanged(MediaFile file) {
+		public void OnNowPlayingChanged(MediaFile file)
+		{
 			if (NowPlayingChanged != null)
 				NowPlayingChanged(file);
 		}
@@ -659,7 +727,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the MDI manager should be shown or hidden
 		/// </summary>
-		private void OnShowMDIManagerChanged() {
+		private void OnShowMDIManagerChanged()
+		{
 			if (ShowMDIManagerChanged != null)
 				ShowMDIManagerChanged();
 		}
@@ -667,7 +736,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Event that handles when the mini-player should be shown or hidden
 		/// </summary>
-		private void OnShowMiniChanged() {
+		private void OnShowMiniChanged()
+		{
 			if (ShowMiniChanged != null)
 				ShowMiniChanged();
 		}
@@ -676,7 +746,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -686,7 +757,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -699,7 +771,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the settings properly
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe others from its events
 			PropertyChanged = null;
 			PropertyChanging = null;
@@ -725,7 +798,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class ColumnSettings : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+	public class ColumnSettings : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Data Store
 
 		private readonly Dictionary<string, ObservableCollection<ColumnVector>> _collections = new Dictionary<string, ObservableCollection<ColumnVector>>();
@@ -763,7 +837,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="group">The name of the group to retrieve the columns for</param>
 		/// <returns>The collection of columns at the given group name</returns>
-		public ObservableCollection<ColumnVector> this[string group] {
+		public ObservableCollection<ColumnVector> this[string group]
+		{
 			get { return _collections[group]; }
 		}
 
@@ -774,9 +849,11 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Construct a new column settings
 		/// </summary>
-		public ColumnSettings() {
+		public ColumnSettings()
+		{
 			// Create the collections and register to their collection changed event
-			foreach (string key in new[] { "Display", "GroupBy", "SortBy" }) {
+			foreach (string key in new[] { "Display", "GroupBy", "SortBy" })
+			{
 				var value = new ObservableCollection<ColumnVector>();
 				value.CollectionChanged += new NotifyCollectionChangedEventHandler(OnCollectionChanged);
 				_collections.Add(key, value);
@@ -801,7 +878,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnAllColumnsChanged(object sender, PropertyChangedEventArgs e) {
+		private void OnAllColumnsChanged(object sender, PropertyChangedEventArgs e)
+		{
 			if (e.PropertyName == "AllColumns")
 				this.OnPropertyChanged("AllColumns");
 		}
@@ -811,7 +889,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+		private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
 			// Get the key for the collection that changed
 			var pair = _collections.SingleOrDefault(c => c.Value == sender);
 			if (!string.IsNullOrEmpty(pair.Key))
@@ -826,22 +905,28 @@ namespace mCubed.Core {
 		/// Generate the mCubed column collections from XML
 		/// </summary>
 		/// <param name="element">The XML column collections to generate from</param>
-		public void GenerateCollections(XElement element) {
+		public void GenerateCollections(XElement element)
+		{
 			// Load up all the column collections
-			foreach (var collection in _collections) {
+			foreach (var collection in _collections)
+			{
 				// Find the collection's list of columns
 				bool hasLoaded = false;
 				XElement ele = element.Element(collection.Key);
-				if (ele != null) {
+				if (ele != null)
+				{
 					// Generate a column vector for each of the columns in the collection
-					foreach (var column in ele.Elements()) {
+					foreach (var column in ele.Elements())
+					{
 						int id = column.Parse<int>("ID", 0);
 						var detail = AllColumns.FirstOrDefault(c => c.XMLID == id);
-						if (id != 0 && detail != null) {
+						if (id != 0 && detail != null)
+						{
 							var vector = new ColumnVector(detail);
 							vector.Direction = column.Parse("Direction", vector.Direction);
 							vector.Width = column.Parse("Width", vector.Width);
-							if (!hasLoaded) {
+							if (!hasLoaded)
+							{
 								hasLoaded = true;
 								collection.Value.Clear();
 							}
@@ -860,12 +945,16 @@ namespace mCubed.Core {
 		/// Generate the XML column collections from mCubed
 		/// </summary>
 		/// <returns>The XML column collections that were generated</returns>
-		public IEnumerable<XElement> GenerateCollections() {
-			foreach (var collection in _collections) {
+		public IEnumerable<XElement> GenerateCollections()
+		{
+			foreach (var collection in _collections)
+			{
 				XElement element = new XElement(collection.Key);
-				foreach (var column in collection.Value) {
+				foreach (var column in collection.Value)
+				{
 					int id = AllColumns.IndexOf(column.ColumnDetail);
-					if (id == -1) {
+					if (id == -1)
+					{
 						id = AllColumns.Count;
 						AllColumns.Add(column.ColumnDetail);
 					}
@@ -887,9 +976,12 @@ namespace mCubed.Core {
 		/// Remove a given column detail from each of the column detail collections
 		/// </summary>
 		/// <param name="column">The column details to remove from each of the column detail collections</param>
-		public void Remove(ColumnDetail column) {
-			foreach (var collection in _collections) {
-				foreach (var item in collection.Value.Where(c => c.ColumnDetail == column).ToArray()) {
+		public void Remove(ColumnDetail column)
+		{
+			foreach (var collection in _collections)
+			{
+				foreach (var item in collection.Value.Where(c => c.ColumnDetail == column).ToArray())
+				{
 					item.Dispose();
 					collection.Value.Remove(item);
 				}
@@ -900,7 +992,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -910,7 +1003,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -923,14 +1017,17 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the column settings appropriately
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe others from its events
 			PropertyChanged = null;
 			PropertyChanging = null;
 
 			// Dispose of the resources it created while unregistering from events
-			foreach (var collection in _collections) {
-				foreach (var item in collection.Value) {
+			foreach (var collection in _collections)
+			{
+				foreach (var item in collection.Value)
+				{
 					item.Dispose();
 				}
 				collection.Value.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnCollectionChanged);
@@ -938,7 +1035,7 @@ namespace mCubed.Core {
 
 			// Finish unregistering from events
 			Utilities.MainSettings.PropertyChanged -= new PropertyChangedEventHandler(OnAllColumnsChanged);
-		
+
 			// Ensure there are no cyclic references
 			_collections.Clear();
 		}
