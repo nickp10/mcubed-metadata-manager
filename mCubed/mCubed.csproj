@@ -279,6 +279,9 @@
     <Resource Include="Icons\arrow_up.png" />
     <Resource Include="Icons\delete.png" />
     <Resource Include="Icons\disk.png" />
+    <Resource Include="Icons\overlay_pause.png" />
+    <Resource Include="Icons\overlay_play.png" />
+    <Resource Include="Icons\overlay_stop.png" />
     <Resource Include="Icons\page_copy.png" />
     <Resource Include="Icons\pencil.png" />
     <Resource Include="Icons\refresh.png" />
