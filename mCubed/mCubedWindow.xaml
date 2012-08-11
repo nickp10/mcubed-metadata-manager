@@ -11,9 +11,32 @@
 		WindowState="Maximized"
 		Height="800"
 		Width="1000">
+	<Window.Resources>
+		<controls:MediaStateToDescriptionConverter x:Key="MediaStateToDescriptionConverter" />
+		<controls:MediaStateToImageConverter x:Key="MediaStateToImageConverter" />
+		<controls:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
+	</Window.Resources>
 	<Window.TaskbarItemInfo>
 		<TaskbarItemInfo controls:TaskbarItemInfoExtensions.MediaState="{Binding LibraryCurrent.MediaObject.State}"
-						 controls:TaskbarItemInfoExtensions.MediaFile="{Binding LibraryCurrent.MediaFileCurrent}" />
+						 controls:TaskbarItemInfoExtensions.MediaFile="{Binding LibraryCurrent.MediaFileCurrent}">
+			<TaskbarItemInfo.ThumbButtonInfos>
+				<ThumbButtonInfo Click="OnThumbButtonInfo_Previous_Click"
+								 Description="Play the media previous to the current media"
+								 DismissWhenClicked="False"
+								 ImageSource="Icons/taskbar_previous.png"
+								 IsEnabled="{Binding LibraryCurrent.SelectPrevExists}" />
+				<ThumbButtonInfo Click="OnThumbButtonInfo_PlayPause_Click"
+								 Description="{Binding LibraryCurrent.MediaObject.State, Converter={StaticResource MediaStateToDescriptionConverter}}"
+								 DismissWhenClicked="False"
+								 ImageSource="{Binding LibraryCurrent.MediaObject.State, Converter={StaticResource MediaStateToImageConverter}}"
+								 IsEnabled="{Binding LibraryCurrent.MediaObject.Path, Converter={StaticResource ObjectToBoolConverter}}" />
+				<ThumbButtonInfo Click="OnThumbButtonInfo_Next_Click"
+								 Description="Play the media next to the current media"
+								 DismissWhenClicked="False"
+								 ImageSource="Icons/taskbar_next.png"
+								 IsEnabled="{Binding LibraryCurrent.SelectNextExists}" />
+			</TaskbarItemInfo.ThumbButtonInfos>
+		</TaskbarItemInfo>
 	</Window.TaskbarItemInfo>
 	<Grid>
 		<Grid>

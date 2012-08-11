@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media.Imaging;
 using mCubed.Core;
 
 namespace mCubed.Controls
@@ -15,7 +17,7 @@ namespace mCubed.Controls
 	{
 		#region IMultiValueConverter Members
 
-		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
 			var value = values.OfType<double>().ToArray();
 			if (value.Length == 2)
@@ -25,7 +27,7 @@ namespace mCubed.Controls
 			return null;
 		}
 
-		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -41,12 +43,12 @@ namespace mCubed.Controls
 	{
 		#region IValueConverter Members
 
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return GroupListHelper.IsGroupList(value);
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -62,7 +64,7 @@ namespace mCubed.Controls
 	{
 		#region IValueConverter Members
 
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			int depth = 0;
 			if (value is int)
@@ -70,7 +72,7 @@ namespace mCubed.Controls
 			return new Thickness(depth * 25, 0, 0, 0);
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -86,12 +88,12 @@ namespace mCubed.Controls
 	{
 		#region IValueConverter Members
 
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return new Thickness((double)value + 5, 5, 5, 5);
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -107,12 +109,12 @@ namespace mCubed.Controls
 	{
 		#region IValueConverter Members
 
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return (double)value - 12;
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -128,7 +130,7 @@ namespace mCubed.Controls
 	{
 		#region IValueConverter Members
 
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			// Convert the value to directories
 			var directories = value as IEnumerable<string>;
@@ -154,7 +156,7 @@ namespace mCubed.Controls
 			return items;
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -170,7 +172,7 @@ namespace mCubed.Controls
 	{
 		#region IValueConverter Members
 
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			// Convert the value to directories
 			var directories = value as IEnumerable<string>;
@@ -183,7 +185,7 @@ namespace mCubed.Controls
 			return directories.Any();
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -199,13 +201,13 @@ namespace mCubed.Controls
 	{
 		#region IValueConverter Members
 
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var count = value as int?;
 			return count.HasValue && count.Value > 0;
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -221,7 +223,7 @@ namespace mCubed.Controls
 	{
 		#region IMultiValueConverter Members
 
-		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
 			/*
 			 * 0 == AllColumns (IEnumerable<ColumnDetail>)
@@ -246,7 +248,7 @@ namespace mCubed.Controls
 			return all.Where(detail => !sel.Any(vector => vector.ColumnDetail == detail)).ToArray();
 		}
 
-		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -262,7 +264,7 @@ namespace mCubed.Controls
 	{
 		#region IMultiValueConverter Members
 
-		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
 			/*
 			 * 0 == SelectedColumns (IEnumerable<ColumnVector>)
@@ -281,7 +283,7 @@ namespace mCubed.Controls
 			return sel.Any(vector => vector.ColumnDetail == det);
 		}
 
-		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -297,13 +299,13 @@ namespace mCubed.Controls
 	{
 		#region IValueConverter Members
 
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var columns = value as IEnumerable<ColumnVector> ?? Enumerable.Empty<ColumnVector>();
 			return columns.Select(v => v.ColumnDetail.Display).AggregateIfAny((s1, s2) => s1 += ", " + s2, "N/A");
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}
@@ -319,14 +321,90 @@ namespace mCubed.Controls
 	{
 		#region IMultiValueConverter Members
 
-		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
 			// 0 == InvokingElement.IsMouseOver, 1 == PopupElement.IsMouseOver
 			bool[] bools = values.OfType<bool>().ToArray();
 			return bools.Length == 2 && (bools[0] || bools[1]);
 		}
 
-		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+		{
+			return null;
+		}
+
+		#endregion
+	}
+
+	/// <summary>
+	/// Used to convert the given media state into a description of what the play/pause
+	/// button will perform when it is clicked again. [Binding, One-Way]
+	/// </summary>
+	public class MediaStateToDescriptionConverter : IValueConverter
+	{
+		#region IValueConverter Members
+
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is MediaState)
+			{
+				if ((MediaState)value == MediaState.Play)
+				{
+					return "Pause playback of the current media";
+				}
+				else if ((MediaState)value == MediaState.Pause)
+				{
+					return "Resume playback of the current media";
+				}
+			}
+			return "Play the current loaded media";
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return null;
+		}
+
+		#endregion
+	}
+
+	/// <summary>
+	/// Used to convert the given media state into an image source that can be used
+	/// for the play/pause button. The pause image is returned if the media state is
+	/// Play. Otherwise, the play image is returned. [Binding, One-Way]
+	/// </summary>
+	public class MediaStateToImageConverter : IValueConverter
+	{
+		#region IValueConverter Members
+
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var isPlay = value is MediaState && (MediaState)value == MediaState.Play;
+			return new BitmapImage(new Uri(string.Format("pack://application:,,,/Icons/taskbar_{0}.png", isPlay ? "pause" : "play")));
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return null;
+		}
+
+		#endregion
+	}
+
+	/// <summary>
+	/// Used to determine if a given object is null or not. If the object is null, then false
+	/// is returned. If the object is not null, then true is returned. [Binding, One-Way]
+	/// </summary>
+	public class ObjectToBoolConverter : IValueConverter
+	{
+		#region IValueConverter Members
+
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return value != null;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}

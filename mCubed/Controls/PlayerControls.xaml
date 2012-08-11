@@ -3,6 +3,10 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:controls="clr-namespace:mCubed.Controls"
 			 xmlns:core="clr-namespace:mCubed.Core">
+	<UserControl.Resources>
+		<controls:MediaStateToDescriptionConverter x:Key="MediaStateToDescriptionConverter" />
+		<controls:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
+	</UserControl.Resources>
 	<Border DataContext="{Binding Source={x:Static core:Utilities.MainSettings}, Path=LibraryCurrent}"
 			Background="{DynamicResource MainBrush}"
 			BorderThickness="2"
@@ -45,37 +49,20 @@
 						</Style>
 					</Button.Style>
 				</Button>
-				<Button Click="MediaButton_Clicked">
+				<Button Tag="PlayPause"
+						ToolTip="{Binding MediaObject.State, Converter={StaticResource MediaStateToDescriptionConverter}}"
+						Click="MediaButton_Clicked"
+						IsEnabled="{Binding MediaObject.Path, Converter={StaticResource ObjectToBoolConverter}}">
 					<Button.Style>
 						<Style TargetType="{x:Type Button}"
 							   BasedOn="{StaticResource MediaButton}">
 							<Setter Property="Content"
 									Value="4" />
-							<Setter Property="Tag"
-									Value="Play" />
-							<Setter Property="ToolTip"
-									Value="Play the current loaded media" />
-							<Setter Property="IsEnabled"
-									Value="True" />
 							<Style.Triggers>
 								<DataTrigger Binding="{Binding Path=MediaObject.State}"
 											 Value="Play">
 									<Setter Property="Content"
 											Value=";" />
-									<Setter Property="Tag"
-											Value="Pause" />
-									<Setter Property="ToolTip"
-											Value="Pause playback of the current media" />
-								</DataTrigger>
-								<DataTrigger Binding="{Binding Path=MediaObject.State}"
-											 Value="Pause">
-									<Setter Property="ToolTip"
-											Value="Resume playback of the current media" />
-								</DataTrigger>
-								<DataTrigger Binding="{Binding Path=MediaObject.Path}"
-											 Value="{x:Null}">
-									<Setter Property="IsEnabled"
-											Value="False" />
 								</DataTrigger>
 							</Style.Triggers>
 						</Style>

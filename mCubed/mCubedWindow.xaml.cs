@@ -220,6 +220,36 @@ namespace mCubed
 			new mCubedSecondary { Owner = this }.Show();
 		}
 
+		/// <summary>
+		/// Event that handles when the previous taskbar button is clicked.
+		/// </summary>
+		/// <param name="sender">The sender object.</param>
+		/// <param name="e">The event arguments.</param>
+		private void OnThumbButtonInfo_Previous_Click(object sender, EventArgs e)
+		{
+			Utilities.MainSettings.PerformAction(MediaAction.Prev);
+		}
+
+		/// <summary>
+		/// Event that handles when the next taskbar button is clicked.
+		/// </summary>
+		/// <param name="sender">The sender object.</param>
+		/// <param name="e">The event arguments.</param>
+		private void OnThumbButtonInfo_Next_Click(object sender, EventArgs e)
+		{
+			Utilities.MainSettings.PerformAction(MediaAction.Next);
+		}
+
+		/// <summary>
+		/// Event that handles when the play/pause taskbar button is clicked.
+		/// </summary>
+		/// <param name="sender">The sender object.</param>
+		/// <param name="e">The event arguments.</param>
+		private void OnThumbButtonInfo_PlayPause_Click(object sender, EventArgs e)
+		{
+			Utilities.MainSettings.PerformAction(MediaAction.PlayPause);
+		}
+
 		#endregion
 	}
 }

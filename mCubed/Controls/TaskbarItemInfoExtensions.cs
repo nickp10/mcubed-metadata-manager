@@ -107,7 +107,7 @@ namespace mCubed.Controls
 			}
 			else
 			{
-				taskbar.Overlay = new BitmapImage(new Uri(string.Format("pack://application:,,,/Icons/overlay_{0}.png", state.ToString().ToLower())));
+				taskbar.Overlay = new BitmapImage(new Uri(string.Format("pack://application:,,,/Icons/taskbar_{0}.png", state.ToString().ToLower())));
 			}
 		}
 
