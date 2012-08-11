@@ -117,7 +117,7 @@
 							<DataTemplate>
 								<ListBoxItem Style="{DynamicResource AutoCompleteItem}"
 											 Cursor="Hand"
-											 controls:SelectorExtension.IsSelectable="{Binding IsSelected}"
+											 controls:SelectorExtensions.IsSelectable="{Binding IsSelected}"
 											 MouseEnter="OnAutoCompleteItemEntered"
 											 MouseLeftButtonUp="OnAutoCompleteItemSelected"
 											 Content="{Binding Value}" />

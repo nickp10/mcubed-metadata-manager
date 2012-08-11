@@ -11,6 +11,10 @@
 		WindowState="Maximized"
 		Height="800"
 		Width="1000">
+	<Window.TaskbarItemInfo>
+		<TaskbarItemInfo controls:TaskbarItemInfoExtensions.MediaState="{Binding LibraryCurrent.MediaObject.State}"
+						 controls:TaskbarItemInfoExtensions.MediaFile="{Binding LibraryCurrent.MediaFileCurrent}" />
+	</Window.TaskbarItemInfo>
 	<Grid>
 		<Grid>
 			<Grid.Style>

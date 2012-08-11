@@ -171,9 +171,9 @@
 				<ListView.ItemContainerStyle>
 					<Style TargetType="{x:Type ListViewItem}"
 						   BasedOn="{StaticResource {x:Type ListViewItem}}">
-						<Setter Property="controls:SelectorExtension.IsSelectable"
+						<Setter Property="controls:SelectorExtensions.IsSelectable"
 								Value="False" />
-						<Setter Property="controls:SelectorExtension.IsGridViewRow"
+						<Setter Property="controls:SelectorExtensions.IsGridViewRow"
 								Value="False" />
 						<EventSetter Event="PreviewMouseDown"
 									 Handler="OnMediaFileSelected" />
@@ -186,9 +186,9 @@
 										Value="{StaticResource ListView_ContextMenu}" />
 								<Setter Property="HorizontalContentAlignment"
 										Value="Stretch" />
-								<Setter Property="controls:SelectorExtension.IsSelectable"
+								<Setter Property="controls:SelectorExtensions.IsSelectable"
 										Value="True" />
-								<Setter Property="controls:SelectorExtension.IsGridViewRow"
+								<Setter Property="controls:SelectorExtensions.IsGridViewRow"
 										Value="True" />
 							</DataTrigger>
 						</Style.Triggers>

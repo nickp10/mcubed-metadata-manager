@@ -487,7 +487,7 @@
 				<MultiTrigger.Conditions>
 					<Condition Property="IsMouseOver"
 							   Value="True" />
-					<Condition Property="controls:SelectorExtension.IsSelectable"
+					<Condition Property="controls:SelectorExtensions.IsSelectable"
 							   Value="True" />
 				</MultiTrigger.Conditions>
 				<MultiTrigger.Setters>
@@ -501,7 +501,7 @@
 				<MultiTrigger.Conditions>
 					<Condition Property="IsSelected"
 							   Value="True" />
-					<Condition Property="controls:SelectorExtension.IsSelectable"
+					<Condition Property="controls:SelectorExtensions.IsSelectable"
 							   Value="True" />
 				</MultiTrigger.Conditions>
 				<MultiTrigger.Setters>
@@ -566,7 +566,7 @@
 							<MultiTrigger.Conditions>
 								<Condition Property="IsMouseOver"
 										   Value="True" />
-								<Condition Property="controls:SelectorExtension.IsSelectable"
+								<Condition Property="controls:SelectorExtensions.IsSelectable"
 										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.Setters>
@@ -582,7 +582,7 @@
 							<MultiTrigger.Conditions>
 								<Condition Property="IsSelected"
 										   Value="True" />
-								<Condition Property="controls:SelectorExtension.IsSelectable"
+								<Condition Property="controls:SelectorExtensions.IsSelectable"
 										   Value="True" />
 							</MultiTrigger.Conditions>
 							<MultiTrigger.Setters>
@@ -604,7 +604,7 @@
 			</Setter.Value>
 		</Setter>
 		<Style.Triggers>
-			<Trigger Property="controls:SelectorExtension.IsGridViewRow"
+			<Trigger Property="controls:SelectorExtensions.IsGridViewRow"
 					 Value="False">
 				<Setter Property="Template">
 					<Setter.Value>
@@ -621,7 +621,7 @@
 									<MultiTrigger.Conditions>
 										<Condition Property="IsMouseOver"
 												   Value="True" />
-										<Condition Property="controls:SelectorExtension.IsSelectable"
+										<Condition Property="controls:SelectorExtensions.IsSelectable"
 												   Value="True" />
 									</MultiTrigger.Conditions>
 									<MultiTrigger.Setters>
@@ -637,7 +637,7 @@
 									<MultiTrigger.Conditions>
 										<Condition Property="IsSelected"
 												   Value="True" />
-										<Condition Property="controls:SelectorExtension.IsSelectable"
+										<Condition Property="controls:SelectorExtensions.IsSelectable"
 												   Value="True" />
 									</MultiTrigger.Conditions>
 									<MultiTrigger.Setters>
@@ -851,7 +851,7 @@
 		<Setter Property="BorderBrush"
 				Value="Transparent" />
 		<Style.Triggers>
-			<Trigger Property="controls:SelectorExtension.IsSelectable"
+			<Trigger Property="controls:SelectorExtensions.IsSelectable"
 					 Value="True">
 				<Setter Property="Background"
 						Value="{DynamicResource PressedBrush}" />
