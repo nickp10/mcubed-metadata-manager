@@ -175,6 +175,8 @@
 								Value="False" />
 						<Setter Property="controls:SelectorExtensions.IsGridViewRow"
 								Value="False" />
+						<Setter Property="IsTabStop"
+								Value="False" />
 						<EventSetter Event="PreviewMouseDown"
 									 Handler="OnMediaFileSelected" />
 						<EventSetter Event="MouseDoubleClick"
@@ -189,6 +191,8 @@
 								<Setter Property="controls:SelectorExtensions.IsSelectable"
 										Value="True" />
 								<Setter Property="controls:SelectorExtensions.IsGridViewRow"
+										Value="True" />
+								<Setter Property="IsTabStop"
 										Value="True" />
 							</DataTrigger>
 						</Style.Triggers>

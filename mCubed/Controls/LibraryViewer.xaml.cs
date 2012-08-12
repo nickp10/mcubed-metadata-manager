@@ -554,15 +554,39 @@ namespace mCubed.Controls
 			var group = element == null ? null : element.DataContext as GroupList<MediaFile>;
 			if (group != null)
 			{
-				if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+				if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
 				{
-					SelectedItems = SelectedItems.ToArray().Union(group);
+					// Dispatch to the UI thread to allow the normal shift selection to occur
+					// before attempting to append the group selection as well.
+					Dispatcher.BeginInvoke(new Action(() =>
+					{
+						SelectedItems = SelectedItems.ToArray().Union(group);
+					}));
+				}
+				else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+				{
+					// Retrieve the current selection of items. The ToArray is needed to evaluate
+					// the selected items right away. This is because setting the SelectedItems
+					// is going to clear the selection before evaluating the new selection of items.
+					var selectedItems = SelectedItems.ToArray();
+
+					// If any file in the group is not selected, then all files in the group need to be
+					// selected. Otherwise, all the files in the group are selected and need to be unselected.
+					if (group.Any(f => !selectedItems.Contains(f)))
+					{
+						SelectedItems = selectedItems.Union(group);
+					}
+					else
+					{
+						SelectedItems = selectedItems.Except(group);
+					}
+					e.Handled = true;
 				}
 				else
 				{
 					SelectedItems = group;
+					e.Handled = true;
 				}
-				e.Handled = true;
 			}
 		}
 
