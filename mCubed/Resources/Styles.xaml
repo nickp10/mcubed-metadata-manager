@@ -4,7 +4,6 @@
 
 	<!-- Up Arrow Path -->
 	<Style TargetType="{x:Type Path}"
-		   BasedOn="{StaticResource {x:Type Path}}"
 		   x:Key="UpArrowPath">
 		<Setter Property="Data"
 				Value="M 0 7 L 7 7 L 3.5 3.5 Z" />
@@ -14,7 +13,6 @@
 
 	<!-- Right Arrow Path -->
 	<Style TargetType="{x:Type Path}"
-		   BasedOn="{StaticResource {x:Type Path}}"
 		   x:Key="RightArrowPath">
 		<Setter Property="Data"
 				Value="M 0 0 L 0 7 L 3.5 3.5 Z" />
@@ -24,7 +22,6 @@
 
 	<!-- Left Arrow Path -->
 	<Style TargetType="{x:Type Path}"
-		   BasedOn="{StaticResource {x:Type Path}}"
 		   x:Key="LeftArrowPath">
 		<Setter Property="Data"
 				Value="M 7 0 L 7 7 L 3.5 3.5 Z" />
@@ -34,7 +31,6 @@
 
 	<!-- Down Arrow Path -->
 	<Style TargetType="{x:Type Path}"
-		   BasedOn="{StaticResource {x:Type Path}}"
 		   x:Key="DownArrowPath">
 		<Setter Property="Data"
 				Value="M 0 0 L 7 0 L 3.5 3.5 Z" />
@@ -44,7 +40,6 @@
 
 	<!-- Check X Path -->
 	<Style TargetType="{x:Type Path}"
-		   BasedOn="{StaticResource {x:Type Path}}"
 		   x:Key="CheckXPath">
 		<Setter Property="Data"
 				Value="M 0 0 L 7 7 M 0 7 L 7 0" />
@@ -56,7 +51,6 @@
 
 	<!-- Check Mark Path -->
 	<Style TargetType="{x:Type Path}"
-		   BasedOn="{StaticResource {x:Type Path}}"
 		   x:Key="CheckMarkPath">
 		<Setter Property="Data"
 				Value="M 0 3.5 L 2.3 7 L 7 0" />
