@@ -290,6 +290,7 @@
     <Resource Include="Icons\taskbar_stop.png" />
     <Resource Include="Images\Default.png" />
     <Resource Include="Images\InvalidFormat.png" />
+    <Resource Include="Readme.txt" />
     <Content Include="References\taglib-sharp.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
