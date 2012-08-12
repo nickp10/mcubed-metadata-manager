@@ -121,18 +121,18 @@
 						Tag="Prev"
 						ToolTip="Play the media previous to the current media"
 						Click="MediaButton_Clicked"
-						Style="{StaticResource MediaButton}"
+						Style="{DynamicResource MediaButton}"
 						IsEnabled="{Binding Path=SelectPrevExists}" />
 				<Button Content="M"
 						Tag="ToggleMini"
 						ToolTip="Show the mini/full player"
 						Click="MediaButton_Clicked"
-						Style="{StaticResource NormalMediaButton}" />
+						Style="{DynamicResource NormalMediaButton}" />
 				<Button Content=":"
 						Tag="Next"
 						ToolTip="Play the media next to the current media"
 						Click="MediaButton_Clicked"
-						Style="{StaticResource MediaButton}"
+						Style="{DynamicResource MediaButton}"
 						IsEnabled="{Binding Path=SelectNextExists}" />
 				<Button Tag="ToggleRepeat"
 						Click="MediaButton_Clicked">

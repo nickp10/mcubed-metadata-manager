@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace mCubed.Core {
-	public class Command : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging {
+namespace mCubed.Core
+{
+	public class Command : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging
+	{
 		#region Data Store
 
 		private string _displayName;
@@ -18,7 +16,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set a display name for this command [Bindable]
 		/// </summary>
-		public string DisplayName {
+		public string DisplayName
+		{
 			get { return _displayName; }
 			set { this.SetAndNotify(ref _displayName, value, "DisplayName"); }
 		}
@@ -26,7 +25,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the actual command-line string for this command [Bindable]
 		/// </summary>
-		public string Value {
+		public string Value
+		{
 			get { return _value; }
 			set { this.SetAndNotify(ref _value, value, "Value"); }
 		}
@@ -35,7 +35,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -45,7 +46,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 

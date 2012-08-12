@@ -25,8 +25,7 @@
 					<TextBlock>/</TextBlock>
 					<TextBlock Text="{Binding TotalCount}" />
 					<TextBlock>)</TextBlock>
-					<ProgressBar Style="{StaticResource {x:Type ProgressBar}}"
-								 Margin="10,0,0,0"
+					<ProgressBar Margin="10,0,0,0"
 								 Width="100"
 								 VerticalContentAlignment="Stretch"
 								 Minimum="0"

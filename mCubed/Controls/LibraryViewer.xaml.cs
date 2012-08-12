@@ -12,11 +12,14 @@ using System.Windows.Input;
 using mCubed.Core;
 using mCubed.MetaData;
 
-namespace mCubed.Controls {
-	public partial class LibraryViewer : UserControl, IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging {
+namespace mCubed.Controls
+{
+	public partial class LibraryViewer : UserControl, IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging
+	{
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -26,7 +29,8 @@ namespace mCubed.Controls {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -42,7 +46,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set the height for the group by and sort by options [Bindable]
 		/// </summary>
-		public double GroupSortHeight {
+		public double GroupSortHeight
+		{
 			get { return (double)GetValue(GroupSortHeightProperty); }
 			set { SetValue(GroupSortHeightProperty, value); }
 		}
@@ -56,9 +61,11 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private static void OnLibraryChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		private static void OnLibraryChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
 			var viewer = sender as LibraryViewer;
-			if (viewer != null) {
+			if (viewer != null)
+			{
 				var oldVal = e.OldValue as Library;
 				var newVal = e.NewValue as Library;
 				viewer.OnLibraryChanged(oldVal, newVal);
@@ -71,7 +78,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set the library that is currently being viewed by this viewer
 		/// </summary>
-		public Library Library {
+		public Library Library
+		{
 			get { return (Library)GetValue(LibraryProperty); }
 			set { SetValue(LibraryProperty, value); }
 		}
@@ -91,7 +99,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get the collection of column details that represents the displayed columns and its ordering [Bindable]
 		/// </summary>
-		public ObservableCollection<ColumnVector> DisplayColumns {
+		public ObservableCollection<ColumnVector> DisplayColumns
+		{
 			get { return _displayColumns; }
 			private set { this.SetAndNotify(ref _displayColumns, value, null, OnDisplayColumnsChanged, "DisplayColumns"); }
 		}
@@ -99,9 +108,11 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get the collection of currently selected items
 		/// </summary>
-		public IEnumerable<MediaFile> SelectedItems {
+		public IEnumerable<MediaFile> SelectedItems
+		{
 			get { return SelectedMedia.SelectedItems.OfType<MediaFile>(); }
-			set {
+			set
+			{
 				_itemsChanging = true;
 				SelectedMedia.SelectedItems.Clear();
 				foreach (var file in value)
@@ -115,7 +126,8 @@ namespace mCubed.Controls {
 
 		#region Constructor
 
-		public LibraryViewer() {
+		public LibraryViewer()
+		{
 			// Set up event handlers
 			Utilities.MainSettings.ShowMDIManagerChanged += new Action(OnShowMDIManagerChanged);
 			Loaded += new RoutedEventHandler(OnLoaded);
@@ -136,7 +148,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaFilePlay(object sender, RoutedEventArgs e) {
+		private void OnMediaFilePlay(object sender, RoutedEventArgs e)
+		{
 			OnMediaFilePlay(sender, (MouseButtonEventArgs)null);
 		}
 
@@ -145,7 +158,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaFilePlay(object sender, MouseButtonEventArgs e) {
+		private void OnMediaFilePlay(object sender, MouseButtonEventArgs e)
+		{
 			var ele = sender as FrameworkElement;
 			var file = ele == null ? null : ele.DataContext as MediaFile;
 			if (file != null)
@@ -157,10 +171,12 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaFileShowExplorer(object sender, RoutedEventArgs e) {
+		private void OnMediaFileShowExplorer(object sender, RoutedEventArgs e)
+		{
 			var ele = sender as FrameworkElement;
 			var file = ele == null ? null : ele.DataContext as MediaFile;
-			if (file != null) {
+			if (file != null)
+			{
 				System.Diagnostics.Process.Start("explorer.exe", "/select,\"" + file.MetaData.FilePath + "\"");
 			}
 		}
@@ -170,23 +186,27 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaExecuteCommand(object sender, RoutedEventArgs e) {
+		private void OnMediaExecuteCommand(object sender, RoutedEventArgs e)
+		{
 			// Grab the command
 			var ele = sender as MenuItem;
 			var command = ele == null ? null : ele.DataContext as Command;
-			if (command != null) {
+			if (command != null)
+			{
 				// Generate the %c placeholder value
 				string currentPath = "";
 				var par = ele.CommandParameter as FrameworkElement;
 				var file = par == null ? null : par.DataContext as MediaFile;
-				if (file != null) {
+				if (file != null)
+				{
 					currentPath = "\"" + file.MetaData.FilePath + "\"";
 				}
 
 				// Generate the %s placeholder value
 				string selectedPath = "";
 				var files = SelectedItems.ToArray();
-				if (files.Length > 0) {
+				if (files.Length > 0)
+				{
 					selectedPath = files.Select(f => "\"" + f.MetaData.FilePath + "\"").Aggregate((s1, s2) => s1 += "," + s2);
 				}
 
@@ -194,9 +214,12 @@ namespace mCubed.Controls {
 				Func<string, string> replace = s => s.Replace("%c", currentPath).Replace("%s", selectedPath);
 				string value = command.Value;
 				int index = value.IndexOf(' ');
-				if (index > -1) {
+				if (index > -1)
+				{
 					System.Diagnostics.Process.Start(replace(value.Substring(0, index)), replace(value.Substring(index + 1)));
-				} else {
+				}
+				else
+				{
 					System.Diagnostics.Process.Start(replace(value));
 				}
 			}
@@ -207,15 +230,19 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaCopyTo(object sender, RoutedEventArgs e) {
+		private void OnMediaCopyTo(object sender, RoutedEventArgs e)
+		{
 			string destDir = GetDestinationDirectory(sender);
-			if (destDir != null) {
+			if (destDir != null)
+			{
 				Library destLib = GetDestinationLibrary(sender);
-				if (destLib != null) {
+				if (destLib != null)
+				{
 					var items = SelectedItems.ToArray();
 					Utilities.MainProcessManager.AddProcess(process =>
 					{
-						foreach (var item in items) {
+						foreach (var item in items)
+						{
 							FileUtilities.Copy(item, destLib, destDir);
 							process.CompletedCount++;
 						}
@@ -229,15 +256,19 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaMoveTo(object sender, RoutedEventArgs e) {
+		private void OnMediaMoveTo(object sender, RoutedEventArgs e)
+		{
 			string destDir = GetDestinationDirectory(sender);
-			if (destDir != null) {
+			if (destDir != null)
+			{
 				Library destLib = GetDestinationLibrary(sender);
-				if (destLib != null) {
+				if (destLib != null)
+				{
 					var items = SelectedItems.ToArray();
 					Utilities.MainProcessManager.AddProcess(process =>
 					{
-						foreach (var item in items) {
+						foreach (var item in items)
+						{
 							FileUtilities.Move(item, destLib, destDir);
 							process.CompletedCount++;
 						}
@@ -251,7 +282,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaRemove(object sender, RoutedEventArgs e) {
+		private void OnMediaRemove(object sender, RoutedEventArgs e)
+		{
 			var items = SelectedItems.ToArray();
 			Library.RemoveMedia(items);
 		}
@@ -261,11 +293,14 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaRemoveComputer(object sender, RoutedEventArgs e) {
+		private void OnMediaRemoveComputer(object sender, RoutedEventArgs e)
+		{
 			var items = SelectedItems.ToArray();
-			if (items.Length > 0 && mCubedError.ShowConfirm(string.Format("Are you sure you want to permanently remove the {0} selected file(s)?", items.Length))) {
+			if (items.Length > 0 && mCubedError.ShowConfirm(string.Format("Are you sure you want to permanently remove the {0} selected file(s)?", items.Length)))
+			{
 				Library.RemoveMedia(items);
-				foreach (var item in items) {
+				foreach (var item in items)
+				{
 					FileUtilities.Delete(item);
 				}
 			}
@@ -276,7 +311,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaAdd(object sender, RoutedEventArgs e) {
+		private void OnMediaAdd(object sender, RoutedEventArgs e)
+		{
 			Library.AddMedia(Library.GenerateMedia());
 		}
 
@@ -285,7 +321,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaReload(object sender, RoutedEventArgs e) {
+		private void OnMediaReload(object sender, RoutedEventArgs e)
+		{
 			Library.Reload();
 		}
 
@@ -294,9 +331,11 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaSeekToNowPlaying(object sender, RoutedEventArgs e) {
+		private void OnMediaSeekToNowPlaying(object sender, RoutedEventArgs e)
+		{
 			var nowPlaying = Library.MediaFileCurrent;
-			if (nowPlaying != null) {
+			if (nowPlaying != null)
+			{
 				SelectedMedia.ScrollIntoView(nowPlaying);
 				SelectedMedia.SelectedItem = nowPlaying;
 			}
@@ -307,12 +346,14 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaAutoPopulateTrack(object sender, RoutedEventArgs e) {
+		private void OnMediaAutoPopulateTrack(object sender, RoutedEventArgs e)
+		{
 			var items = SelectedItems.ToArray();
 			Utilities.MainProcessManager.AddProcess(process =>
 			{
 				uint currentTrack = 1;
-				foreach (var item in items) {
+				foreach (var item in items)
+				{
 					item.Parent.MediaFiles.BeginTransaction();
 					item.MetaData.Track = currentTrack++;
 					item.MetaData.Save();
@@ -327,11 +368,13 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaAutoRename(object sender, RoutedEventArgs e) {
+		private void OnMediaAutoRename(object sender, RoutedEventArgs e)
+		{
 			var items = SelectedItems.ToArray();
 			Utilities.MainProcessManager.AddProcess(process =>
 			{
-				foreach (var item in items) {
+				foreach (var item in items)
+				{
 					FileUtilities.Rename(item);
 					process.CompletedCount++;
 				}
@@ -343,7 +386,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaLoaded(object sender, RoutedEventArgs e) {
+		private void OnMediaLoaded(object sender, RoutedEventArgs e)
+		{
 			SetMDIManager("Manually Loaded Media", SelectedItems.Select(mf => mf.MetaData));
 		}
 
@@ -356,7 +400,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnLoaded(object sender, RoutedEventArgs e) {
+		private void OnLoaded(object sender, RoutedEventArgs e)
+		{
 			if (Utilities.MainSettings.LibraryCurrent != null)
 				OnNowPlayingChanged(Utilities.MainSettings.LibraryCurrent.MediaFileCurrent);
 			Utilities.MainSettings.NowPlayingChanged += new Action<MediaFile>(OnNowPlayingChanged);
@@ -367,14 +412,17 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="oldLibrary">The previous library value</param>
 		/// <param name="newLibrary">The new library value</param>
-		private void OnLibraryChanged(Library oldLibrary, Library newLibrary) {
+		private void OnLibraryChanged(Library oldLibrary, Library newLibrary)
+		{
 			// Unregister the old library
-			if (oldLibrary != null) {
+			if (oldLibrary != null)
+			{
 				DisplayColumns.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnDisplayCollectionChanged);
 			}
 
 			// Register the new library
-			if (newLibrary != null) {
+			if (newLibrary != null)
+			{
 				DisplayColumns = newLibrary.ColumnSettings.Display;
 				DisplayColumns.CollectionChanged += new NotifyCollectionChangedEventHandler(OnDisplayCollectionChanged);
 			}
@@ -385,10 +433,14 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaFileDragOver(object sender, DragEventArgs e) {
-			if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+		private void OnMediaFileDragOver(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+			{
 				e.Effects = DragDropEffects.Copy;
-			} else {
+			}
+			else
+			{
 				e.Effects = DragDropEffects.None;
 			}
 			e.Handled = true;
@@ -399,9 +451,11 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaFileDrop(object sender, DragEventArgs e) {
+		private void OnMediaFileDrop(object sender, DragEventArgs e)
+		{
 			// Make sure directories/files are being dropped
-			if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+			{
 				// Start the import as a background process
 				Utilities.MainProcessManager.AddProcess(process =>
 				{
@@ -409,20 +463,28 @@ namespace mCubed.Controls {
 					var files = new List<string>();
 					var data = e.Data.GetData(DataFormats.FileDrop);
 					var paths = data as string[];
-					if (paths != null) {
+					if (paths != null)
+					{
 						// Iterate over the paths (including directories, subdirectories, and files)
 						var stack = new Stack<string>(paths);
-						while (stack.Count > 0) {
+						while (stack.Count > 0)
+						{
 							var path = stack.Pop();
-							if (!string.IsNullOrEmpty(path)) {
-								if (Directory.Exists(path)) {
-									foreach (var subdirectory in Directory.GetDirectories(path)) {
+							if (!string.IsNullOrEmpty(path))
+							{
+								if (Directory.Exists(path))
+								{
+									foreach (var subdirectory in Directory.GetDirectories(path))
+									{
 										stack.Push(subdirectory);
 									}
-									foreach (var file in Directory.GetFiles(path)) {
+									foreach (var file in Directory.GetFiles(path))
+									{
 										files.Add(file);
 									}
-								} else if (File.Exists(path)) {
+								}
+								else if (File.Exists(path))
+								{
 									files.Add(path);
 								}
 							}
@@ -431,7 +493,8 @@ namespace mCubed.Controls {
 					process.CompletedCount++;
 
 					// Generate the media
-					if (files != null && files.Any()) {
+					if (files != null && files.Any())
+					{
 						Library.GenerateMediaFromDragDrop(files);
 					}
 					process.CompletedCount++;
@@ -443,7 +506,8 @@ namespace mCubed.Controls {
 		/// Event that handles when the now playing media has changed
 		/// </summary>
 		/// <param name="file">The media that is now playing</param>
-		private void OnNowPlayingChanged(MediaFile file) {
+		private void OnNowPlayingChanged(MediaFile file)
+		{
 			SetMDIManager("Now Playing", file == null ? null : new[] { file.MetaData });
 		}
 
@@ -452,7 +516,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnSelectedMediaChanged(object sender, SelectionChangedEventArgs e) {
+		private void OnSelectedMediaChanged(object sender, SelectionChangedEventArgs e)
+		{
 			if (!_itemsChanging)
 				SetMDIManager("Selected Media", SelectedItems.Select(mf => mf.MetaData));
 		}
@@ -460,13 +525,17 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Event that handles when the visiblity of the MDI manager should change
 		/// </summary>
-		private void OnShowMDIManagerChanged() {
+		private void OnShowMDIManagerChanged()
+		{
 			// Show or hide the MDI manager according
-			if (Utilities.MainSettings.ShowMDIManager) {
+			if (Utilities.MainSettings.ShowMDIManager)
+			{
 				MDIRow.Height = _prevMDIHeight;
 				MDISplitter.Visibility = Visibility.Visible;
 				MetaDataManager.Visibility = Visibility.Visible;
-			} else {
+			}
+			else
+			{
 				_prevMDIHeight = MDIRow.Height;
 				MDIRow.Height = new GridLength();
 				MDISplitter.Visibility = Visibility.Collapsed;
@@ -479,13 +548,18 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnMediaFileSelected(object sender, MouseButtonEventArgs e) {
+		private void OnMediaFileSelected(object sender, MouseButtonEventArgs e)
+		{
 			var element = sender as FrameworkElement;
 			var group = element == null ? null : element.DataContext as GroupList<MediaFile>;
-			if (group != null) {
-				if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control) {
+			if (group != null)
+			{
+				if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+				{
 					SelectedItems = SelectedItems.ToArray().Union(group);
-				} else {
+				}
+				else
+				{
 					SelectedItems = group;
 				}
 				e.Handled = true;
@@ -501,7 +575,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The object sending the request</param>
 		/// <param name="e">The arguments for the request</param>
-		private void OnGridViewColumnHeaderClicked(object sender, RoutedEventArgs e) {
+		private void OnGridViewColumnHeaderClicked(object sender, RoutedEventArgs e)
+		{
 			var headerClicked = e.OriginalSource as GridViewColumnHeader;
 			if (headerClicked != null && headerClicked.Role != GridViewColumnHeaderRole.Padding)
 				DisplayColumnSelector.IsOpen = true;
@@ -512,13 +587,18 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnColumnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
-			if (e.Action == NotifyCollectionChangedAction.Move) {
-				if (e.OldStartingIndex == 0 || e.NewStartingIndex == 0) {
+		private void OnColumnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			if (e.Action == NotifyCollectionChangedAction.Move)
+			{
+				if (e.OldStartingIndex == 0 || e.NewStartingIndex == 0)
+				{
 					var item = LibraryGridView.Columns[e.NewStartingIndex];
 					LibraryGridView.Columns.RemoveAt(e.NewStartingIndex);
 					LibraryGridView.Columns.Insert(e.OldStartingIndex, item);
-				} else {
+				}
+				else
+				{
 					_isColumnCollectionChanging = true;
 					DisplayColumns.Move(e.OldStartingIndex - 1, e.NewStartingIndex - 1);
 					_isColumnCollectionChanging = false;
@@ -529,7 +609,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Event that handles when the collection of columns being displayed changes to a new collection
 		/// </summary>
-		private void OnDisplayColumnsChanged() {
+		private void OnDisplayColumnsChanged()
+		{
 			OnDisplayCollectionChanged(null, null);
 		}
 
@@ -538,7 +619,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnDisplayCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+		private void OnDisplayCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
 			// Ignore this event if it came from the grid view itself
 			if (_isColumnCollectionChanging)
 				return;
@@ -548,7 +630,8 @@ namespace mCubed.Controls {
 				LibraryGridView.Columns.RemoveAt(1);
 
 			// Add all the additional columns
-			foreach (var columnInfo in DisplayColumns) {
+			foreach (var columnInfo in DisplayColumns)
+			{
 				// Create the column
 				var column = new GridViewColumn();
 				var header = new GridViewColumnHeader();
@@ -556,10 +639,13 @@ namespace mCubed.Controls {
 
 				// Setup the data template
 				var factory = new FrameworkElementFactory(typeof(TextBlock));
-				if (columnInfo.ColumnDetail.Type == ColumnType.Property) {
+				if (columnInfo.ColumnDetail.Type == ColumnType.Property)
+				{
 					var binding = new Binding { Path = new PropertyPath("MetaData." + columnInfo.ColumnDetail.Key) };
 					factory.SetBinding(TextBlock.TextProperty, binding);
-				} else {
+				}
+				else
+				{
 					Formula.BindFormula(factory, columnInfo.ColumnDetail.Formula, new Binding(), TextBlock.TextProperty);
 				}
 				column.CellTemplate = new DataTemplate { VisualTree = factory };
@@ -578,7 +664,8 @@ namespace mCubed.Controls {
 		/// Event that handles when a display column has been deselected
 		/// </summary>
 		/// <param name="column">The column that has been deselected</param>
-		private void OnDisplayColumnDeselected(ColumnDetail column) {
+		private void OnDisplayColumnDeselected(ColumnDetail column)
+		{
 			var vectors = Library.ColumnSettings.Display.Where(vector => vector.ColumnDetail == column).ToArray();
 			foreach (var vector in vectors)
 				Library.ColumnSettings.Display.Remove(vector);
@@ -589,7 +676,8 @@ namespace mCubed.Controls {
 		/// Event that handles when a display column has been selected
 		/// </summary>
 		/// <param name="column">The column that has been selected</param>
-		private void OnDisplayColumnSelected(ColumnDetail column) {
+		private void OnDisplayColumnSelected(ColumnDetail column)
+		{
 			Library.ColumnSettings.Display.Add(new ColumnVector(column));
 			DisplayColumnSelector.IsOpen = false;
 		}
@@ -603,22 +691,26 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <returns>The selected destination directory from the selected menu item</returns>
-		private string GetDestinationDirectory(object sender) {
+		private string GetDestinationDirectory(object sender)
+		{
 			// Retrieve the menu item
 			var menu = sender as MenuItem;
-			if (menu == null || menu.Role != MenuItemRole.SubmenuItem) {
+			if (menu == null || menu.Role != MenuItemRole.SubmenuItem)
+			{
 				return null;
 			}
 
 			// Return the data context if it's a string
 			var dir = menu.DataContext as string;
-			if (dir != null) {
+			if (dir != null)
+			{
 				return dir;
 			}
 
 			// Return the library's first directory
 			var lib = menu.DataContext as Library;
-			if (lib != null) {
+			if (lib != null)
+			{
 				return lib.Directories.FirstOrDefault();
 			}
 			return null;
@@ -629,16 +721,19 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <returns>The selected destination library from the selected menu item</returns>
-		private Library GetDestinationLibrary(object sender) {
+		private Library GetDestinationLibrary(object sender)
+		{
 			// Retrieve the menu item
 			var menu = sender as MenuItem;
-			if (menu == null || menu.Role != MenuItemRole.SubmenuItem) {
+			if (menu == null || menu.Role != MenuItemRole.SubmenuItem)
+			{
 				return null;
 			}
 
 			// Return the data context if it's a library
 			var lib = menu.DataContext as Library;
-			if (lib != null) {
+			if (lib != null)
+			{
 				return lib;
 			}
 
@@ -651,12 +746,16 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="key">The key for the collection to belong to</param>
 		/// <param name="info">The collection of meta-data information</param>
-		private void SetMDIManager(string key, IEnumerable<MetaDataInfo> info) {
-			if (Dispatcher.CheckAccess()) {
+		private void SetMDIManager(string key, IEnumerable<MetaDataInfo> info)
+		{
+			if (Dispatcher.CheckAccess())
+			{
 				var manager = FindName("MetaDataManager") as MDIManager;
 				if (manager != null)
 					manager[key] = info;
-			} else {
+			}
+			else
+			{
 				Dispatcher.Invoke(new Action<string, IEnumerable<MetaDataInfo>>(SetMDIManager), key, info);
 			}
 		}

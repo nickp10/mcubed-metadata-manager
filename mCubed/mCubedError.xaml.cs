@@ -1,8 +1,9 @@
 ﻿using System.Windows;
-using mCubed.Core;
 
-namespace mCubed {
-	public partial class mCubedError : Window {
+namespace mCubed
+{
+	public partial class mCubedError : Window
+	{
 		#region Static Members
 
 		/// <summary>
@@ -10,7 +11,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="message">The message to prompt the user for confirmation of</param>
 		/// <returns>True if the user confirmed the message, or false otherwise</returns>
-		public static bool ShowConfirm(string message) {
+		public static bool ShowConfirm(string message)
+		{
 			return ShowConfirm(message, "Continue", "Cancel");
 		}
 
@@ -21,7 +23,8 @@ namespace mCubed {
 		/// <param name="continueText">The text that should be displayed on the continue/accept button</param>
 		/// <param name="cancelText">The text that should be displayed on the cancel/decline button</param>
 		/// <returns>True if the user confirmed the message, or false otherwise</returns>
-		public static bool ShowConfirm(string message, string continueText, string cancelText) {
+		public static bool ShowConfirm(string message, string continueText, string cancelText)
+		{
 			var error = new mCubedError
 			{
 				Owner = Application.Current.MainWindow,
@@ -39,7 +42,8 @@ namespace mCubed {
 		/// Displays the given message to the user, forcing the user to acknowledge it before proceeding
 		/// </summary>
 		/// <param name="message">The message to display to the user</param>
-		public static void ShowDisplay(string message) {
+		public static void ShowDisplay(string message)
+		{
 			ShowDisplay(message, "OK");
 		}
 
@@ -48,7 +52,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="message">The message to display to the user</param>
 		/// <param name="buttonText">The text that should be display on the cancel/acknowledgment button</param>
-		public static void ShowDisplay(string message, string buttonText) {
+		public static void ShowDisplay(string message, string buttonText)
+		{
 			var error = new mCubedError
 			{
 				Owner = Application.Current.MainWindow,
@@ -71,7 +76,8 @@ namespace mCubed {
 		/// <summary>
 		/// Get/set the message that will be displayed [Bindable]
 		/// </summary>
-		public string Message {
+		public string Message
+		{
 			get { return (string)GetValue(MessageProperty); }
 			set { SetValue(MessageProperty, value); }
 		}
@@ -83,7 +89,8 @@ namespace mCubed {
 		/// <summary>
 		/// Construct an error window
 		/// </summary>
-		private mCubedError() {
+		private mCubedError()
+		{
 			InitializeComponent();
 		}
 
@@ -96,7 +103,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnContinueClicked(object sender, RoutedEventArgs e) {
+		private void OnContinueClicked(object sender, RoutedEventArgs e)
+		{
 			DialogResult = true;
 			Close();
 		}
@@ -106,7 +114,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnCancelClicked(object sender, RoutedEventArgs e) {
+		private void OnCancelClicked(object sender, RoutedEventArgs e)
+		{
 			DialogResult = false;
 			Close();
 		}

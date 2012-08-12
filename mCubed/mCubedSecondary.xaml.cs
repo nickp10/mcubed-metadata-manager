@@ -10,11 +10,13 @@ using System.Windows.Documents;
 using System.Windows.Navigation;
 using mCubed.Core;
 
-namespace mCubed {
-	public partial class mCubedSecondary : Window {
+namespace mCubed
+{
+	public partial class mCubedSecondary : Window
+	{
 		#region Data Store
 
-		private static DateTime _releaseDate = new DateTime(2011, 2, 19);
+		private static DateTime _releaseDate = new DateTime(2012, 9, 1);
 
 		#endregion
 
@@ -34,10 +36,11 @@ namespace mCubed {
 
 		#region Constructor
 
-		public mCubedSecondary() {
+		public mCubedSecondary()
+		{
 			// Set up event handlers
 			Closing += new CancelEventHandler(OnClosing);
-			
+
 			// Initialize
 			InitializeComponent();
 		}
@@ -51,13 +54,16 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void ApplicationSettings_BrowseDirectory(object sender, RoutedEventArgs e) {
+		private void ApplicationSettings_BrowseDirectory(object sender, RoutedEventArgs e)
+		{
 			var ele = sender as FrameworkElement;
 			var tag = ele == null ? null : ele.Tag as string;
-			if (tag != null) {
+			if (tag != null)
+			{
 				var property = typeof(Settings).GetProperty(tag);
 				var directory = OnBrowseDirectory(property.GetValue(Settings, null) as string);
-				if (directory != null) {
+				if (directory != null)
+				{
 					property.SetValue(Settings, directory, null);
 				}
 			}
@@ -68,7 +74,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void ApplicationSettings_AddFormula(object sender, RoutedEventArgs e) {
+		private void ApplicationSettings_AddFormula(object sender, RoutedEventArgs e)
+		{
 			var formula = new MetaDataFormula { Formula = "%Title%", Name = "New Formula", Type = MetaDataFormulaType.Custom };
 			Settings.Formulas.Add(formula);
 		}
@@ -78,9 +85,11 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void ApplicationSettings_RemoveFormula(object sender, RoutedEventArgs e) {
+		private void ApplicationSettings_RemoveFormula(object sender, RoutedEventArgs e)
+		{
 			var selection = FormulaListView.SelectedItem as MetaDataFormula;
-			if (selection != null) {
+			if (selection != null && selection.Type == MetaDataFormulaType.Custom)
+			{
 				selection.Dispose();
 				Settings.Formulas.Remove(selection);
 			}
@@ -95,7 +104,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void ApplicationSettings_AddCommand(object sender, RoutedEventArgs e) {
+		private void ApplicationSettings_AddCommand(object sender, RoutedEventArgs e)
+		{
 			Settings.Commands.Add(new Command
 			{
 				DisplayName = "Show in Windows Explorer",
@@ -108,9 +118,11 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void ApplicationSettings_RemoveCommand(object sender, RoutedEventArgs e) {
+		private void ApplicationSettings_RemoveCommand(object sender, RoutedEventArgs e)
+		{
 			var selection = CommandListView.SelectedItem as Command;
-			if (selection != null) {
+			if (selection != null)
+			{
 				Settings.Commands.Remove(selection);
 			}
 		}
@@ -124,7 +136,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void LibrarySettings_AddLibrary(object sender, RoutedEventArgs e) {
+		private void LibrarySettings_AddLibrary(object sender, RoutedEventArgs e)
+		{
 			Settings.LibrarySelected = new Library { DisplayName = "New Library" };
 			Settings.AddLibrary(Settings.LibrarySelected);
 		}
@@ -134,7 +147,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void LibrarySettings_RemoveLibrary(object sender, RoutedEventArgs e) {
+		private void LibrarySettings_RemoveLibrary(object sender, RoutedEventArgs e)
+		{
 			Settings.RemoveLibrary(Settings.LibrarySelected);
 			Settings.LibrarySelected = Settings.LibraryCurrent;
 		}
@@ -144,7 +158,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void LibrarySettings_LoadLibrary(object sender, RoutedEventArgs e) {
+		private void LibrarySettings_LoadLibrary(object sender, RoutedEventArgs e)
+		{
 			if (Settings.LibrarySelected != null)
 				Settings.LibrarySelected.IsLoaded = true;
 		}
@@ -154,10 +169,12 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void LibrarySettings_AddDirectory(object sender, RoutedEventArgs e) {
-			if (Settings.LibrarySelected != null) {
+		private void LibrarySettings_AddDirectory(object sender, RoutedEventArgs e)
+		{
+			if (Settings.LibrarySelected != null)
+			{
 				var directory = OnBrowseDirectory(Settings.DirectoryMediaDefault);
-				if(directory != null)
+				if (directory != null)
 					Settings.LibrarySelected.AddDirectory(directory);
 			}
 		}
@@ -167,7 +184,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void LibrarySettings_RemoveDirectory(object sender, RoutedEventArgs e) {
+		private void LibrarySettings_RemoveDirectory(object sender, RoutedEventArgs e)
+		{
 			if (Settings.LibrarySelected != null && DirectorySelection.SelectedItem is string)
 				Settings.LibrarySelected.RemoveDirectory((string)DirectorySelection.SelectedItem);
 		}
@@ -177,7 +195,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void LibrarySettings_ReshuffleAll(object sender, RoutedEventArgs e) {
+		private void LibrarySettings_ReshuffleAll(object sender, RoutedEventArgs e)
+		{
 			if (Settings.LibrarySelected != null)
 				Settings.LibrarySelected.Reshuffle();
 		}
@@ -187,7 +206,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void LibrarySettings_Reshuffle(object sender, RoutedEventArgs e) {
+		private void LibrarySettings_Reshuffle(object sender, RoutedEventArgs e)
+		{
 			var order = MediaOrdersListBox.SelectedItem as MediaOrder;
 			if (order != null && order.Parent != null)
 				order.Parent.Reshuffle(order);
@@ -198,7 +218,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void LibrarySettings_LoadMediaOrder(object sender, RoutedEventArgs e) {
+		private void LibrarySettings_LoadMediaOrder(object sender, RoutedEventArgs e)
+		{
 			var order = MediaOrdersListBox.SelectedItem as MediaOrder;
 			if (order != null)
 				order.IsLoaded = true;
@@ -252,7 +273,7 @@ namespace mCubed {
 
 		#region Custom Formulas
 
-		private static readonly IEnumerable _formulas = new [] {
+		private static readonly IEnumerable _formulas = new[] {
 			new { Items = MetaDataFormula.FormulaProperties.Where(f => f.Priority == 1), Title = "File", Priority = "1st",
 				Description = "These are the formulas available to the individual media files. " },
 			new { Items = MetaDataFormula.FormulaProperties.Where(f => f.Priority == 2), Title = "Playback", Priority = "2nd",
@@ -269,14 +290,17 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void FormulaName_TextChanged(object sender, TextChangedEventArgs e) {
+		private void FormulaName_TextChanged(object sender, TextChangedEventArgs e)
+		{
 			TextBox textBox = sender as TextBox;
-			if (textBox != null) {
+			if (textBox != null)
+			{
 				string baseText = textBox.Text;
 				string text = baseText;
 				int id = 1;
 				int count = 1;
-				while (string.IsNullOrEmpty(text) || Settings.Formulas.Count(f => f.Name == text) > count) {
+				while (string.IsNullOrEmpty(text) || Settings.Formulas.Count(f => f.Name == text) > count)
+				{
 					text = baseText + id;
 					count = 0;
 					id++;
@@ -292,10 +316,10 @@ namespace mCubed {
 		#region Credits
 
 		private static readonly IEnumerable _credits = new[] {
-			new { Author = "Nick Paddock", Project = "mCubed Core", Version = "Music Meta-data Manager", URL = "http://mcubed.sourceforge.net/" },
-			new { Author = "Nick Paddock", Project = "mCubed UI", Version = "Music Meta-data Manager", URL = "http://mcubed.sourceforge.net/" },
+			new { Author = "Nick Paddock", Project = "mCubed Core", Version = "Music Meta-data Manager", URL = "http://mcubed.dyndns.info/" },
+			new { Author = "Nick Paddock", Project = "mCubed UI", Version = "Music Meta-data Manager", URL = "http://mcubed.dyndns.info/" },
 			new { Author = "Mark James", Project = "Silk Icon Set", Version = "1.3", URL = "http://www.famfamfam.com/lab/icons/silk/" },
-			new { Author = "Banshee Development Team", Project = "TagLib#", Version = "2.0.4.0", URL = "https://github.com/mono/taglib-sharp/" }
+			new { Author = "Banshee Development Team", Project = "TagLib#", Version = "2.1.0.0", URL = "https://github.com/mono/taglib-sharp/" }
 		};
 
 		/// <summary>
@@ -365,7 +389,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="initialDirectory">The initiali directory that should be selected</param>
 		/// <returns>The directory the user selected, or null if the user cancelled or selected an invalid directory</returns>
-		private string OnBrowseDirectory(string initialDirectory) {
+		private string OnBrowseDirectory(string initialDirectory)
+		{
 			var dlg = new System.Windows.Forms.FolderBrowserDialog { SelectedPath = initialDirectory };
 			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK && System.IO.Directory.Exists(dlg.SelectedPath))
 				return dlg.SelectedPath;
@@ -377,7 +402,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnClosing(object sender, CancelEventArgs e) {
+		private void OnClosing(object sender, CancelEventArgs e)
+		{
 			Utilities.MainSettings.Save();
 		}
 
@@ -386,7 +412,8 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnClosed(object sender, RoutedEventArgs e) {
+		private void OnClosed(object sender, RoutedEventArgs e)
+		{
 			Close();
 		}
 
@@ -395,9 +422,11 @@ namespace mCubed {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnHyperlinkClicked(object sender, RequestNavigateEventArgs e) {
+		private void OnHyperlinkClicked(object sender, RequestNavigateEventArgs e)
+		{
 			var hyperlink = sender as Hyperlink;
-			if (hyperlink != null) {
+			if (hyperlink != null)
+			{
 				string navigateUri = hyperlink.NavigateUri.ToString();
 				System.Diagnostics.Process.Start(new ProcessStartInfo(navigateUri));
 			}

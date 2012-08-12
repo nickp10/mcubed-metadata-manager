@@ -138,6 +138,7 @@ namespace mCubed.Core
 			_player.MediaEnded += new EventHandler(OnMediaEnded);
 			_player.MediaFailed += new EventHandler<ExceptionEventArgs>(OnMediaFailed);
 			_player.MediaOpened += new EventHandler(OnMediaOpened);
+			PerformAction(p => p.Stop());
 		}
 
 		#endregion

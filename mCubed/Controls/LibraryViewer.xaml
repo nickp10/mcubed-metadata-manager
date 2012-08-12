@@ -170,7 +170,7 @@
 				</ListView.Resources>
 				<ListView.ItemContainerStyle>
 					<Style TargetType="{x:Type ListViewItem}"
-						   BasedOn="{StaticResource {x:Type ListViewItem}}">
+						   BasedOn="{StaticResource BaseListViewItem}">
 						<Setter Property="controls:SelectorExtensions.IsSelectable"
 								Value="False" />
 						<Setter Property="controls:SelectorExtensions.IsGridViewRow"
