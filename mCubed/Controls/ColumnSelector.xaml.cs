@@ -7,8 +7,10 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using mCubed.Core;
 
-namespace mCubed.Controls {
-	public partial class ColumnSelector : Popup {
+namespace mCubed.Controls
+{
+	public partial class ColumnSelector : Popup
+	{
 		#region Dependency Property: ColumnSettings
 
 		/// <summary>
@@ -16,7 +18,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private static void OnColumnSettingsChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		private static void OnColumnSettingsChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
 			var selector = sender as ColumnSelector;
 			if (selector != null)
 				selector.OnColumnSettingsChanged(e);
@@ -28,7 +31,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set the column settings used for this column selector [Bindable]
 		/// </summary>
-		public ColumnSettings ColumnSettings {
+		public ColumnSettings ColumnSettings
+		{
 			get { return (ColumnSettings)GetValue(ColumnSettingsProperty); }
 			set { SetValue(ColumnSettingsProperty, value); }
 		}
@@ -43,18 +47,20 @@ namespace mCubed.Controls {
 		/// <param name="sender">The sender object</param>
 		/// <param name="baseValue">The previous value</param>
 		/// <returns>The new value</returns>
-		private static object CoerceSelectedColumns(DependencyObject sender, object baseValue) {
+		private static object CoerceSelectedColumns(DependencyObject sender, object baseValue)
+		{
 			var selector = sender as ColumnSelector;
 			return selector == null ? baseValue : selector.OnSelectedColumnsChanging();
 		}
 
 		private static readonly DependencyPropertyKey SelectedColumnsProperty =
 			DependencyProperty.RegisterReadOnly("SelectedColumns", typeof(IEnumerable<ColumnVector>), typeof(ColumnSelector), new UIPropertyMetadata(null, null, new CoerceValueCallback(CoerceSelectedColumns)));
-		
+
 		/// <summary>
 		/// Get the collection of the selected columns [Bindable]
 		/// </summary>
-		public IEnumerable<ColumnVector> SelectedColumns {
+		public IEnumerable<ColumnVector> SelectedColumns
+		{
 			get { return (IEnumerable<ColumnVector>)GetValue(SelectedColumnsProperty.DependencyProperty); }
 			private set { SetValue(SelectedColumnsProperty, value); }
 		}
@@ -68,7 +74,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private static void OnSelectedColumnGroupChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		private static void OnSelectedColumnGroupChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
 			sender.InvalidateProperty(ColumnSelector.SelectedColumnsProperty.DependencyProperty);
 		}
 
@@ -78,7 +85,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set the column group that is used for the selected columns [Bindable]
 		/// </summary>
-		public string SelectedColumnGroup {
+		public string SelectedColumnGroup
+		{
 			get { return (string)GetValue(SelectedColumnGroupProperty); }
 			set { SetValue(SelectedColumnGroupProperty, value); }
 		}
@@ -93,10 +101,11 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set whether or not the previously selected columns should be shown [Bindable]
 		/// </summary>
-		public bool ShowSelectedColumns {
+		public bool ShowSelectedColumns
+		{
 			get { return (bool)GetValue(ShowSelectedColumnsProperty); }
 			set { SetValue(ShowSelectedColumnsProperty, value); }
-		}		
+		}
 
 		#endregion
 
@@ -112,7 +121,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Construct a new column selector user control that will be used to select columns
 		/// </summary>
-		public ColumnSelector() {
+		public ColumnSelector()
+		{
 			InitializeComponent();
 		}
 
@@ -125,10 +135,12 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnColumnMouseUp(object sender, MouseButtonEventArgs e) {
+		private void OnColumnMouseUp(object sender, MouseButtonEventArgs e)
+		{
 			var element = sender as FrameworkElement;
 			var context = element == null ? null : element.DataContext as ColumnDetail;
-			if (context != null) {
+			if (context != null)
+			{
 				if (SelectedColumns.Any(vector => vector.ColumnDetail == context))
 					OnColumnDeselected(context);
 				else
@@ -140,7 +152,8 @@ namespace mCubed.Controls {
 		/// Event that handles when a particular column detail has been selected
 		/// </summary>
 		/// <param name="column">The column detail that has been selected</param>
-		private void OnColumnSelected(ColumnDetail column) {
+		private void OnColumnSelected(ColumnDetail column)
+		{
 			if (ColumnSelected != null)
 				ColumnSelected(column);
 		}
@@ -149,16 +162,18 @@ namespace mCubed.Controls {
 		/// Event that handles when a particular column detail has been deselected
 		/// </summary>
 		/// <param name="column">The column detail that has been deselected</param>
-		private void OnColumnDeselected(ColumnDetail column) {
+		private void OnColumnDeselected(ColumnDetail column)
+		{
 			if (ColumnDeselected != null)
 				ColumnDeselected(column);
 		}
-		
+
 		/// <summary>
 		/// Event that handles when the column settings has changed
 		/// </summary>
 		/// <param name="e">The event arguments</param>
-		private void OnColumnSettingsChanged(DependencyPropertyChangedEventArgs e) {
+		private void OnColumnSettingsChanged(DependencyPropertyChangedEventArgs e)
+		{
 			// Unregister to the property changed
 			var oldValue = e.OldValue as INotifyPropertyChanged;
 			if (oldValue != null)
@@ -178,7 +193,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnColumnSettingsPropertyChanged(object sender, PropertyChangedEventArgs e) {
+		private void OnColumnSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
 			if (e.PropertyName == SelectedColumnGroup)
 				InvalidateProperty(ColumnSelector.SelectedColumnsProperty.DependencyProperty);
 		}
@@ -187,7 +203,8 @@ namespace mCubed.Controls {
 		/// Event that handles when the selected columns are in the process of changing
 		/// </summary>
 		/// <returns>The collection of selected columns</returns>
-		private object OnSelectedColumnsChanging() {
+		private object OnSelectedColumnsChanging()
+		{
 			// Ensure we have settings
 			if (ColumnSettings == null)
 				return null;

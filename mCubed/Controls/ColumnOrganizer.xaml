@@ -50,19 +50,43 @@
 								<Border Style="{DynamicResource HoverItem}"
 										Padding="5,3"
 										Cursor="Hand"
-										MouseLeftButtonUp="OnColumnDirectionSwithced">
+										MouseLeftButtonDown="OnColumnDirectionSwitched">
 									<Grid>
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition Width="*" />
 											<ColumnDefinition Width="5" />
 											<ColumnDefinition Width="Auto" />
+											<ColumnDefinition Width="Auto" />
+											<ColumnDefinition Width="2" />
+											<ColumnDefinition Width="Auto" />
 											<ColumnDefinition Width="5" />
 											<ColumnDefinition Width="Auto" />
 										</Grid.ColumnDefinitions>
 										<TextBlock Text="{Binding ColumnDetail.Display}" />
-										<Image Grid.Column="2"
+										<Border Grid.Column="2"
+												Cursor="Hand"
+												Padding="3"
+												Style="{DynamicResource HoverItem}"
+												ToolTip="Move this column before the previous column"
+												VerticalAlignment="Stretch"
+												MouseLeftButtonDown="OnColumnMovedUp">
+											<Path Style="{DynamicResource UpArrowPath}"
+												  VerticalAlignment="Center" />
+										</Border>
+										<Border Grid.Column="3"
+												Cursor="Hand"
+												Padding="3"
+												Style="{DynamicResource HoverItem}"
+												ToolTip="Move this column after the next column"
+												VerticalAlignment="Stretch"
+												MouseLeftButtonDown="OnColumnMovedDown">
+											<Path Style="{DynamicResource DownArrowPath}"
+												  VerticalAlignment="Center" />
+										</Border>
+										<Image Grid.Column="5"
 											   Height="16"
-											   Cursor="Hand">
+											   Cursor="Hand"
+											   VerticalAlignment="Center">
 											<Image.Style>
 												<Style TargetType="{x:Type Image}">
 													<Setter Property="Source"
@@ -81,11 +105,12 @@
 												</Style>
 											</Image.Style>
 										</Image>
-										<Image Grid.Column="4"
+										<Image Grid.Column="7"
 											   Source="{controls:Icon Type=Delete}"
 											   Height="16"
 											   Cursor="Hand"
-											   ToolTip="Delete this column from the group bys"
+											   ToolTip="Delete this column"
+											   VerticalAlignment="Center"
 											   MouseLeftButtonDown="OnColumnDeleted" />
 									</Grid>
 								</Border>

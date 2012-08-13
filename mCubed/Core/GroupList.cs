@@ -5,8 +5,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
 
-namespace mCubed.Core {
-	public static class GroupListHelper {
+namespace mCubed.Core
+{
+	public static class GroupListHelper
+	{
 		#region Static Members
 
 		/// <summary>
@@ -14,12 +16,14 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="value">The value to check if its type is a group list</param>
 		/// <returns>True if the given object is a group list, or false otherwise</returns>
-		public static bool IsGroupList(object value) {
+		public static bool IsGroupList(object value)
+		{
 			if (value == null)
 				return false;
 			Type genericType = typeof(GroupList<>);
 			Type type = value.GetType();
-			while (type != null) {
+			while (type != null)
+			{
 				if (type.IsGenericType && type.GetGenericTypeDefinition() == genericType)
 					return true;
 				type = type.BaseType;
@@ -30,7 +34,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class GroupList<T> : INotifyPropertyChanged, ICollection<T>, IDisposable {
+	public class GroupList<T> : INotifyPropertyChanged, ICollection<T>, IDisposable
+	{
 		#region Data Store
 
 		private static readonly string[] _itemProps = new string[] { "Items", "FirstItem", "Count", "Structure" };
@@ -54,14 +59,19 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the count of all the items in the group list [Bindable]
 		/// </summary>
-		public int Count {
-			get {
-				if (IsRoot) {
+		public int Count
+		{
+			get
+			{
+				if (IsRoot)
+				{
 					int count = 0;
 					foreach (T item in this)
 						count++;
 					return count;
-				} else {
+				}
+				else
+				{
 					return Root.Count;
 				}
 			}
@@ -95,11 +105,16 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the key that resembles a common value for all the items in this group
 		/// </summary>
-		public string Key {
-			get {
-				if (IsRoot) {
+		public string Key
+		{
+			get
+			{
+				if (IsRoot)
+				{
 					return "Root";
-				} else {
+				}
+				else
+				{
 					IKeyProvider<T> provider = Parent.Grouper as IKeyProvider<T>;
 					return provider == null ? null : provider.GetKey(FirstItem);
 				}
@@ -119,7 +134,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get whether or not notifications are currently being suppressed
 		/// </summary>
-		public bool IsNotificationSuppressed {
+		public bool IsNotificationSuppressed
+		{
 			get { return Root._suppressNotify; }
 			private set { Root._suppressNotify = value; }
 		}
@@ -152,11 +168,16 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the sorter that will be used to sort the items within this tree
 		/// </summary>
-		public IComparer<T> Sorter {
-			get {
-				if (IsRoot) {
+		public IComparer<T> Sorter
+		{
+			get
+			{
+				if (IsRoot)
+				{
 					return new CompositeComparer<T>(_sortBys);
-				} else {
+				}
+				else
+				{
 					return Root.Sorter;
 				}
 			}
@@ -184,7 +205,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Create a new group list object
 		/// </summary>
-		public GroupList() {
+		public GroupList()
+		{
 			_groupBys = new List<IComparer<T>>();
 			_sortBys = new List<IComparer<T>>();
 			_transactions = new Dictionary<int, GroupListTransaction<T>>();
@@ -196,7 +218,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="depth">The depth at which this group list is nested</param>
 		/// <param name="parent">The immediate parent of this group list for traversals</param>
-		private GroupList(int depth, GroupList<T> parent) {
+		private GroupList(int depth, GroupList<T> parent)
+		{
 			_depth = depth;
 			_parent = parent;
 		}
@@ -209,7 +232,8 @@ namespace mCubed.Core {
 		/// Event that handles when a property has changed
 		/// </summary>
 		/// <param name="properties">The name of the property or properties that has or have changed</param>
-		private void OnPropertyChanged(params string[] properties) {
+		private void OnPropertyChanged(params string[] properties)
+		{
 			PerformAction(list =>
 			{
 				list.OnPropertyChangedInternal(properties);
@@ -220,11 +244,13 @@ namespace mCubed.Core {
 		/// Event that handles when a property has changed, for internal purposes only
 		/// </summary>
 		/// <param name="properties">The name of the property or properties that has or have changed</param>
-		private void OnPropertyChangedInternal(params string[] properties) {
+		private void OnPropertyChangedInternal(params string[] properties)
+		{
 			// Notify up the chain of each property, using "this" as the sender
 			List<GroupListNotification<T>> notifications = new List<GroupListNotification<T>>();
 			GroupList<T> propertyChanged = this;
-			while (propertyChanged != null) {
+			while (propertyChanged != null)
+			{
 				notifications.Add(new GroupListNotification<T>
 				{
 					Properties = properties,
@@ -240,7 +266,8 @@ namespace mCubed.Core {
 		/// Event that handles when a property has changed, for internal purposes only
 		/// </summary>
 		/// <param name="notifications">The notifications for the properties that have changed</param>
-		private void OnPropertyChangedInternal(GroupListNotification<T>[] notifications) {
+		private void OnPropertyChangedInternal(GroupListNotification<T>[] notifications)
+		{
 			// Determine if the properties should be cached or actually be notified
 			Action<GroupListNotification<T>> func = GroupList<T>.OnPropertyChangedInternal;
 			if (IsNotificationSuppressed)
@@ -249,16 +276,21 @@ namespace mCubed.Core {
 				func = Root.Transaction.AddProperties;
 
 			// Send the notificatoins
-			foreach (var notification in notifications) {
+			foreach (var notification in notifications)
+			{
 				func(notification);
 			}
 
 			// Let the root notify itself
-			if (!IsRoot) {
+			if (!IsRoot)
+			{
 				List<string> properties = new List<string>();
-				foreach (GroupListNotification<T> notification in notifications) {
-					foreach (string notificationProperty in notification.Properties) {
-						if (!properties.Contains(notificationProperty)) {
+				foreach (GroupListNotification<T> notification in notifications)
+				{
+					foreach (string notificationProperty in notification.Properties)
+					{
+						if (!properties.Contains(notificationProperty))
+						{
 							properties.Add(notificationProperty);
 						}
 					}
@@ -273,7 +305,8 @@ namespace mCubed.Core {
 		/// <param name="propertyChanged">The list to use the property changed event handler from to notify of the property changed</param>
 		/// <param name="sender">The sender to send as the object that the property changed for</param>
 		/// <param name="properties">The name of the property or properties that has or have changed</param>
-		private static void OnPropertyChangedInternal(GroupListNotification<T> notification) {
+		private static void OnPropertyChangedInternal(GroupListNotification<T> notification)
+		{
 			PropertyChangedEventHandler handler = notification.PropertyChanged.PropertyChanged;
 			if (handler != null && notification.Properties != null)
 				foreach (string property in notification.Properties)
@@ -288,21 +321,24 @@ namespace mCubed.Core {
 		/// Add a suppressed notification to the cache
 		/// </summary>
 		/// <param name="notification">The notificatoin to supppress</param>
-		private void AddSuppressedNotification(GroupListNotification<T> notification) {
+		private void AddSuppressedNotification(GroupListNotification<T> notification)
+		{
 			_suppressNotifyCache.Add(notification);
 		}
 
 		/// <summary>
 		/// Clear the cache of suppressed notifications
 		/// </summary>
-		private void ClearSuppressedNotifications() {
+		private void ClearSuppressedNotifications()
+		{
 			_suppressNotifyCache.Clear();
 		}
 
 		/// <summary>
 		/// Notify all the suppressed notifications
 		/// </summary>
-		private void NotifySuppressedNotifications() {
+		private void NotifySuppressedNotifications()
+		{
 			OnPropertyChangedInternal(_suppressNotifyCache.ToArray());
 			ClearSuppressedNotifications();
 		}
@@ -317,7 +353,8 @@ namespace mCubed.Core {
 		/// <param name="action">The action the will be executed on the current list</param>
 		/// <param name="performOn">The list to perform the given action upon</param>
 		/// <param name="surroundWithTransaction">True to surround the action with a transaction, or false otherwise</param>
-		public void RunAction(Action<GroupList<T>> action, GroupList<T> performOn, bool surroundWithTransaction) {
+		public void RunAction(Action<GroupList<T>> action, GroupList<T> performOn, bool surroundWithTransaction)
+		{
 			// Begin a transaction, optionally
 			if (surroundWithTransaction)
 				performOn.BeginTransaction();
@@ -334,7 +371,8 @@ namespace mCubed.Core {
 		/// Perform the given action on the root of the list accordingly
 		/// </summary>
 		/// <param name="action">The action to perform</param>
-		private void PerformAction(Action<GroupList<T>> action) {
+		private void PerformAction(Action<GroupList<T>> action)
+		{
 			PerformAction(action, true, false, true);
 		}
 
@@ -345,17 +383,24 @@ namespace mCubed.Core {
 		/// <param name="performOnRoot">True to force the action on the root of the list, or false to use the "this" list</param>
 		/// <param name="bypassTransaction">True to bypass the transaction check forcing the action to be performed immediately, or false to add it to the current transaction if one exists</param>
 		/// <param name="surroundWithTransaction">True to surround the given action with a begin and end transaction, or false to run the action how it is</param>
-		private void PerformAction(Action<GroupList<T>> action, bool performOnRoot, bool bypassTransaction, bool surroundWithTransaction) {
+		private void PerformAction(Action<GroupList<T>> action, bool performOnRoot, bool bypassTransaction, bool surroundWithTransaction)
+		{
 			// Perform the action on the root or bypass the check accordingly
-			if (!performOnRoot || IsRoot) {
+			if (!performOnRoot || IsRoot)
+			{
 				// Check if a transaction is being used, otherwise just perform it
 				GroupList<T> performOn = performOnRoot ? Root : this;
-				if (!bypassTransaction && IsInTransaction) {
+				if (!bypassTransaction && IsInTransaction)
+				{
 					Transaction.AddAction(action, performOn, surroundWithTransaction);
-				} else {
+				}
+				else
+				{
 					RunAction(action, performOn, surroundWithTransaction);
 				}
-			} else {
+			}
+			else
+			{
 				Root.PerformAction(action, performOnRoot, bypassTransaction, surroundWithTransaction);
 			}
 		}
@@ -368,7 +413,8 @@ namespace mCubed.Core {
 		/// Add an item to the list
 		/// </summary>
 		/// <param name="item">The item to add to the list</param>
-		public void Add(T item) {
+		public void Add(T item)
+		{
 			PerformAction(list =>
 			{
 				list.AddItemToGroup(item);
@@ -380,7 +426,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="item">The item to remove from the list</param>
 		/// <returns>This method will ALWAYS return true regardless if the item was removed or not. ICollection requires the return value.</returns>
-		public bool Remove(T item) {
+		public bool Remove(T item)
+		{
 			PerformAction(list =>
 			{
 				list.RemoveItemFromGroup(item);
@@ -391,7 +438,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Resets the entire list to ensure the items are grouped and sorted properly
 		/// </summary>
-		public void Reset() {
+		public void Reset()
+		{
 			PerformAction(list =>
 			{
 				list.ResetInternal();
@@ -401,7 +449,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Resets the entire list to ensure the items are grouped and sorted properly, used for internal purposes
 		/// </summary>
-		private void ResetInternal() {
+		private void ResetInternal()
+		{
 			// Cache all the items
 			List<T> items = new List<T>();
 			foreach (T item in this)
@@ -419,7 +468,8 @@ namespace mCubed.Core {
 		/// Resets the given item within the list, re-placing it in its appropriate group and sort order
 		/// </summary>
 		/// <param name="item">The item that will be reset, only if the list already contains the item and if there is a group or sort by currently added</param>
-		public void Reset(T item) {
+		public void Reset(T item)
+		{
 			PerformAction(list =>
 			{
 				list.ResetInternal(item);
@@ -430,15 +480,18 @@ namespace mCubed.Core {
 		/// Resets the given item within the list, re-placing it in its appropriate group and sort order, used for internal purposes
 		/// </summary>
 		/// <param name="item">The item that will be reset, only if the list already contains the item and if there is a group or sort by currently added</param>
-		private void ResetInternal(T item) {
+		private void ResetInternal(T item)
+		{
 			// Make sure there's a group or sort by
-			if (_groupBys.Count == 0 && _sortBys.Count == 0) {
+			if (_groupBys.Count == 0 && _sortBys.Count == 0)
+			{
 				return;
 			}
 
 			// Find its current location
 			GroupList<T> currentGroup = FindItemsCurrentGroup(item);
-			if (currentGroup != null) {
+			if (currentGroup != null)
+			{
 				// Find its current index
 				int currentIndex = currentGroup._items.IndexOf(item);
 
@@ -457,9 +510,12 @@ namespace mCubed.Core {
 
 				// Only notify if a new group was chosen
 				IsNotificationSuppressed = false;
-				if (newGroup == currentGroup && newIndex == currentIndex) {
+				if (newGroup == currentGroup && newIndex == currentIndex)
+				{
 					ClearSuppressedNotifications();
-				} else {
+				}
+				else
+				{
 					NotifySuppressedNotifications();
 				}
 			}
@@ -470,11 +526,16 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="item">The item to retrieve the current group location for</param>
 		/// <returns>The current group location for the given item</returns>
-		private GroupList<T> FindItemsCurrentGroup(T item) {
-			if (_items.Contains(item)) {
+		private GroupList<T> FindItemsCurrentGroup(T item)
+		{
+			if (_items.Contains(item))
+			{
 				return this;
-			} else {
-				foreach (GroupList<T> group in _groups) {
+			}
+			else
+			{
+				foreach (GroupList<T> group in _groups)
+				{
 					GroupList<T> curGroup = group.FindItemsCurrentGroup(item);
 					if (curGroup != null)
 						return curGroup;
@@ -488,7 +549,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="item">The item to check if the list contains the item</param>
 		/// <returns>True if the list contains the item, or false otherwise</returns>
-		public bool Contains(T item) {
+		public bool Contains(T item)
+		{
 			// Check the items collection first
 			if (_items.Contains(item))
 				return true;
@@ -503,7 +565,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Clears all the items from the list
 		/// </summary>
-		public void Clear() {
+		public void Clear()
+		{
 			PerformAction(list =>
 			{
 				list.ClearInternal();
@@ -513,7 +576,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Clears all the items from the list, for internal purposes 
 		/// </summary>
-		private void ClearInternal() {
+		private void ClearInternal()
+		{
 			foreach (GroupList<T> group in _groups)
 				group.Dispose();
 			_groups.Clear();
@@ -530,7 +594,8 @@ namespace mCubed.Core {
 		/// Subscribe to the collection changed events on the given object, duplicating the items as the group bys for the list
 		/// </summary>
 		/// <param name="notifier">The object that stores the group bys and notifies when the collection has changed</param>
-		public void SubscribeGroupBy(INotifyCollectionChanged notifier) {
+		public void SubscribeGroupBy(INotifyCollectionChanged notifier)
+		{
 			PerformAction(list =>
 			{
 				list.SubscribeGroupByInternal(notifier);
@@ -541,7 +606,8 @@ namespace mCubed.Core {
 		/// Subscribe to the collection changed events on the given object, duplicating the items as the group bys for the list, for internal purposes
 		/// </summary>
 		/// <param name="notifier">The object that stores the group bys and notifies when the collection has changed</param>
-		private void SubscribeGroupByInternal(INotifyCollectionChanged notifier) {
+		private void SubscribeGroupByInternal(INotifyCollectionChanged notifier)
+		{
 			UnsubscribeGroupByInternal();
 			_groupByNotifier = notifier;
 			_groupByNotifier.CollectionChanged += new NotifyCollectionChangedEventHandler(OnGroupBysChanged);
@@ -554,7 +620,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Unubscribe to the collection changed events on the previously subscribed object
 		/// </summary>		
-		public void UnsubscribeGroupBy() {
+		public void UnsubscribeGroupBy()
+		{
 			PerformAction(list =>
 			{
 				list.UnsubscribeGroupByInternal();
@@ -564,7 +631,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Unubscribe to the collection changed events on the previously subscribed object, for internal purposes
 		/// </summary>
-		private void UnsubscribeGroupByInternal() {
+		private void UnsubscribeGroupByInternal()
+		{
 			if (_groupByNotifier != null)
 				_groupByNotifier.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnGroupBysChanged);
 		}
@@ -574,7 +642,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The collection that sent the notification</param>
 		/// <param name="e">The arguments stating the changes in the collection</param>
-		private void OnGroupBysChanged(object sender, NotifyCollectionChangedEventArgs e) {
+		private void OnGroupBysChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
 			PerformAction(list =>
 			{
 				OnGroupBysChangedInternal(sender, e);
@@ -586,19 +655,34 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The collection that sent the notification</param>
 		/// <param name="e">The arguments stating the changes in the collection</param>
-		private void OnGroupBysChangedInternal(object sender, NotifyCollectionChangedEventArgs e) {
-			if (e != null) {
+		private void OnGroupBysChangedInternal(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			if (e != null)
+			{
 				// Remove the old items
 				if (e.OldItems != null)
+				{
 					foreach (object item in e.OldItems)
+					{
 						if (item is IComparer<T>)
+						{
 							RemoveGroupByInternal((IComparer<T>)item);
+						}
+					}
+				}
 
 				// Add the new items
 				if (e.NewItems != null)
+				{
+					var index = e.NewStartingIndex;
 					foreach (object item in e.NewItems)
+					{
 						if (item is IComparer<T>)
-							AddGroupByInternal((IComparer<T>)item);
+						{
+							AddGroupByInternal((IComparer<T>)item, index++);
+						}
+					}
+				}
 			}
 		}
 
@@ -606,7 +690,8 @@ namespace mCubed.Core {
 		/// Event that handles when a group by was reset from within the reset event in the group by
 		/// </summary>
 		/// <param name="grouper">The grouper that has been reset</param>
-		private void OnGroupByReset(IComparer<T> grouper) {
+		private void OnGroupByReset(IComparer<T> grouper)
+		{
 			PerformAction(list =>
 			{
 				list.ResetGroupByInternal(grouper);
@@ -617,7 +702,8 @@ namespace mCubed.Core {
 		/// Add a group by to the list of group bys for the list
 		/// </summary>
 		/// <param name="grouper">The grouper that determines how to group the items</param>
-		public void AddGroupBy(IComparer<T> grouper) {
+		public void AddGroupBy(IComparer<T> grouper)
+		{
 			PerformAction(list =>
 			{
 				list.AddGroupByInternal(grouper);
@@ -628,33 +714,54 @@ namespace mCubed.Core {
 		/// Add a group by to the list of group bys for the list, for internal purposes
 		/// </summary>
 		/// <param name="grouper">The grouper that determines how to group the items</param>
-		private void AddGroupByInternal(IComparer<T> grouper) {
+		/// <param name="index">The index of which the group by is being inserted</param>
+		private void AddGroupByInternal(IComparer<T> grouper, int index = -1)
+		{
 			// Store the collection of group bys in the root
-			_groupBys.Add(grouper);
+			if (index > -1)
+			{
+				_groupBys.Insert(index, grouper);
+			}
+			else
+			{
+				_groupBys.Add(grouper);
+			}
 
 			// Register the reset delegate, if possible
 			if (grouper is IResettable<T>)
 				((IResettable<T>)grouper).Reset += new Action<IComparer<T>>(OnGroupByReset);
 
 			// Tell all the leafs to group themselves accordingly
-			AddGroup();
+			if (index > -1 && index < _groupBys.Count - 1)
+			{
+				ResetInternal();
+			}
+			else
+			{
+				AddGroup();
+			}
 		}
 
 		/// <summary>
 		/// Add a group by to the list of groups by for the list, internal for the leaves to perform the grouping
 		/// </summary>
-		private void AddGroup() {
+		private void AddGroup()
+		{
 			// Check if this is a leaf
-			if (IsLeaf) {
+			if (IsLeaf)
+			{
 				// Group the items accordingly if we've reached a leaf
-				foreach (T item in _items) {
+				foreach (T item in _items)
+				{
 					AddItemToGroup(item);
 				}
 
 				// Clear the list since the items have been redistributed
 				_items.Clear();
 				OnPropertyChanged(_itemProps);
-			} else {
+			}
+			else
+			{
 				// Continue until we've reached a leaf
 				foreach (GroupList<T> group in _groups)
 					group.AddGroup();
@@ -665,14 +772,18 @@ namespace mCubed.Core {
 		/// Groups the given item appropriately within the list, internal for the leaves to perform the grouping
 		/// </summary>
 		/// <param name="item">The item to add into the list</param>
-		private void AddItemToGroup(T item) {
+		private void AddItemToGroup(T item)
+		{
 			// Get the grouper
 			IComparer<T> grouper = Grouper;
 
 			// Check if there was a grouper
-			if (grouper == null) {
+			if (grouper == null)
+			{
 				AddItemSorted(item);
-			} else {
+			}
+			else
+			{
 				FindGroupForItem(grouper, item).AddItemToGroup(item);
 			}
 		}
@@ -681,7 +792,8 @@ namespace mCubed.Core {
 		/// Remove a group by from the list of group bys for the list
 		/// </summary>
 		/// <param name="grouper">The grouper that should be removed from the list of group bys</param>
-		public void RemoveGroupBy(IComparer<T> grouper) {
+		public void RemoveGroupBy(IComparer<T> grouper)
+		{
 			PerformAction(list =>
 			{
 				list.RemoveGroupByInternal(grouper);
@@ -692,7 +804,8 @@ namespace mCubed.Core {
 		/// Remove a group by from the list of group bys for the list, for internal purposes
 		/// </summary>
 		/// <param name="grouper">The grouper that should be removed from the list of group bys</param>
-		private void RemoveGroupByInternal(IComparer<T> grouper) {
+		private void RemoveGroupByInternal(IComparer<T> grouper)
+		{
 			// Remove the group by from the collection
 			_groupBys.Remove(grouper);
 
@@ -708,7 +821,8 @@ namespace mCubed.Core {
 		/// Remove a group from the list of groups since no more items fill the given group
 		/// </summary>
 		/// <param name="group">The group that will be removed from the list of groups</param>
-		private void RemoveGroup(GroupList<T> group) {
+		private void RemoveGroup(GroupList<T> group)
+		{
 			// Remove the group
 			group.Dispose();
 			_groups.Remove(group);
@@ -723,12 +837,14 @@ namespace mCubed.Core {
 		/// Remove a given item from the group that it currently resides in
 		/// </summary>
 		/// <param name="item">The item to remove from the group</param>
-		private void RemoveItemFromGroup(T item) {
+		private void RemoveItemFromGroup(T item)
+		{
 			// Get the grouper
 			IComparer<T> grouper = Grouper;
 
 			// Check if the list contains the item
-			if (_items.Contains(item)) {
+			if (_items.Contains(item))
+			{
 				// Remove the item
 				_items.Remove(item);
 				OnPropertyChanged(_itemProps);
@@ -736,7 +852,9 @@ namespace mCubed.Core {
 				// Check if itself needs to be removed
 				if (_items.Count == 0 && !IsRoot)
 					Parent.RemoveGroup(this);
-			} else {
+			}
+			else
+			{
 				GroupList<T>[] tempGroups = _groups.ToArray();
 				foreach (GroupList<T> group in tempGroups)
 					group.RemoveItemFromGroup(item);
@@ -749,23 +867,29 @@ namespace mCubed.Core {
 		/// <param name="grouper">The grouper to use to find where the item should belong</param>
 		/// <param name="item">The item to find the proper group for</param>
 		/// <returns>The list that will contain the given item</returns>
-		private GroupList<T> FindGroupForItem(IComparer<T> grouper, T item) {
+		private GroupList<T> FindGroupForItem(IComparer<T> grouper, T item)
+		{
 			// Find the group to place the item
 			GroupList<T> groupToAddItem = null;
 			int i = 0;
-			for (; i < _groups.Count; i++) {
+			for (; i < _groups.Count; i++)
+			{
 				GroupList<T> group = _groups[i];
 				int compare = grouper.Compare(item, group.FirstItem);
-				if (compare < 0) {
+				if (compare < 0)
+				{
 					break;
-				} else if (compare == 0) {
+				}
+				else if (compare == 0)
+				{
 					groupToAddItem = group;
 					break;
 				}
 			}
 
 			// Create a new group if a home wasn't found
-			if (groupToAddItem == null) {
+			if (groupToAddItem == null)
+			{
 				groupToAddItem = new GroupList<T>(Depth + 1, this);
 				_groups.Insert(i, groupToAddItem);
 				OnPropertyChanged(_groupProps);
@@ -776,7 +900,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Clear all the group bys in the list while reorganizing the list accordingly
 		/// </summary>
-		public void ClearGroupBys() {
+		public void ClearGroupBys()
+		{
 			PerformAction(list =>
 			{
 				list.ClearGroupBysInternal();
@@ -786,7 +911,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Clear all the group bys in the list while reorganizing the list accordingly, for internal purposes
 		/// </summary>
-		private void ClearGroupBysInternal() {
+		private void ClearGroupBysInternal()
+		{
 			// Unregister all the reset delegates, if possible
 			foreach (IComparer<T> grouper in _groupBys)
 				if (grouper is IResettable<T>)
@@ -803,7 +929,8 @@ namespace mCubed.Core {
 		/// Resets the given group by to ensure that the compare has produced the expected groups
 		/// </summary>
 		/// <param name="grouper">The grouper to reset to ensure the expected groups have been created</param>
-		public void ResetGroupBy(IComparer<T> grouper) {
+		public void ResetGroupBy(IComparer<T> grouper)
+		{
 			PerformAction(list =>
 			{
 				list.ResetGroupByInternal(grouper);
@@ -814,7 +941,8 @@ namespace mCubed.Core {
 		/// Resets the given group by to ensure that the compare has produced the expected groups, for internal purposes
 		/// </summary>
 		/// <param name="grouper">The grouper to reset to ensure the expected groups have been created</param>
-		private void ResetGroupByInternal(IComparer<T> grouper) {
+		private void ResetGroupByInternal(IComparer<T> grouper)
+		{
 			if (_groupBys.Contains(grouper))
 				ResetInternal();
 		}
@@ -828,7 +956,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <typeparam name="U">The type of collection that is storing the list of sort bys</typeparam>
 		/// <param name="notifier">The object that stores the sort bys and notifies when the collection has changed</param>
-		public void SubscribeSortBy<U>(U notifier) where U : INotifyCollectionChanged {
+		public void SubscribeSortBy<U>(U notifier) where U : INotifyCollectionChanged
+		{
 			PerformAction(list =>
 			{
 				list.SubscribeSortByInternal(notifier);
@@ -840,7 +969,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <typeparam name="U">The type of collection that is storing the list of sort bys</typeparam>
 		/// <param name="notifier">The object that stores the sort bys and notifies when the collection has changed</param>
-		private void SubscribeSortByInternal<U>(U notifier) where U : INotifyCollectionChanged {
+		private void SubscribeSortByInternal<U>(U notifier) where U : INotifyCollectionChanged
+		{
 			UnsubscribeSortByInternal();
 			_sortByNotifier = notifier;
 			_sortByNotifier.CollectionChanged += new NotifyCollectionChangedEventHandler(OnSortBysChanged);
@@ -853,7 +983,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Unubscribe to the collection changed events on the previously subscribed object
 		/// </summary>		
-		public void UnsubscribeSortBy() {
+		public void UnsubscribeSortBy()
+		{
 			PerformAction(list =>
 			{
 				list.UnsubscribeSortByInternal();
@@ -863,7 +994,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Unubscribe to the collection changed events on the previously subscribed object, for internal purposes
 		/// </summary>		
-		private void UnsubscribeSortByInternal() {
+		private void UnsubscribeSortByInternal()
+		{
 			if (_sortByNotifier != null)
 				_sortByNotifier.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnSortBysChanged);
 		}
@@ -873,7 +1005,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The collection that sent the notification</param>
 		/// <param name="e">The arguments stating the changes in the collection</param>
-		private void OnSortBysChanged(object sender, NotifyCollectionChangedEventArgs e) {
+		private void OnSortBysChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
 			PerformAction(list =>
 			{
 				list.OnSortBysChangedInternal(sender, e);
@@ -885,19 +1018,34 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The collection that sent the notification</param>
 		/// <param name="e">The arguments stating the changes in the collection</param>
-		private void OnSortBysChangedInternal(object sender, NotifyCollectionChangedEventArgs e) {
-			if (e != null) {
+		private void OnSortBysChangedInternal(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			if (e != null)
+			{
 				// Remove the old items
 				if (e.OldItems != null)
+				{
 					foreach (object item in e.OldItems)
+					{
 						if (item is IComparer<T>)
+						{
 							RemoveSortByInternal((IComparer<T>)item);
+						}
+					}
+				}
 
 				// Add the new items
 				if (e.NewItems != null)
+				{
+					int index = e.NewStartingIndex;
 					foreach (object item in e.NewItems)
+					{
 						if (item is IComparer<T>)
-							AddSortByInternal((IComparer<T>)item);
+						{
+							AddSortByInternal((IComparer<T>)item, index++);
+						}
+					}
+				}
 			}
 		}
 
@@ -905,7 +1053,8 @@ namespace mCubed.Core {
 		/// Event that handles when a sort by was reset from within the reset event in the sort by
 		/// </summary>
 		/// <param name="sorter">The sorter that has been reset</param>
-		private void OnSortByReset(IComparer<T> sorter) {
+		private void OnSortByReset(IComparer<T> sorter)
+		{
 			PerformAction(list =>
 			{
 				list.ResetSortByInternal(sorter);
@@ -916,7 +1065,8 @@ namespace mCubed.Core {
 		/// Add a sort by to the end of the list of sort bys for the list
 		/// </summary>
 		/// <param name="sorter">The sorter that determines how the items should be sorted</param>
-		public void AddSortBy(IComparer<T> sorter) {
+		public void AddSortBy(IComparer<T> sorter)
+		{
 			PerformAction(list =>
 			{
 				list.AddSortByInternal(sorter);
@@ -927,9 +1077,18 @@ namespace mCubed.Core {
 		/// Add a sort by to the end of the list of sort bys for the list, for internal purposes
 		/// </summary>
 		/// <param name="sorter">The sorter that determines how the items should be sorted</param>
-		private void AddSortByInternal(IComparer<T> sorter) {
+		/// <param name="index">The index of which the sort by is being inserted</param>
+		private void AddSortByInternal(IComparer<T> sorter, int index = -1)
+		{
 			// Store the collection of sort bys in the root
-			_sortBys.Add(sorter);
+			if (index > -1)
+			{
+				_sortBys.Insert(index, sorter);
+			}
+			else
+			{
+				_sortBys.Add(sorter);
+			}
 
 			// Register the reset delegate, if possible
 			if (sorter is IResettable<T>)
@@ -943,7 +1102,8 @@ namespace mCubed.Core {
 		/// Remove the given sort by from the list of sort bys for the list
 		/// </summary>
 		/// <param name="sorter">The sorter that should be removed from the list of sort bys</param>
-		public void RemoveSortBy(IComparer<T> sorter) {
+		public void RemoveSortBy(IComparer<T> sorter)
+		{
 			PerformAction(list =>
 			{
 				list.RemoveSortByInternal(sorter);
@@ -954,7 +1114,8 @@ namespace mCubed.Core {
 		/// Remove the given sort by from the list of sort bys for the list, for internal purposes
 		/// </summary>
 		/// <param name="sorter">The sorter that should be removed from the list of sort bys</param>
-		private void RemoveSortByInternal(IComparer<T> sorter) {
+		private void RemoveSortByInternal(IComparer<T> sorter)
+		{
 			// Remove the sort by from the collection
 			_sortBys.Remove(sorter);
 
@@ -970,7 +1131,8 @@ namespace mCubed.Core {
 		/// Adds the given item into the leave of the list sorted properly
 		/// </summary>
 		/// <param name="item">The item that will be added into the list sorted</param>
-		private void AddItemSorted(T item) {
+		private void AddItemSorted(T item)
+		{
 			IComparer<T> sorter = Sorter;
 			int i = 0;
 			while (i < _items.Count && sorter.Compare(item, _items[i]) >= 0)
@@ -983,11 +1145,15 @@ namespace mCubed.Core {
 		/// Resorts all the leaves in the list to ensure the items are properly sorted, for internal purposes.
 		/// This uses the System.Collections.Generic.List&lt;T&gt;.Sort method to sort the items which is an unstable quicksort.
 		/// </summary>
-		private void ResortInternal() {
-			if (IsLeaf) {
+		private void ResortInternal()
+		{
+			if (IsLeaf)
+			{
 				_items.Sort(Sorter);
 				OnPropertyChanged(_itemProps);
-			} else {
+			}
+			else
+			{
 				foreach (GroupList<T> group in _groups)
 					group.ResortInternal();
 			}
@@ -996,7 +1162,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Clears all the sort bys for the list, however no rearranging of the items occurs
 		/// </summary>
-		public void ClearSortBys() {
+		public void ClearSortBys()
+		{
 			PerformAction(list =>
 			{
 				list.ClearGroupBysInternal();
@@ -1006,7 +1173,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Clears all the sort bys for the list, however no rearranging of the items occurs, for internal purposes
 		/// </summary>
-		private void ClearSortBysInternal() {
+		private void ClearSortBysInternal()
+		{
 			// Unregister all the reset delegates, if possible
 			foreach (IComparer<T> sorter in _sortBys)
 				if (sorter is IResettable<T>)
@@ -1020,7 +1188,8 @@ namespace mCubed.Core {
 		/// Resets the given sort by to ensure that the compare has produced the expected sort
 		/// </summary>
 		/// <param name="sorter">The sorter to reset to ensure the expected sort has been produced</param>
-		public void ResetSortBy(IComparer<T> sorter) {
+		public void ResetSortBy(IComparer<T> sorter)
+		{
 			PerformAction(list =>
 			{
 				list.ResetSortByInternal(sorter);
@@ -1031,7 +1200,8 @@ namespace mCubed.Core {
 		/// Resets the given sort by to ensure that the compare has produced the expected sort, for internal purposes
 		/// </summary>
 		/// <param name="sorter">The sorter to reset to ensure the expected sort has been produced</param>
-		private void ResetSortByInternal(IComparer<T> sorter) {
+		private void ResetSortByInternal(IComparer<T> sorter)
+		{
 			if (_sortBys.Contains(sorter))
 				ResortInternal();
 		}
@@ -1043,7 +1213,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Begin a transaction on this thread that will queue up all the actions afterward until the transaction has ended or has been cancelled
 		/// </summary>
-		public void BeginTransaction() {
+		public void BeginTransaction()
+		{
 			PerformAction(list =>
 			{
 				// Retrieve the transaction
@@ -1060,21 +1231,27 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Ends the transaction that has been started on this thread by performing all the actions that have been queued up
 		/// </summary>
-		public void EndTransaction() {
+		public void EndTransaction()
+		{
 			PerformAction(list =>
 			{
 				// Retrieve the transaction
 				GroupListTransaction<T> transaction = list.Transaction;
-				if (transaction != null) {
+				if (transaction != null)
+				{
 					// Check if we can run it, or decrement the run count if we can't
-					if (transaction.RunCount > 0) {
+					if (transaction.RunCount > 0)
+					{
 						transaction.RunCount--;
-					} else {
+					}
+					else
+					{
 						// Run the transaction
 						Queue<GroupListTransactionItem<T>> actions = transaction.Actions;
-						while (actions.Count > 0) {
+						while (actions.Count > 0)
+						{
 							GroupListTransactionItem<T> item = actions.Dequeue();
-							lock(list)
+							lock (list)
 								RunAction(item.Action, item.PerformOn, item.SurroundWithTransaction);
 							item.Dispose();
 						}
@@ -1096,12 +1273,14 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Cancel the transaction that has been started on this thread if a transaction has started
 		/// </summary>
-		public void CancelTransaction() {
+		public void CancelTransaction()
+		{
 			PerformAction(list =>
 			{
 				// Retrieve the transaction
 				GroupListTransaction<T> transaction = list.Transaction;
-				if (transaction != null) {
+				if (transaction != null)
+				{
 					// Remove the transaction
 					list._transactions.Remove(ThreadID);
 
@@ -1125,23 +1304,31 @@ namespace mCubed.Core {
 		/// Returns the structure of the list as a flat structure instead of a hierarchical strucutre
 		/// </summary>
 		/// <returns>The structure of the list as a flast structure</returns>
-		private IEnumerable<object> GetStructure() {
-			try {
+		private IEnumerable<object> GetStructure()
+		{
+			try
+			{
 				if (IsRoot)
 					Monitor.Enter(Root);
 				List<object> items = new List<object>();
-				if (IsLeaf) {
+				if (IsLeaf)
+				{
 					foreach (T item in Items)
 						items.Add(item);
-				} else {
-					foreach (GroupList<T> group in Groups) {
+				}
+				else
+				{
+					foreach (GroupList<T> group in Groups)
+					{
 						items.Add(group);
 						foreach (object item in group.Structure)
 							items.Add(item);
 					}
 				}
 				return items;
-			} finally {
+			}
+			finally
+			{
 				if (IsRoot)
 					Monitor.Exit(Root);
 			}
@@ -1151,20 +1338,27 @@ namespace mCubed.Core {
 		/// Returns an enumerator that iterates through the list
 		/// </summary>
 		/// <returns>An enumerator that iterates through the list</returns>
-		public IEnumerator<T> GetEnumerator() {
-			try {
+		public IEnumerator<T> GetEnumerator()
+		{
+			try
+			{
 				if (IsRoot)
 					Monitor.Enter(Root);
-				if (IsLeaf) {
+				if (IsLeaf)
+				{
 					return _items.GetEnumerator();
-				} else {
+				}
+				else
+				{
 					List<T> items = new List<T>();
 					foreach (GroupList<T> group in Groups)
 						foreach (T item in group)
 							items.Add(item);
 					return items.GetEnumerator();
 				}
-			} finally {
+			}
+			finally
+			{
 				if (IsRoot)
 					Monitor.Exit(Root);
 			}
@@ -1174,7 +1368,8 @@ namespace mCubed.Core {
 		/// Returns an enumerator that iterates through the list
 		/// </summary>
 		/// <returns>An enumerator that iterates through the list</returns>
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
 			return GetEnumerator();
 		}
 
@@ -1187,7 +1382,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="array">The array in which the items will be copied to</param>
 		/// <param name="arrayIndex">The array index in which to start copying the items</param>
-		public void CopyTo(T[] array, int arrayIndex) {
+		public void CopyTo(T[] array, int arrayIndex)
+		{
 			List<T> items = new List<T>();
 			foreach (T item in this)
 				items.Add(item);
@@ -1201,7 +1397,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the list, mainly used to release resources properly for the sub-groups
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe from delegates
 			UnsubscribeGroupByInternal();
 			UnsubscribeSortByInternal();
@@ -1220,7 +1417,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class GroupListTransaction<T> : IDisposable {
+	public class GroupListTransaction<T> : IDisposable
+	{
 		#region Data Store
 
 		private readonly Queue<GroupListTransactionItem<T>> _actions = new Queue<GroupListTransactionItem<T>>();
@@ -1255,7 +1453,8 @@ namespace mCubed.Core {
 		/// <param name="action">The action to add to the transaction</param>
 		/// <param name="performOn">The list to perform the given action upon</param>
 		/// <param name="surroundWithTransaction">True to surround the given action within a transaction, or false otherwise</param>
-		public void AddAction(Action<GroupList<T>> action, GroupList<T> performOn, bool surroundWithTransaction) {
+		public void AddAction(Action<GroupList<T>> action, GroupList<T> performOn, bool surroundWithTransaction)
+		{
 			GroupListTransactionItem<T> item = new GroupListTransactionItem<T>()
 			{
 				Action = action,
@@ -1269,11 +1468,14 @@ namespace mCubed.Core {
 		/// Add a list of properties that have changed, only keeping the distinct properties
 		/// </summary>
 		/// <param name="notification">The nofitication that should be queued up</param>
-		public void AddProperties(GroupListNotification<T> notification) {
+		public void AddProperties(GroupListNotification<T> notification)
+		{
 			// Check if a current notification can be modified
-			foreach (GroupListNotification<T> property in Properties) {
+			foreach (GroupListNotification<T> property in Properties)
+			{
 				// Check if the property changed and sender are the same
-				if (property.PropertyChanged == notification.PropertyChanged && property.Sender == notification.Sender) {
+				if (property.PropertyChanged == notification.PropertyChanged && property.Sender == notification.Sender)
+				{
 					// Create an array containing the distinct properties from the old notification and new notification
 					List<string> properties = new List<string>(property.Properties);
 					foreach (string newProp in notification.Properties)
@@ -1297,7 +1499,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the transaction accordingly by ensuring it references no actions and no properties
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Dispose all disposable references it created
 			foreach (GroupListTransactionItem<T> action in _actions)
 				action.Dispose();
@@ -1310,7 +1513,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class GroupListTransactionItem<T> : IDisposable {
+	public class GroupListTransactionItem<T> : IDisposable
+	{
 		#region Properties
 
 		public Action<GroupList<T>> Action { get; set; }
@@ -1324,7 +1528,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the transaction item properly
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Clear children references to ensure no cyclic references
 			Action = null;
 			PerformOn = null;
@@ -1333,7 +1538,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class GroupListNotification<T> {
+	public class GroupListNotification<T>
+	{
 		#region Properties
 
 		/// <summary>
@@ -1354,7 +1560,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class CompositeComparer<T> : IComparer<T> {
+	public class CompositeComparer<T> : IComparer<T>
+	{
 		#region Data Store
 
 		private IEnumerable<IComparer<T>> _comparers = new IComparer<T>[0];
@@ -1367,7 +1574,8 @@ namespace mCubed.Core {
 		/// Create a composite comparer that takes the collection of comparers to compare by
 		/// </summary>
 		/// <param name="comparers">The collection of comparers to compare by</param>
-		public CompositeComparer(IEnumerable<IComparer<T>> comparers) {
+		public CompositeComparer(IEnumerable<IComparer<T>> comparers)
+		{
 			if (comparers != null)
 				_comparers = comparers;
 		}
@@ -1382,8 +1590,10 @@ namespace mCubed.Core {
 		/// <param name="x">The left item in the comparison</param>
 		/// <param name="y">The right item in the comparison</param>
 		/// <returns>A negative integer if the left item is less than the right item, positive if it's vice versa, or 0 if they're equal</returns>
-		public int Compare(T x, T y) {
-			foreach (IComparer<T> comparer in _comparers) {
+		public int Compare(T x, T y)
+		{
+			foreach (IComparer<T> comparer in _comparers)
+			{
 				int compare = comparer.Compare(x, y);
 				if (compare != 0)
 					return compare;
@@ -1394,7 +1604,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public interface IKeyProvider<T> {
+	public interface IKeyProvider<T>
+	{
 		/// <summary>
 		/// Get the key or string representation for the given item
 		/// </summary>
@@ -1402,7 +1613,8 @@ namespace mCubed.Core {
 		/// <returns>The key or string representation for the given item</returns>
 		string GetKey(T item);
 	}
-	public interface IResettable<T> {
+	public interface IResettable<T>
+	{
 		event Action<IComparer<T>> Reset;
 	}
 }

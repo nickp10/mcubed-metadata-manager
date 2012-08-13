@@ -5,8 +5,10 @@ using System.Windows.Data;
 using System.Windows.Input;
 using mCubed.Core;
 
-namespace mCubed.Controls {
-	public partial class ColumnOrganizer : UserControl {
+namespace mCubed.Controls
+{
+	public partial class ColumnOrganizer : UserControl
+	{
 		#region Dependency Property: ColumnSettings
 
 		public static readonly DependencyProperty ColumnSettingsProperty =
@@ -15,7 +17,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set the column settings that will be used by the organizer [Bindable]
 		/// </summary>
-		public ColumnSettings ColumnSettings {
+		public ColumnSettings ColumnSettings
+		{
 			get { return (ColumnSettings)GetValue(ColumnSettingsProperty); }
 			set { SetValue(ColumnSettingsProperty, value); }
 		}
@@ -30,7 +33,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set the header that will be used for the column organizer [Bindable]
 		/// </summary>
-		public string Header {
+		public string Header
+		{
 			get { return (string)GetValue(HeaderProperty); }
 			set { SetValue(HeaderProperty, value); }
 		}
@@ -45,7 +49,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Get/set the column group that is used for the selected columns [Bindable]
 		/// </summary>
-		public string SelectedColumnGroup {
+		public string SelectedColumnGroup
+		{
 			get { return (string)GetValue(SelectedColumnGroupProperty); }
 			set { SetValue(SelectedColumnGroupProperty, value); }
 		}
@@ -57,7 +62,8 @@ namespace mCubed.Controls {
 		/// <summary>
 		/// Create a new column organizer control
 		/// </summary>
-		public ColumnOrganizer() {
+		public ColumnOrganizer()
+		{
 			// Setup the loaded event
 			Loaded += delegate
 			{
@@ -80,7 +86,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnOrganizerShown(object sender, RoutedEventArgs e) {
+		private void OnOrganizerShown(object sender, RoutedEventArgs e)
+		{
 			OrganizerPopup.IsOpen = true;
 		}
 
@@ -89,7 +96,8 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnSelectorShown(object sender, MouseButtonEventArgs e) {
+		private void OnSelectorShown(object sender, MouseButtonEventArgs e)
+		{
 			ColumnSelector.IsOpen = true;
 		}
 
@@ -97,7 +105,8 @@ namespace mCubed.Controls {
 		/// Event that handles when a column has been selected
 		/// </summary>
 		/// <param name="detail">The column detail that has been selected</param>
-		private void OnColumnSelected(ColumnDetail detail) {
+		private void OnColumnSelected(ColumnDetail detail)
+		{
 			ColumnSettings[SelectedColumnGroup].Add(new ColumnVector(detail));
 		}
 
@@ -106,11 +115,15 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnColumnDeleted(object sender, MouseButtonEventArgs e) {
+		private void OnColumnDeleted(object sender, MouseButtonEventArgs e)
+		{
 			var element = sender as FrameworkElement;
 			var vector = element == null ? null : element.DataContext as ColumnVector;
 			if (vector != null)
+			{
 				ColumnSettings[SelectedColumnGroup].Remove(vector);
+			}
+			e.Handled = true;
 		}
 
 		/// <summary>
@@ -118,11 +131,57 @@ namespace mCubed.Controls {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnColumnDirectionSwithced(object sender, MouseButtonEventArgs e) {
+		private void OnColumnDirectionSwitched(object sender, MouseButtonEventArgs e)
+		{
 			var element = sender as FrameworkElement;
 			var vector = element == null ? null : element.DataContext as ColumnVector;
 			if (vector != null)
+			{
 				vector.Direction = vector.Direction == ColumnDirection.Ascending ? ColumnDirection.Descending : ColumnDirection.Ascending;
+			}
+		}
+
+		/// <summary>
+		/// Event that handles when a column should be moved up or down
+		/// </summary>
+		/// <param name="sender">The sender object</param>
+		/// <param name="e">The event arguments</param>
+		/// <param name="offset">The direction in which the column should be moved (-1 for up, +1 for down)</param>
+		private void OnColumnMoved(object sender, MouseButtonEventArgs e, int offset)
+		{
+			var element = sender as FrameworkElement;
+			var vector = element == null ? null : element.DataContext as ColumnVector;
+			if (vector != null)
+			{
+				var list = ColumnSettings[SelectedColumnGroup];
+				var index = list.IndexOf(vector);
+				var newIndex = index + offset;
+				if (index >= 0 && index < list.Count && newIndex >= 0 && newIndex < list.Count)
+				{
+					list.Move(index, newIndex);
+				}
+			}
+			e.Handled = true;
+		}
+
+		/// <summary>
+		/// Event that handles when a column should be moved up
+		/// </summary>
+		/// <param name="sender">The sender object</param>
+		/// <param name="e">The event arguments</param>
+		private void OnColumnMovedUp(object sender, MouseButtonEventArgs e)
+		{
+			OnColumnMoved(sender, e, -1);
+		}
+
+		/// <summary>
+		/// Event that handles when a column should be moved down
+		/// </summary>
+		/// <param name="sender">The sender object</param>
+		/// <param name="e">The event arguments</param>
+		private void OnColumnMovedDown(object sender, MouseButtonEventArgs e)
+		{
+			OnColumnMoved(sender, e, 1);
 		}
 
 		#endregion
