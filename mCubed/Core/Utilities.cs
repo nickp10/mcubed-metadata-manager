@@ -848,7 +848,7 @@ namespace mCubed.Core
 	public enum MetaDataPicResource { Default, InvalidFormat }
 	public enum MetaDataStatus { None, Loaded, Edit }
 	public enum MetaDataValueStatus { Read, ReadEdit, Edit }
-	public enum TabOption { Application, Library, Keyboard, Formulas, About, Credits, Help }
+	public enum TabOption { Application, Advanced, Library, Keyboard, Formulas, About, Credits, Help }
 	public interface ICopiable<T> where T : ICopiable<T>
 	{
 		void CopyFrom(T obj);
