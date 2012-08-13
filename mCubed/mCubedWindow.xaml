@@ -12,6 +12,9 @@
 		Height="800"
 		Width="1000">
 	<Window.Resources>
+		<controls:BoolToVisibilityConverter TrueVisibility="Visible"
+											FalseVisibility="Hidden"
+											x:Key="BoolToVisibilityConverter" />
 		<controls:MediaStateToDescriptionConverter x:Key="MediaStateToDescriptionConverter" />
 		<controls:MediaStateToImageConverter x:Key="MediaStateToImageConverter" />
 		<controls:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
@@ -103,22 +106,9 @@
 							<Path Grid.Column="0"
 								  IsHitTestVisible="False"
 								  HorizontalAlignment="Center"
-								  VerticalAlignment="Center">
-								<Path.Style>
-									<Style BasedOn="{StaticResource RightArrowPath}"
-										   TargetType="{x:Type Path}">
-										<Setter Property="Visibility"
-												Value="Hidden" />
-										<Style.Triggers>
-											<DataTrigger Binding="{Binding IsLoaded}"
-														 Value="True">
-												<Setter Property="Visibility"
-														Value="Visible" />
-											</DataTrigger>
-										</Style.Triggers>
-									</Style>
-								</Path.Style>
-							</Path>
+								  VerticalAlignment="Center"
+								  Visibility="{Binding IsLoaded, Converter={StaticResource BoolToVisibilityConverter}}"
+								  Style="{DynamicResource RightArrowPath}" />
 							<TextBlock Grid.Column="2"
 									   IsHitTestVisible="False"
 									   Text="{Binding DisplayName}" />

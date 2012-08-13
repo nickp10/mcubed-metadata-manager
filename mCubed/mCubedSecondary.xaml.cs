@@ -16,7 +16,7 @@ namespace mCubed
 	{
 		#region Data Store
 
-		private static DateTime _releaseDate = new DateTime(2012, 9, 1);
+		private static DateTime _releaseDate = new DateTime(2012, 8, 14);
 
 		#endregion
 
@@ -316,8 +316,8 @@ namespace mCubed
 		#region Credits
 
 		private static readonly IEnumerable _credits = new[] {
-			new { Author = "Nick Paddock", Project = "mCubed Core", Version = "Music Meta-data Manager", URL = "http://mcubed.dyndns.info/" },
-			new { Author = "Nick Paddock", Project = "mCubed UI", Version = "Music Meta-data Manager", URL = "http://mcubed.dyndns.info/" },
+			new { Author = "Nick Paddock", Project = "mCubed Core", Version = "1.00", URL = "http://mcubed.dyndns.info/" },
+			new { Author = "Nick Paddock", Project = "mCubed UI", Version = "1.00", URL = "http://mcubed.dyndns.info/" },
 			new { Author = "Mark James", Project = "Silk Icon Set", Version = "1.3", URL = "http://www.famfamfam.com/lab/icons/silk/" },
 			new { Author = "Banshee Development Team", Project = "TagLib#", Version = "2.1.0.0", URL = "https://github.com/mono/taglib-sharp/" }
 		};

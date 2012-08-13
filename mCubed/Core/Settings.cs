@@ -894,7 +894,10 @@ namespace mCubed.Core
 			// Get the key for the collection that changed
 			var pair = _collections.SingleOrDefault(c => c.Value == sender);
 			if (!string.IsNullOrEmpty(pair.Key))
+			{
 				this.OnPropertyChanged(pair.Key);
+				ReevaluateColumnVectorPositions(pair.Value);
+			}
 		}
 
 		#endregion
@@ -985,6 +988,22 @@ namespace mCubed.Core
 					item.Dispose();
 					collection.Value.Remove(item);
 				}
+			}
+		}
+
+		/// <summary>
+		/// Re-evalutes the position of the column vectors for the given collection.
+		/// For instance, the first column vector will be marked as such. The last
+		/// column vector will also be marked as such.
+		/// </summary>
+		/// <param name="collection">The collection to re-evalute the column vector positions for.</param>
+		private void ReevaluateColumnVectorPositions(ObservableCollection<ColumnVector> collection)
+		{
+			for (int i = 0; i < collection.Count; i++)
+			{
+				var vector = collection[i];
+				vector.IsFirst = i <= 0;
+				vector.IsLast = i >= collection.Count - 1;
 			}
 		}
 

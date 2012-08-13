@@ -1,6 +1,7 @@
 ﻿<Window x:Class="mCubed.mCubedSecondary"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:controls="clr-namespace:mCubed.Controls"
 		xmlns:core="clr-namespace:mCubed.Core"
 		xmlns:local="clr-namespace:mCubed"
 		AllowsTransparency="True"
@@ -10,6 +11,11 @@
 		ShowInTaskbar="False"
 		WindowStyle="None"
 		WindowStartupLocation="CenterOwner">
+	<Window.Resources>
+		<controls:BoolToVisibilityConverter TrueVisibility="Visible"
+											FalseVisibility="Hidden"
+											x:Key="BoolToVisibilityConverter" />
+	</Window.Resources>
 	<Border DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
 			Background="{DynamicResource MainBrush}"
 			Padding="25"
@@ -591,22 +597,9 @@
 												<DataTemplate>
 													<WrapPanel Margin="2">
 														<Path HorizontalAlignment="Center"
-															  VerticalAlignment="Center">
-															<Path.Style>
-																<Style BasedOn="{StaticResource RightArrowPath}"
-																	   TargetType="{x:Type Path}">
-																	<Setter Property="Visibility"
-																			Value="Hidden" />
-																	<Style.Triggers>
-																		<DataTrigger Binding="{Binding IsLoaded}"
-																					 Value="True">
-																			<Setter Property="Visibility"
-																					Value="Visible" />
-																		</DataTrigger>
-																	</Style.Triggers>
-																</Style>
-															</Path.Style>
-														</Path>
+															  VerticalAlignment="Center"
+															  Visibility="{Binding IsLoaded, Converter={StaticResource BoolToVisibilityConverter}}"
+															  Style="{DynamicResource RightArrowPath}" />
 														<TextBlock Margin="5,0,0,0"
 																   Text="{Binding Type}" />
 													</WrapPanel>
@@ -782,15 +775,15 @@
 								   Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}, Path=ViewportWidth}">
 							<Run FontWeight="Bold">mCubed For Windows</Run> is an all-inclusive media manager. The application is described by its version name.
 							The version name will always fulfill the acronym of mCubed (three M's). The first release of mCubed is Music Meta-data
-							Manager. This means that this version is only for meta-data purposes for music files. Future releases of mCubed will, 
+							Manager. This means that this version is primarily for meta-data purposes involving music files. Future releases of mCubed will, 
 							hopefully, improve upon this release by expanding the acronym to be broader. The ultimate goal is Multi-Media Manager.
 							<LineBreak />
 							<LineBreak />
-							I started this project in the fall of 2008, but it has been a dream of mine since I was a little kid. I've always wanted
+							I started this project in the fall of 2008, but it has been a dream of mine since I was a little kid. I have always wanted
 							to write my own applications. As far as I can remember, I always wanted my own media player. I don't know what my fascination
 							of media players is, but I enjoy them. I, personally, have complaints about every media player I've ever used, mainly with their
-							meta-data features. That is why I finally began working on this project; I wanted to make a media player customized to my needs
-							and my needs only. This became known as the Music Meta-data Manager.
+							meta-data features. That is why I finally began working on this project; I wanted to make a media player customized to my wants
+							and needs. This became known as the Music Meta-data Manager.
 							<LineBreak />
 							<LineBreak />
 							With the progress of the project coming along much better than I ever imagined, I decided I would release it publicly.
@@ -800,14 +793,9 @@
 							aspects.
 							<LineBreak />
 							<LineBreak />
-							After nearly 2 years in development, I finally decided to release an official beta version of the application. This beta release
-							marked the first major milestone in the life of mCubed. Nearly 7 months later, the second beta of the application was released.
-							This particular beta added many great features and improvements, but still lacked perfection, and it also included the biggest
-							feature in mCubed's history: the greatly improved library viewer. This marked the second major milestone in its ongoing history.
-							Shortly thereafter, a third beta was released improving and polishing many features throughout the application. This release
-							is the closest to an official release that mCubed has been. A month later, a fourth beta was released significantly improving
-							the performance of the application. It also added several minor changes and features. With these milestones accomplished, the
-							future of mCubed only holds room for improvement.
+							After nearly 4 years in development, I finally decided to release an official version of the application. This release marked
+							the first major milestone in the life of <Run FontWeight="Bold">mCubed For Windows</Run>. With this accomplishment, the future
+							of mCubed only holds room for improvement.
 						</TextBlock>
 					</ScrollViewer>
 				</TabItem>

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace mCubed.Core {
-	public class ColumnDetail : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+namespace mCubed.Core
+{
+	public class ColumnDetail : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Data Store
 
 		private string _display;
@@ -20,7 +22,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the value that should be displayed when the column itself is being displayed [Bindable]
 		/// </summary>
-		public string Display {
+		public string Display
+		{
 			get { return _display; }
 			set { this.SetAndNotify(ref _display, value, "Display"); }
 		}
@@ -37,7 +40,8 @@ namespace mCubed.Core {
 		/// value for this column. "Title" with Type equal to Formula means that the formula with a name
 		/// of "Title" will be used to generate the value displayed for each instance under this column. [Bindable]
 		/// </summary>
-		public string Key {
+		public string Key
+		{
 			get { return _key; }
 			private set { this.SetAndNotify(ref _key, value, "Key"); }
 		}
@@ -50,7 +54,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the type of column that the detail represents [Bindable]
 		/// </summary>
-		public ColumnType Type {
+		public ColumnType Type
+		{
 			get { return _type; }
 			private set { this.SetAndNotify(ref _type, value, "Type"); }
 		}
@@ -69,7 +74,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="formula">The formula for the column to replicate</param>
 		public ColumnDetail(MetaDataFormula formula)
-			: this(ColumnType.Formula, formula.Name, formula.Name) {
+			: this(ColumnType.Formula, formula.Name, formula.Name)
+		{
 			_formula = formula;
 			RegisterFormula();
 		}
@@ -79,7 +85,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="property">The property for the column to replicate</param>
 		public ColumnDetail(MetaDataAttribute property)
-			: this(ColumnType.Property, property.Property.Name, property.Display) {
+			: this(ColumnType.Property, property.Property.Name, property.Display)
+		{
 			_property = property;
 		}
 
@@ -89,12 +96,16 @@ namespace mCubed.Core {
 		/// <param name="type">The type for the column</param>
 		/// <param name="key">The key for the column</param>
 		public ColumnDetail(ColumnType type, string key)
-			: this(type, key, null) {
-			if (type == ColumnType.Formula) {
+			: this(type, key, null)
+		{
+			if (type == ColumnType.Formula)
+			{
 				_formula = Utilities.MainSettings.Formulas.FirstOrDefault(f => f.Name == key);
 				Display = _formula.Name;
 				RegisterFormula();
-			} else if (type == ColumnType.Property) {
+			}
+			else if (type == ColumnType.Property)
+			{
 				_property = MetaDataFormula.MetaDataProperties.FirstOrDefault(p => p.Property.Name == key);
 				Display = _property.Display;
 			}
@@ -107,7 +118,8 @@ namespace mCubed.Core {
 		/// <param name="type">The type for the column</param>
 		/// <param name="key">The key for the column</param>
 		/// <param name="display">The display for the column</param>
-		private ColumnDetail(ColumnType type, string key, string display) {
+		private ColumnDetail(ColumnType type, string key, string display)
+		{
 			Type = type;
 			Key = key;
 			Display = display;
@@ -122,8 +134,10 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		private void OnFormulaPropertyChanged(object sender, PropertyChangedEventArgs e) {
-			if (e.PropertyName == "Name") {
+		private void OnFormulaPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Name")
+			{
 				Key = _formula.Name;
 				Display = _formula.Name;
 			}
@@ -136,7 +150,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Register to the formula display name changed
 		/// </summary>
-		private void RegisterFormula() {
+		private void RegisterFormula()
+		{
 			if (_formula != null)
 				_formula.PropertyChanged += new PropertyChangedEventHandler(OnFormulaPropertyChanged);
 		}
@@ -146,12 +161,16 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="file">The file that the column details should be applied on to generate a value</param>
 		/// <returns>The value from the file as described by the column details</returns>
-		public IComparable ProvideValue(MediaFile file) {
+		public IComparable ProvideValue(MediaFile file)
+		{
 			// Retrieve the value
 			object value = null;
-			if (Type == ColumnType.Formula) {
+			if (Type == ColumnType.Formula)
+			{
 				value = MDFFile.GetValue(_formula, file);
-			} else if (Type == ColumnType.Property) {
+			}
+			else if (Type == ColumnType.Property)
+			{
 				value = _property.Property.GetValue(file.MetaData, null);
 			}
 
@@ -167,7 +186,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -177,7 +197,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -190,7 +211,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the column detail appropriately
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe from delegates
 			if (_formula != null)
 				_formula.PropertyChanged -= new PropertyChangedEventHandler(OnFormulaPropertyChanged);
@@ -203,11 +225,13 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class ColumnVector : IKeyProvider<MediaFile>, IComparer<MediaFile>, IResettable<MediaFile>, IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+	public class ColumnVector : IKeyProvider<MediaFile>, IComparer<MediaFile>, IResettable<MediaFile>, IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Data Store
 
 		private readonly ColumnDetail _columnDetail;
 		private ColumnDirection _direction = ColumnDirection.Ascending;
+		private bool _isFirst, _isLast;
 		private double _width = double.NaN;
 
 		#endregion
@@ -222,15 +246,35 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the direction of how the column detail will be used [Bindable]
 		/// </summary>
-		public ColumnDirection Direction {
+		public ColumnDirection Direction
+		{
 			get { return _direction; }
 			set { this.SetAndNotify(ref _direction, value, null, OnReset, "Direction"); }
 		}
 
 		/// <summary>
+		/// Get/set whether or not the column is the first column in its collection [Bindable]
+		/// </summary>
+		public bool IsFirst
+		{
+			get { return _isFirst; }
+			set { this.SetAndNotify(ref _isFirst, value, "IsFirst"); }
+		}
+
+		/// <summary>
+		/// Get/set whether or not the column is the last column in its collection [Bindable]
+		/// </summary>
+		public bool IsLast
+		{
+			get { return _isLast; }
+			set { this.SetAndNotify(ref _isLast, value, "IsLast"); }
+		}
+
+		/// <summary>
 		/// Get/set the width that will be displayed for this column [Bindable]
 		/// </summary>
-		public double Width {
+		public double Width
+		{
 			get { return _width; }
 			set { this.SetAndNotify(ref _width, value, "Width"); }
 		}
@@ -243,7 +287,8 @@ namespace mCubed.Core {
 		/// Create a column vector that will specify the width and direction for a given column detail
 		/// </summary>
 		/// <param name="columnDetail">The column detail to specify additional information for</param>
-		public ColumnVector(ColumnDetail columnDetail) {
+		public ColumnVector(ColumnDetail columnDetail)
+		{
 			// Store the column detail
 			_columnDetail = columnDetail;
 
@@ -261,14 +306,16 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="file">The file that the column details should be applied on to generate a value</param>
 		/// <returns>The value from the file as described by the column details</returns>
-		public IComparable ProvideValue(MediaFile file) {
+		public IComparable ProvideValue(MediaFile file)
+		{
 			return ColumnDetail.ProvideValue(file);
 		}
 
 		/// <summary>
 		/// Event that notifies when the column vector should be reset, meaning its provide value formula has changed
 		/// </summary>
-		private void OnReset() {
+		private void OnReset()
+		{
 			if (Reset != null)
 				Reset(this);
 		}
@@ -282,7 +329,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="item">The file that the column details should be applied on to generate a value</param>
 		/// <returns>The value from the file as described by the column details</returns>
-		public string GetKey(MediaFile item) {
+		public string GetKey(MediaFile item)
+		{
 			IComparable comparable = ProvideValue(item);
 			if (comparable == null)
 				return null;
@@ -299,18 +347,24 @@ namespace mCubed.Core {
 		/// <param name="x">The first media file to compare</param>
 		/// <param name="y">The second media file to compare</param>
 		/// <returns>A negative integer representing x should come before y, a positive integer representing y should come before x, or 0 if they are equivalent</returns>
-		public int Compare(MediaFile x, MediaFile y) {
+		public int Compare(MediaFile x, MediaFile y)
+		{
 			// Get the values to compare by
 			IComparable xComp = x == null ? null : ProvideValue(x);
 			IComparable yComp = y == null ? null : ProvideValue(y);
 			int compare = 0;
 
 			// Now compare
-			if (xComp == null) {
-				compare =  yComp == null ? 0 : -1;
-			} else if (yComp == null) {
+			if (xComp == null)
+			{
+				compare = yComp == null ? 0 : -1;
+			}
+			else if (yComp == null)
+			{
 				compare = 1;
-			} else {
+			}
+			else
+			{
 				compare = xComp.CompareTo(yComp);
 			}
 			return Direction == ColumnDirection.Ascending ? compare : 0 - compare;
@@ -326,7 +380,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -336,7 +391,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -349,7 +405,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the column detail object appropriately
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe others from its events
 			PropertyChanged = null;
 			PropertyChanging = null;

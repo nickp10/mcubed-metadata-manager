@@ -392,6 +392,54 @@ namespace mCubed.Controls
 	}
 
 	/// <summary>
+	/// Used to convert a bool value into a visibility. There are two properties that are
+	/// used to determine the visiblity if the bool is true or false. [Binding, Two-Way]
+	/// </summary>
+	public class BoolToVisibilityConverter : IValueConverter
+	{
+		#region Constructors
+
+		/// <summary>
+		/// Constructs a new converter used to convert a bool into a visibility.
+		/// </summary>
+		public BoolToVisibilityConverter()
+		{
+			FalseVisibility = Visibility.Collapsed;
+			TrueVisibility = Visibility.Visible;
+		}
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Get/set the visibility to use when the value is false. The default is collapsed.
+		/// </summary>
+		public Visibility FalseVisibility { get; set; }
+
+		/// <summary>
+		/// Get/set the visibility to use when the value is true. The default is visible.
+		/// </summary>
+		public Visibility TrueVisibility { get; set; }
+
+		#endregion
+
+		#region IValueConverter Members
+
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return value is bool && (bool)value ? TrueVisibility : FalseVisibility;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return value is Visibility && (Visibility)value == TrueVisibility;
+		}
+
+		#endregion
+	}
+
+	/// <summary>
 	/// Used to determine if a given object is null or not. If the object is null, then false
 	/// is returned. If the object is not null, then true is returned. [Binding, One-Way]
 	/// </summary>

@@ -4,6 +4,9 @@
 			 xmlns:controls="clr-namespace:mCubed.Controls">
 	<Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
 		<Grid.Resources>
+			<controls:BoolToVisibilityConverter TrueVisibility="Hidden"
+												FalseVisibility="Visible"
+												x:Key="BoolToVisibilityConverter" />
 			<controls:ColumnOrganizerConverter x:Key="ColumnOrganizerConverter" />
 		</Grid.Resources>
 		<Button Content="{Binding Path=Header}"
@@ -69,6 +72,7 @@
 												Style="{DynamicResource HoverItem}"
 												ToolTip="Move this column before the previous column"
 												VerticalAlignment="Stretch"
+												Visibility="{Binding IsFirst, Converter={StaticResource BoolToVisibilityConverter}}"
 												MouseLeftButtonDown="OnColumnMovedUp">
 											<Path Style="{DynamicResource UpArrowPath}"
 												  VerticalAlignment="Center" />
@@ -79,6 +83,7 @@
 												Style="{DynamicResource HoverItem}"
 												ToolTip="Move this column after the next column"
 												VerticalAlignment="Stretch"
+												Visibility="{Binding IsLast, Converter={StaticResource BoolToVisibilityConverter}}"
 												MouseLeftButtonDown="OnColumnMovedDown">
 											<Path Style="{DynamicResource DownArrowPath}"
 												  VerticalAlignment="Center" />
