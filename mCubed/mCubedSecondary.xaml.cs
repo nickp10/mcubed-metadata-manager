@@ -257,6 +257,7 @@ namespace mCubed
 			new { Shortcut = "Ctrl + U / Shift + Ctrl + U", Description = "Cancels or undo's the change to the current field within the meta-data manager (with the shift key determining if the previous or next field should be given focus)." },
 			new { Shortcut = "Ctrl + V", Description = "Pastes the current text stored in the clipboard." },
 			new { Shortcut = "Ctrl + X", Description = "Copies and deletes the selected text within a textbox." },
+			new { Shortcut = "Ctrl + Y", Description = "Cleans a song title to remove featured artists." },
 			new { Shortcut = "Ctrl + Z", Description = "Cancels or undo's the most recent change within a textbox." },
 			new { Shortcut = "Alt + Left Arrow", Description = "Gives the field to left of the current field keyboard focus within the meta-data manager." },
 			new { Shortcut = "Alt + Right Arrow", Description = "Gives the field to right of the current field keyboard focus within the meta-data manager." },

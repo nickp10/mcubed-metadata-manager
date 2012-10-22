@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -97,6 +98,26 @@ namespace mCubed.Core
 		#endregion
 
 		#region Static Members
+
+		/// <summary>
+		/// Cleans up the given title by:
+		/// 
+		/// - Removes "ft", "ft.", "feat", "feat.", and "featuring" followed by the artist names.
+		/// - Removes corresponding parenthesis to the featured artists.
+		/// - Applies pascal casing to the title (e.g. "The Title Of The Song").
+		/// - Trims leading and trailing whitespace.
+		/// </summary>
+		/// <param name="title">The title that should be cleaned up.</param>
+		/// <returns>A cleaned up version of the specified title.</returns>
+		public static string CleanupTitle(string title)
+		{
+			if (!string.IsNullOrEmpty(title))
+			{
+				title = new Regex(@"\(?(featuring|feat\.|feat|ft\.|ft)(.*(?=\()|.*?\)|.*)", RegexOptions.IgnoreCase).Replace(title, string.Empty);
+				return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title.ToLower()).Trim();
+			}
+			return title;
+		}
 
 		/// <summary>
 		/// Formats the given number of bytes into a human-readable string in it's most simplet form

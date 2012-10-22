@@ -84,7 +84,7 @@ namespace mCubed.MetaData
 		}
 
 		public static readonly DependencyProperty SelectedAutoCompleteItemProperty =
-		    DependencyProperty.Register("SelectedAutoCompleteItem", typeof(MDIValueContainer), typeof(MDIValue), new UIPropertyMetadata(null, new PropertyChangedCallback(OnSelectedAutoCompleteItemChanged)));
+			DependencyProperty.Register("SelectedAutoCompleteItem", typeof(MDIValueContainer), typeof(MDIValue), new UIPropertyMetadata(null, new PropertyChangedCallback(OnSelectedAutoCompleteItemChanged)));
 		public MDIValueContainer SelectedAutoCompleteItem
 		{
 			get { return (MDIValueContainer)GetValue(SelectedAutoCompleteItemProperty); }
@@ -358,6 +358,10 @@ namespace mCubed.MetaData
 				else if (e.Key == Key.D)
 				{
 					OnValueDeleted(null, null);
+				}
+				else if (e.Key == Key.Y)
+				{
+					Value.Value = Utilities.CleanupTitle(Value.Value);
 				}
 				else
 				{
