@@ -103,9 +103,10 @@ namespace mCubed.Core
 		/// Cleans up the given title by:
 		/// 
 		/// - Removes "ft", "ft.", "feat", "feat.", and "featuring" followed by the artist names.
-		/// - Removes corresponding parenthesis to the featured artists.
+		/// - Removes "prod", "prod.", and "produced" followed by the producer names.
+		/// - Removes corresponding parenthesis to the featured artists and producers.
 		/// - Applies pascal casing to the title (e.g. "The Title Of The Song").
-		/// - Trims leading and trailing whitespace.
+		/// - Trims leading, trailing, and duplicate whitespace.
 		/// </summary>
 		/// <param name="title">The title that should be cleaned up.</param>
 		/// <returns>A cleaned up version of the specified title.</returns>
@@ -113,7 +114,8 @@ namespace mCubed.Core
 		{
 			if (!string.IsNullOrEmpty(title))
 			{
-				title = new Regex(@"\(?(featuring|feat\.|feat|ft\.|ft)(.*(?=\()|.*?\)|.*)", RegexOptions.IgnoreCase).Replace(title, string.Empty);
+				title = new Regex(@"(?<=\s)\(?(produced|prod\.|prod|featuring|feat\.|feat|ft\.|ft)(.*(?=\()|.*?\)|.*)", RegexOptions.IgnoreCase).Replace(title, string.Empty);
+				title = new Regex(@"\s(?=\s)", RegexOptions.IgnoreCase).Replace(title, string.Empty);
 				return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title.ToLower()).Trim();
 			}
 			return title;
