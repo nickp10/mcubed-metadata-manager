@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -14,18 +13,7 @@ namespace mCubed
 {
 	public partial class mCubedSecondary : Window
 	{
-		#region Data Store
-
-		private static DateTime _releaseDate = new DateTime(2012, 8, 14);
-
-		#endregion
-
 		#region Bindable Properties
-
-		/// <summary>
-		/// Get the date this version was released [Bindable]
-		/// </summary>
-		public static DateTime ReleaseDate { get { return mCubedSecondary._releaseDate; } }
 
 		/// <summary>
 		/// Get the main application settings [Bindable]
@@ -317,8 +305,8 @@ namespace mCubed
 		#region Credits
 
 		private static readonly IEnumerable _credits = new[] {
-			new { Author = "Nick Paddock", Project = "mCubed Core", Version = "1.00", URL = "http://mcubed.dyndns.info/" },
-			new { Author = "Nick Paddock", Project = "mCubed UI", Version = "1.00", URL = "http://mcubed.dyndns.info/" },
+			new { Author = "Nick Paddock", Project = "mCubed Core", Version = "1.01", URL = "http://mcubed.dyndns.info/" },
+			new { Author = "Nick Paddock", Project = "mCubed UI", Version = "1.01", URL = "http://mcubed.dyndns.info/" },
 			new { Author = "Mark James", Project = "Silk Icon Set", Version = "1.3", URL = "http://www.famfamfam.com/lab/icons/silk/" },
 			new { Author = "Banshee Development Team", Project = "TagLib#", Version = "2.1.0.0", URL = "https://github.com/mono/taglib-sharp/" }
 		};
