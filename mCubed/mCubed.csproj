@@ -76,9 +76,8 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="taglib-sharp, Version=2.0.4.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>References\taglib-sharp.dll</HintPath>
+    <Reference Include="taglib-sharp">
+      <HintPath>..\ThirdParty\taglib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationProvider">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -290,7 +289,9 @@
     <Resource Include="Icons\taskbar_stop.png" />
     <Resource Include="Images\Default.png" />
     <Resource Include="Images\InvalidFormat.png" />
-    <Resource Include="Readme.txt" />
+    <Resource Include="..\Readme.txt">
+      <Link>Readme.txt</Link>
+    </Resource>
     <Content Include="References\taglib-sharp.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
