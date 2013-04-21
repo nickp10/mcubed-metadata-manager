@@ -149,7 +149,7 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="filename">The filename to be coerced</param>
 		/// <returns>The coerced filename that does not contain invalid characters</returns>
-		private static string CoerceFilenameValue(string filename) {
+		public static string CoerceFilenameValue(string filename) {
 			return CoerceValue(filename, Path.GetInvalidFileNameChars());
 		}
 
@@ -158,7 +158,7 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="directory">The directory name to be coerced</param>
 		/// <returns>The coerced directory name that does not contain invalid characters</returns>
-		private static string CoerceDirectoryValue(string directory) {
+		public static string CoerceDirectoryValue(string directory) {
 			return CoerceValue(directory, Path.GetInvalidPathChars());
 		}
 
