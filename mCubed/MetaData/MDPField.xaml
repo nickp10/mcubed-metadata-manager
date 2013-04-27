@@ -79,13 +79,14 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                                  VerticalScrollBarVisibility="Auto">
+                                  VerticalScrollBarVisibility="Auto"
+                                  x:Name="PicScrollViewer">
                         <Image Source="{Binding ElementName=PicThumb, Path=Source}"
                                Height="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelHeight}"
                                Width="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelWidth}" />
                     </ScrollViewer>
                     <Grid Grid.Row="2"
-                          MaxWidth="{Binding ElementName=PicThumb, Path=Source.PixelWidth}">
+                          MaxWidth="{Binding ElementName=PicScrollViewer, Path=ActualWidth}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="5" />
