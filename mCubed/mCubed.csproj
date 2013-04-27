@@ -171,6 +171,7 @@
     <Compile Include="Controls\Converters.cs" />
     <Compile Include="Controls\Formula.cs" />
     <Compile Include="Controls\Icon.cs" />
+    <Compile Include="Controls\NoMouseWheelScrollViewer.cs" />
     <Compile Include="Controls\SelectorExtensions.cs" />
     <Compile Include="Controls\TaskbarItemInfoExtensions.cs" />
     <Compile Include="Core\ColumnDetail.cs" />

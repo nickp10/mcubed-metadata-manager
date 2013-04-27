@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace mCubed.Core {
-	public class MetaDataPic : IEquatable<MetaDataPic>, ICopiable<MetaDataPic>, IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+namespace mCubed.Core
+{
+	public class MetaDataPic : IEquatable<MetaDataPic>, ICopiable<MetaDataPic>, IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Data Store
 
 		private static IEnumerable<string> _pictureTypes =
@@ -29,7 +30,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the picture data [Bindable]
 		/// </summary>
-		public byte[] Data {
+		public byte[] Data
+		{
 			get { return _data; }
 			set { this.SetAndNotify(ref _data, value, OnPicChanging, OnPicChanged, "Data", "Image", "MimeType"); }
 		}
@@ -37,7 +39,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the description for the picture [Bindable]
 		/// </summary>
-		public string Description {
+		public string Description
+		{
 			get { return _description; }
 			set { this.SetAndNotify(ref _description, value ?? string.Empty, OnPicChanging, OnPicChanged, "Description"); }
 		}
@@ -45,7 +48,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the event listener for any changes on this picture [Bindable]
 		/// </summary>
-		public IListener<MetaDataPic> EventListener {
+		public IListener<MetaDataPic> EventListener
+		{
 			get { return _eventListener; }
 			set { this.SetAndNotify(ref _eventListener, value, "EventListener"); }
 		}
@@ -53,15 +57,26 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the bitmap version of the picture for displaying purposes [Bindable]
 		/// </summary>
-		public BitmapSource Image {
-			get {
-				try {
+		public BitmapSource Image
+		{
+			get
+			{
+				try
+				{
 					var bm = new BitmapImage();
-					bm.BeginInit();
-					bm.StreamSource = new MemoryStream(Data);
-					bm.EndInit();
+					using (var stream = new MemoryStream(Data))
+					{
+						bm.BeginInit();
+						bm.CreateOptions = BitmapCreateOptions.None;
+						bm.CacheOption = BitmapCacheOption.OnLoad;
+						bm.StreamSource = stream;
+						bm.EndInit();
+						bm.Freeze();
+					}
 					return bm;
-				} catch {
+				}
+				catch
+				{
 					UpdatePicture(MetaDataPicResource.InvalidFormat);
 					return Image;
 				}
@@ -76,14 +91,16 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get a collection of all the available picture types [Bindable]
 		/// </summary>
-		public IEnumerable<string> PictureTypes {
+		public IEnumerable<string> PictureTypes
+		{
 			get { return MetaDataPic._pictureTypes; }
 		}
 
 		/// <summary>
 		/// Get/set the picture type [Bindable]
 		/// </summary>
-		public TagLib.PictureType Type {
+		public TagLib.PictureType Type
+		{
 			get { return _type; }
 			set { this.SetAndNotify(ref _type, value, OnPicChanging, OnPicChanged, "Type", "TypeString"); }
 		}
@@ -91,7 +108,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the picture type in a human-readable format [Bindable]
 		/// </summary>
-		public string TypeString {
+		public string TypeString
+		{
 			get { return Type.ToReadableString(); }
 			set { Type = value.ToEnumType<TagLib.PictureType>(); }
 		}
@@ -103,7 +121,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Create a new metadata picture information object from a default image
 		/// </summary>
-		public MetaDataPic() {
+		public MetaDataPic()
+		{
 			UpdatePicture(MetaDataPicResource.Default);
 		}
 
@@ -111,7 +130,8 @@ namespace mCubed.Core {
 		/// Create a new meta-data picture information object as a clone of an existing meta-data picture object
 		/// </summary>
 		/// <param name="picture">The existing meta-data picture object to clonse</param>
-		public MetaDataPic(MetaDataPic picture) {
+		public MetaDataPic(MetaDataPic picture)
+		{
 			UpdatePicture(picture);
 		}
 
@@ -119,7 +139,8 @@ namespace mCubed.Core {
 		/// Create a new meta-data picture information object from a TagLib picture
 		/// </summary>
 		/// <param name="picture">The TagLib picture to create from</param>
-		public MetaDataPic(TagLib.IPicture picture) {
+		public MetaDataPic(TagLib.IPicture picture)
+		{
 			UpdatePicture(picture);
 		}
 
@@ -130,7 +151,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Invoke the picture changing event if necessary
 		/// </summary>
-		protected void OnPicChanging() {
+		protected void OnPicChanging()
+		{
 			if (_invokePicEvents++ == 0 && EventListener != null)
 				EventListener.OnSpeakerChanging(this);
 		}
@@ -138,7 +160,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Invoke the picture changed event if necessary
 		/// </summary>
-		protected void OnPicChanged() {
+		protected void OnPicChanged()
+		{
 			if (_invokePicEvents-- == 1 && EventListener != null)
 				EventListener.OnSpeakerChanged(this);
 		}
@@ -146,7 +169,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Invoke the picture deleting event if necessary
 		/// </summary>
-		protected void OnPicDeleting() {
+		protected void OnPicDeleting()
+		{
 			if (EventListener != null)
 				EventListener.OnSpeakerDeleting(this);
 		}
@@ -154,7 +178,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Invoke the picture deleted event if necessary
 		/// </summary>
-		protected void OnPicDeleted() {
+		protected void OnPicDeleted()
+		{
 			if (EventListener != null)
 				EventListener.OnSpeakerDeleted(this);
 		}
@@ -167,7 +192,8 @@ namespace mCubed.Core {
 		/// Browse for a picture to replace the current picture
 		/// </summary>
 		/// <returns>True if a file was selected, or false otherwise</returns>
-		public bool BrowseDialog() {
+		public bool BrowseDialog()
+		{
 			// Create an open dialog and show
 			var dlg = new Microsoft.Win32.OpenFileDialog
 			{
@@ -189,7 +215,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Save the meta-data picture information to a file
 		/// </summary>
-		public void SaveToFile() {
+		public void SaveToFile()
+		{
 			// Create the save dialog and show
 			var dlg = new Microsoft.Win32.SaveFileDialog
 			{
@@ -201,7 +228,8 @@ namespace mCubed.Core {
 			};
 
 			// Check if save filename exists
-			if (dlg.ShowDialog().Value) {
+			if (dlg.ShowDialog().Value)
+			{
 				// Save the picture to the save filename
 				File.WriteAllBytes(dlg.FileName, Data);
 			}
@@ -215,14 +243,16 @@ namespace mCubed.Core {
 		/// Copy the information from an object into this object
 		/// </summary>
 		/// <param name="obj">The object to copy the information from</param>
-		public void CopyFrom(MetaDataPic obj) {
+		public void CopyFrom(MetaDataPic obj)
+		{
 			UpdatePicture(obj);
 		}
 
 		/// <summary>
 		/// Delete the picture by invoking the picture deleting and deleted events
 		/// </summary>
-		public void Delete() {
+		public void Delete()
+		{
 			OnPicDeleting();
 			OnPicDeleted();
 		}
@@ -232,7 +262,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="obj">The meta-data picture to compare to</param>
 		/// <returns>Returns true if the two objects are equivalent, or false otherwise</returns>
-		public bool Equals(MetaDataPic other) {
+		public bool Equals(MetaDataPic other)
+		{
 			return other != null && Description == other.Description && Type == other.Type && Data.SequenceEqual(other.Data);
 		}
 
@@ -240,7 +271,8 @@ namespace mCubed.Core {
 		/// Update the picture information without invoking the picture changed events
 		/// </summary>
 		/// <param name="picture">The picture to update to</param>
-		public void UpdatePicture(MetaDataPic picture) {
+		public void UpdatePicture(MetaDataPic picture)
+		{
 			UpdatePicture(picture, false);
 		}
 
@@ -249,9 +281,11 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="picture">The picture to update to</param>
 		/// <param name="invokeEvents">True to invoke the picture changed events, or false otherwise</param>
-		public void UpdatePicture(MetaDataPic picture, bool invokeEvents) {
+		public void UpdatePicture(MetaDataPic picture, bool invokeEvents)
+		{
 			// Check the picture first
-			if (picture != null) {
+			if (picture != null)
+			{
 				// Invoke the changing event
 				if (invokeEvents)
 					OnPicChanging();
@@ -275,7 +309,8 @@ namespace mCubed.Core {
 		/// Update the picture information from a predefined list of picture resources
 		/// </summary>
 		/// <param name="pictureResource">The picture resource to update to</param>
-		public void UpdatePicture(MetaDataPicResource pictureResource) {
+		public void UpdatePicture(MetaDataPicResource pictureResource)
+		{
 			var stream = Application.GetResourceStream(new Uri("pack://application:,,,/Images/" + pictureResource.ToString() + ".png", UriKind.Absolute)).Stream;
 			byte[] bytes = new byte[stream.Length];
 			stream.Read(bytes, 0, bytes.Length);
@@ -290,9 +325,11 @@ namespace mCubed.Core {
 		/// Update the picture information from a TagLib picture
 		/// </summary>
 		/// <param name="picture">The picture to update to</param>
-		public void UpdatePicture(TagLib.IPicture picture) {
+		public void UpdatePicture(TagLib.IPicture picture)
+		{
 			// Check the picture first
-			if (picture != null) {
+			if (picture != null)
+			{
 				// Update the information
 				OnPicChanging();
 				Data = picture.Data.Data;
@@ -306,7 +343,8 @@ namespace mCubed.Core {
 		/// Generate a TagLib picture from the picture information
 		/// </summary>
 		/// <returns></returns>
-		public TagLib.IPicture GenerateTagLib() {
+		public TagLib.IPicture GenerateTagLib()
+		{
 			return new TagLib.Id3v2.AttachedPictureFrame()
 			{
 				TextEncoding = TagLib.StringType.Latin1,
@@ -321,7 +359,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -331,7 +370,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -344,7 +384,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the meta-data picture properly
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe others from its events
 			PropertyChanged = null;
 			PropertyChanging = null;
