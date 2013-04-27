@@ -259,6 +259,10 @@ namespace mCubed.MetaData
 					UndoChange();
 					OnSpecializedTabOut(!shift);
 				}
+				else if (e.Key == Key.D)
+				{
+					OnSpecializedTabOut(!shift);
+				}
 				else
 				{
 					handled = false;
@@ -455,7 +459,7 @@ namespace mCubed.MetaData
 		/// <param name="sender">The sender object that should be deleted or cleared from the value</param>
 		private void OnValueDeleted(MDIValue sender)
 		{
-			OnValueDeleted(sender, true, true);
+			OnValueDeleted(sender, (Keyboard.Modifiers & ModifierKeys.Shift) == 0, true);
 		}
 
 		/// <summary>
@@ -463,28 +467,27 @@ namespace mCubed.MetaData
 		/// </summary>
 		/// <param name="sender">The sender object that should be deleted or cleared from the value</param>
 		/// <param name="forward">True if the forward object should be given focus, or false if the backward object should be given focus</param>
-		/// <param name="attemptSelect">True if the there should be an attempt to select a value, or false otherwise</param>
-		/// <returns>True if the given forward direction was successful, or false otherwise</returns>
-		private bool OnValueDeleted(MDIValue sender, bool forward, bool attemptSelect)
+		/// <param name="attemptSelect">True if the there should be an attempt to select a value in the same field before attempting to select a value in another field</param>
+		private void OnValueDeleted(MDIValue sender, bool forward, bool attemptToSelect)
 		{
-			bool retValue = false;
 			if (NewValue != null && NewValue.Contains(sender.Value))
 			{
 				if (!IsMultiValues)
 				{
 					sender.Value.Value = "";
 					Select(sender);
+					OnSpecializedTabOut(forward);
 				}
 				else
 				{
 					int index = NewValue.ToList().IndexOf(sender.Value);
 					NewValue = NewValue.Where(v => v != sender.Value).ToArray();
-					retValue = Select(forward ? index : index - 1);
-					if (attemptSelect && !retValue)
-						Select(forward ? index - 1 : index);
+					if (!Select(forward ? index : index - 1) && (!attemptToSelect || !Select(forward ? index - 1 : index)))
+					{
+						OnSpecializedTabOut(forward);
+					}
 				}
 			}
-			return retValue;
 		}
 
 		#endregion
@@ -624,8 +627,7 @@ namespace mCubed.MetaData
 			{
 				if (IsMultiValues && String.IsNullOrEmpty(mdiVC.Value))
 				{
-					if (!OnValueDeleted(mdiValue, forward, false))
-						OnSpecializedTabOut(forward);
+					OnValueDeleted(mdiValue, forward, false);
 				}
 				else if (IsMultiValues && forward && NewValue.LastOrDefault() == mdiVC)
 				{
