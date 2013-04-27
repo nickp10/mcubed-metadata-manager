@@ -114,7 +114,7 @@ namespace mCubed.Core
 		{
 			if (!string.IsNullOrEmpty(title))
 			{
-				title = new Regex(@"(?<=\s)\(?(produced|prod\.|prod|featuring|feat\.|feat|ft\.|ft)(.*(?=\()|.*?\)|.*)", RegexOptions.IgnoreCase).Replace(title, string.Empty);
+				title = new Regex(@"(?<=\s)\(?\[?(produced|prod\.|prod|featuring|feat\.|feat|ft\.|ft)(.*(?=\()|.*(?=\[)|.*?\)|.*?\]|.*)", RegexOptions.IgnoreCase).Replace(title, string.Empty);
 				title = new Regex(@"\s(?=\s)", RegexOptions.IgnoreCase).Replace(title, string.Empty);
 				return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title.ToLower()).Trim();
 			}

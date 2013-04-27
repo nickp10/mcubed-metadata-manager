@@ -1,0 +1,202 @@
+<UtilitiesTestsData>
+    <Row>
+        <Input>null</Input>
+        <Expected>null</Expected>
+    </Row>
+    <Row>
+        <Input></Input>
+        <Expected></Expected>
+    </Row>
+    <Row>
+        <Input>     </Input>
+        <Expected></Expected>
+    </Row>
+    <Row>
+        <Input> Hey   </Input>
+        <Expected>Hey</Expected>
+    </Row>
+    <Row>
+        <Input>   HEY   </Input>
+        <Expected>Hey</Expected>
+    </Row>
+    <Row>
+        <Input> hey </Input>
+        <Expected>Hey</Expected>
+    </Row>
+    <Row>
+        <Input>Title of the song</Input>
+        <Expected>Title Of The Song</Expected>
+    </Row>
+    <Row>
+        <Input>title Of The song</Input>
+        <Expected>Title Of The Song</Expected>
+    </Row>
+    <Row>
+        <Input>Title of the sonG</Input>
+        <Expected>Title Of The Song</Expected>
+    </Row>
+    <Row>
+        <Input>TiTLe OF the song</Input>
+        <Expected>Title Of The Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song feat</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song ft</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song feat.</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song ft.</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song featuring</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song FEATURING</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song (FT.</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song (FT. blah)</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song (Feat jim boby and joe)</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song (Remix) feat Jimmey</Input>
+        <Expected>Song (Remix)</Expected>
+    </Row>
+    <Row>
+        <Input>Song (fEatUring Jimmey, Joe &amp; Bob)   (Remix)   </Input>
+        <Expected>Song (Remix)</Expected>
+    </Row>
+    <Row>
+        <Input>Song   (fEatUring Jimmey, Joe &amp; Bob)   (Remix)   </Input>
+        <Expected>Song (Remix)</Expected>
+    </Row>
+    <Row>
+        <Input> My song is feat. You and You</Input>
+        <Expected>My Song Is</Expected>
+    </Row>
+    <Row>
+        <Input>Song feat Jimmy (Remix)</Input>
+        <Expected>Song (Remix)</Expected>
+    </Row>
+    <Row>
+        <Input>Song ft Joe jim bob (Remix)</Input>
+        <Expected>Song (Remix)</Expected>
+    </Row>
+    <Row>
+        <Input>Song feat. Jkjkd fjkdf j sfas  (Remix)</Input>
+        <Expected>Song (Remix)</Expected>
+    </Row>
+    <Row>
+        <Input>the name of the song j.k.i. ft. the all-stars featuring you of me</Input>
+        <Expected>The Name Of The Song J.K.I.</Expected>
+    </Row>
+    <Row>
+        <Input>The side left</Input>
+        <Expected>The Side Left</Expected>
+    </Row>
+    <Row>
+        <Input>Featuring you</Input>
+        <Expected>Featuring You</Expected>
+    </Row>
+    <Row>
+        <Input>The side defeat</Input>
+        <Expected>The Side Defeat</Expected>
+    </Row>
+    <Row>
+        <Input>My SONG produced by jimmy (feat. joey)</Input>
+        <Expected>My Song</Expected>
+    </Row>
+    <Row>
+        <Input>You're Jay-z bombing (prod. by jay-z)</Input>
+        <Expected>You're Jay-Z Bombing</Expected>
+    </Row>
+    <Row>
+        <Input>The left side (prod by johnny) Remix</Input>
+        <Expected>The Left Side Remix</Expected>
+    </Row>
+    <Row>
+        <Input>I am you featuring me and produced by you</Input>
+        <Expected>I Am You</Expected>
+    </Row>
+    <Row>
+        <Input>Why do you care? (ft. Jim) (PRODUCED BY Zilla)</Input>
+        <Expected>Why Do You Care?</Expected>
+    </Row>
+    <Row>
+        <Input>Song [FT.</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song [FT. blah]</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song [Feat jim boby and joe]</Input>
+        <Expected>Song</Expected>
+    </Row>
+    <Row>
+        <Input>Song [Remix] feat Jimmey</Input>
+        <Expected>Song [Remix]</Expected>
+    </Row>
+    <Row>
+        <Input>Song [fEatUring Jimmey, Joe &amp; Bob]   [Remix]   </Input>
+        <Expected>Song [Remix]</Expected>
+    </Row>
+    <Row>
+        <Input>Song   [fEatUring Jimmey, Joe &amp; Bob]   [Remix]   </Input>
+        <Expected>Song [Remix]</Expected>
+    </Row>
+    <Row>
+        <Input>Song feat Jimmy [Remix]</Input>
+        <Expected>Song [Remix]</Expected>
+    </Row>
+    <Row>
+        <Input>Song ft Joe jim bob [Remix]</Input>
+        <Expected>Song [Remix]</Expected>
+    </Row>
+    <Row>
+        <Input>Song feat. Jkjkd fjkdf j sfas  [Remix]</Input>
+        <Expected>Song [Remix]</Expected>
+    </Row>
+    <Row>
+        <Input>the name of the song j.k.i. ft. the all-stars featuring you of me</Input>
+        <Expected>The Name Of The Song J.K.I.</Expected>
+    </Row>
+    <Row>
+        <Input>My SONG produced by jimmy [feat. joey]</Input>
+        <Expected>My Song</Expected>
+    </Row>
+    <Row>
+        <Input>You're Jay-z bombing [prod. by jay-z]</Input>
+        <Expected>You're Jay-Z Bombing</Expected>
+    </Row>
+    <Row>
+        <Input>The left side [prod by johnny] Remix</Input>
+        <Expected>The Left Side Remix</Expected>
+    </Row>
+    <Row>
+        <Input>I am you featuring me and produced by you</Input>
+        <Expected>I Am You</Expected>
+    </Row>
+    <Row>
+        <Input>Why do you care? [ft. Jim] [PRODUCED BY Zilla]</Input>
+        <Expected>Why Do You Care?</Expected>
+    </Row>
+</UtilitiesTestsData>
