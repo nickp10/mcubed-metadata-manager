@@ -65,6 +65,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -186,6 +187,7 @@
     <Compile Include="Core\MediaFile.cs" />
     <Compile Include="Core\MediaOrder.cs" />
     <Compile Include="Core\ProcessManager.cs" />
+    <Compile Include="Core\ScreenUtilities.cs" />
     <Compile Include="Core\SingleInstance.cs" />
     <Compile Include="Core\Utilities.cs" />
     <Compile Include="Controls\LibraryViewer.xaml.cs">

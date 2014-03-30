@@ -118,7 +118,8 @@ namespace mCubed
 			{
 				if (Utilities.MainSettings.ShowMini)
 				{
-					Utilities.MainSettings.MiniLocation = new Point(Left / SystemParameters.VirtualScreenWidth, Top / SystemParameters.VirtualScreenHeight);
+					var screen = ScreenUtilities.GetScreenFrom(this);
+					Utilities.MainSettings.MiniLocation = new Point(Left / screen.DeviceBounds.Width, Top / screen.DeviceBounds.Height);
 				}
 				else
 				{
@@ -156,15 +157,18 @@ namespace mCubed
 				_fullState = WindowState;
 				_fullPos = RestoreBounds;
 				if (_fullPos == Rect.Empty)
+				{
 					_fullPos = new Rect(double.NaN, double.NaN, ActualWidth == 0 ? Width : ActualWidth, ActualHeight == 0 ? Height : ActualHeight);
+				}
 				Width = Height = Double.NaN;
 				WindowState = WindowState.Normal;
 				SizeToContent = SizeToContent.WidthAndHeight;
 				ResizeMode = ResizeMode.NoResize;
 				if (Utilities.MainSettings.MiniLocation.HasValue)
 				{
-					Top = Utilities.MainSettings.MiniLocation.Value.Y * SystemParameters.VirtualScreenHeight;
-					Left = Utilities.MainSettings.MiniLocation.Value.X * SystemParameters.VirtualScreenWidth;
+					var screen = ScreenUtilities.GetScreenFrom(this);
+					Top = Utilities.MainSettings.MiniLocation.Value.Y * screen.DeviceBounds.Height;
+					Left = Utilities.MainSettings.MiniLocation.Value.X * screen.DeviceBounds.Width;
 					Utilities.MainSettings.MiniLocation = null;
 				}
 			}
