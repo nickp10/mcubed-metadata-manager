@@ -94,7 +94,7 @@ namespace mCubed.Core
 				// Add the event handlers
 				worker.DoWork += (sender, e) => handler(process);
 				worker.ProgressChanged += (sender, e) => OnProgressChanged();
-				worker.RunWorkerCompleted += (sender, e) => PerformAvailableProcess();
+				worker.RunWorkerCompleted += (sender, e) => PerformAvailableProcess(e.Error);
 
 				// Add the process
 				lock (this)
@@ -104,15 +104,20 @@ namespace mCubed.Core
 
 				// Check if a process is running before continuing
 				if (!IsProcessActive)
-					PerformAvailableProcess();
+					PerformAvailableProcess(null);
 			});
 		}
 
 		/// <summary>
 		/// Perform the next process in the list similar to a queue
 		/// </summary>
-		private void PerformAvailableProcess()
+		/// <param name="error">An exception that may have occurred during the save process.</param>
+		private void PerformAvailableProcess(Exception error)
 		{
+			if (error != null)
+			{
+				Logger.Log(LogLevel.Exception, LogType.Application, error);
+			}
 			lock (this)
 			{
 				// Grab the next process, queue style

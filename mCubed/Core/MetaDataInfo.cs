@@ -6,8 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace mCubed.Core {
-	public abstract class MetaDataInfo : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable {
+namespace mCubed.Core
+{
+	public abstract class MetaDataInfo : IExternalNotifyPropertyChanged, IExternalNotifyPropertyChanging, IDisposable
+	{
 		#region Data Store
 
 		private string _album;
@@ -43,7 +45,8 @@ namespace mCubed.Core {
 		/// Get/set the album title [Bindable]
 		/// </summary>
 		[MetaData("The album that the media is on.")]
-		public string Album {
+		public string Album
+		{
 			get { return _album; }
 			set { this.SetAndNotify(ref _album, value, "Album"); }
 		}
@@ -51,7 +54,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the artists/performers for the album [Bindable]
 		/// </summary>
-		public string[] AlbumArtists {
+		public string[] AlbumArtists
+		{
 			get { return _albumArtists; }
 			set { this.SetAndNotify(ref _albumArtists, value, "AlbumArtists", "FirstAlbumArtist", "JoinedAlbumArtists"); }
 		}
@@ -60,7 +64,8 @@ namespace mCubed.Core {
 		/// Get the audio bitrate [Bindable]
 		/// </summary>
 		[MetaData("The bitrate for the media measured in kilobits per seconds (kbps).")]
-		public int AudioBitrate {
+		public int AudioBitrate
+		{
 			get { return _audioBitrate; }
 			protected set { this.SetAndNotify(ref _audioBitrate, value, "AudioBitrate"); }
 		}
@@ -69,7 +74,8 @@ namespace mCubed.Core {
 		/// Get the audio sample rate [Bindable]
 		/// </summary>
 		[MetaData("The sample rate for the media measured in samples per second (hertz).")]
-		public int AudioSampleRate {
+		public int AudioSampleRate
+		{
 			get { return _audioSampleRate; }
 			protected set { this.SetAndNotify(ref _audioSampleRate, value, "AudioSampleRate"); }
 		}
@@ -78,7 +84,8 @@ namespace mCubed.Core {
 		/// Get/set the beats per minute [Bindable]
 		/// </summary>
 		[MetaData("The number of beats every minute for the media.")]
-		public uint BeatsPerMinute {
+		public uint BeatsPerMinute
+		{
 			get { return _beatsPerMinute; }
 			set { this.SetAndNotify(ref _beatsPerMinute, value, "BeatsPerMinute"); }
 		}
@@ -87,7 +94,8 @@ namespace mCubed.Core {
 		/// Get/set the comment [Bindable]
 		/// </summary>
 		[MetaData("The comment for the media.")]
-		public string Comment {
+		public string Comment
+		{
 			get { return _comment; }
 			set { this.SetAndNotify(ref _comment, value, "Comment"); }
 		}
@@ -95,7 +103,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the composers [Bindable]
 		/// </summary>
-		public string[] Composers {
+		public string[] Composers
+		{
 			get { return _composers; }
 			set { this.SetAndNotify(ref _composers, value, "Composers", "FirstComposer", "JoinedComposers"); }
 		}
@@ -104,7 +113,8 @@ namespace mCubed.Core {
 		/// Get/set the conductor [Bindable]
 		/// </summary>
 		[MetaData("The conductor for the media.")]
-		public string Conductor {
+		public string Conductor
+		{
 			get { return _conductor; }
 			set { this.SetAndNotify(ref _conductor, value, "Conductor"); }
 		}
@@ -113,7 +123,8 @@ namespace mCubed.Core {
 		/// Get/set the copyright information [Bindable]
 		/// </summary>
 		[MetaData("The copyright information for the media.")]
-		public string Copyright {
+		public string Copyright
+		{
 			get { return _copyright; }
 			set { this.SetAndNotify(ref _copyright, value, "Copyright"); }
 		}
@@ -122,7 +133,8 @@ namespace mCubed.Core {
 		/// Get/set the disc number [Bindable]
 		/// </summary>
 		[MetaData("The disc number for the media.")]
-		public uint Disc {
+		public uint Disc
+		{
 			get { return _disc; }
 			set { this.SetAndNotify(ref _disc, value, "Disc"); }
 		}
@@ -131,7 +143,8 @@ namespace mCubed.Core {
 		/// Get/set the total number of discs [Bindable]
 		/// </summary>
 		[MetaData("The total number of discs on the album that the media is on.")]
-		public uint DiscCount {
+		public uint DiscCount
+		{
 			get { return _discCount; }
 			set { this.SetAndNotify(ref _discCount, value, "DiscCount"); }
 		}
@@ -146,7 +159,8 @@ namespace mCubed.Core {
 		/// Get/set the filepath [Bindable]
 		/// </summary>
 		[MetaData("The full filepath to the media location.")]
-		public string FilePath {
+		public string FilePath
+		{
 			get { return _filePath; }
 			set { this.SetAndNotify(ref _filePath, value, "FilePath", "FileName"); }
 		}
@@ -160,7 +174,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the size of the file calculated in bytes [Bindable]
 		/// </summary>
-		public long FileSizeBytes {
+		public long FileSizeBytes
+		{
 			get { return _fileSizeBytes; }
 			protected set { this.SetAndNotify(ref _fileSizeBytes, value, "FileSizeBytes", "FileSize"); }
 		}
@@ -192,7 +207,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the genres [Bindable]
 		/// </summary>
-		public string[] Genres {
+		public string[] Genres
+		{
 			get { return _genres; }
 			set { this.SetAndNotify(ref _genres, value, "Genres", "FirstGenre", "JoinedGenres"); }
 		}
@@ -201,7 +217,8 @@ namespace mCubed.Core {
 		/// Get/set the grouping or series [Bindable]
 		/// </summary>
 		[MetaData("The grouping that the media belongs to.")]
-		public string Grouping {
+		public string Grouping
+		{
 			get { return _grouping; }
 			set { this.SetAndNotify(ref _grouping, value, "Grouping"); }
 		}
@@ -248,7 +265,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get the length/duration [Bindable]
 		/// </summary>
-		public TimeSpan Length {
+		public TimeSpan Length
+		{
 			get { return _length; }
 			protected set { this.SetAndNotify(ref _length, value, "Length", "LengthString"); }
 		}
@@ -263,7 +281,8 @@ namespace mCubed.Core {
 		/// Get/set the lyrics [Bindable]
 		/// </summary>
 		[MetaData("The lyrics to the media.")]
-		public string Lyrics {
+		public string Lyrics
+		{
 			get { return _lyrics; }
 			set { this.SetAndNotify(ref _lyrics, value, "Lyrics"); }
 		}
@@ -277,7 +296,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the artists/performers for the media [Bindable]
 		/// </summary>
-		public string[] Performers {
+		public string[] Performers
+		{
 			get { return _performers; }
 			set { this.SetAndNotify(ref _performers, value, "Performers", "FirstPerformer", "JoinedPerformers"); }
 		}
@@ -285,7 +305,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the album artwork/pictures [Bindable]
 		/// </summary>
-		public MetaDataPic[] Pictures {
+		public MetaDataPic[] Pictures
+		{
 			get { return _pictures; }
 			set { this.SetAndNotify(ref _pictures, value, "Pictures"); }
 		}
@@ -293,7 +314,8 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Get/set the status of the meta data information [Bindable]
 		/// </summary>
-		public MetaDataStatus Status {
+		public MetaDataStatus Status
+		{
 			get { return _status; }
 			set { this.SetAndNotify(ref _status, value, "Status"); }
 		}
@@ -302,7 +324,8 @@ namespace mCubed.Core {
 		/// Get/set the title [Bindable]
 		/// </summary>
 		[MetaData("The title of the media.")]
-		public string Title {
+		public string Title
+		{
 			get { return _title; }
 			set { this.SetAndNotify(ref _title, value, "Title"); }
 		}
@@ -311,7 +334,8 @@ namespace mCubed.Core {
 		/// Get/set the track number [Bindable]
 		/// </summary>
 		[MetaData("The track number for the media.", ColumnAlias = "#")]
-		public uint Track {
+		public uint Track
+		{
 			get { return _track; }
 			set { this.SetAndNotify(ref _track, value, "Track"); }
 		}
@@ -320,7 +344,8 @@ namespace mCubed.Core {
 		/// Get/set the total number of tracks [Bindable]
 		/// </summary>
 		[MetaData("The total number of tracks on the album that the media is on.")]
-		public uint TrackCount {
+		public uint TrackCount
+		{
 			get { return _trackCount; }
 			set { this.SetAndNotify(ref _trackCount, value, "TrackCount"); }
 		}
@@ -329,7 +354,8 @@ namespace mCubed.Core {
 		/// Get/set the year [Bindable]
 		/// </summary>
 		[MetaData("The year the media was released.")]
-		public uint Year {
+		public uint Year
+		{
 			get { return _year; }
 			set { this.SetAndNotify(ref _year, value, "Year"); }
 		}
@@ -350,14 +376,18 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Save the information back to the media it was created from
 		/// </summary>
-		public void Save() {
-			if (!IsReadOnly) {
+		public void Save()
+		{
+			if (!IsReadOnly)
+			{
 				var state = Parent.UnlockFile();
 				Save(null);
-				if (Parent.Parent.AutoRenameOnUpdates) {
+				if (Parent.Parent.AutoRenameOnUpdates)
+				{
 					string newLocation = FileUtilities.Rename(Parent);
 					FilePath = newLocation;
-					if (state != null) {
+					if (state != null)
+					{
 						state.Path = newLocation;
 					}
 				}
@@ -370,7 +400,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="propertyName">The property name of the value to retrieve</param>
 		/// <returns>The property value on this object in the form of a string collection</returns>
-		public IEnumerable<string> GetValue(string propertyName) {
+		public IEnumerable<string> GetValue(string propertyName)
+		{
 			// Get the property
 			PropertyInfo property = GetType().GetProperty(propertyName);
 			if (property == null)
@@ -390,7 +421,8 @@ namespace mCubed.Core {
 		/// </summary>
 		/// <param name="propertyName">The name of the property to set</param>
 		/// <param name="propertyValue">The value to set to</param>
-		public void SetProperty(string propertyName, object propertyValue) {
+		public void SetProperty(string propertyName, object propertyValue)
+		{
 			// Get the property
 			PropertyInfo property = GetType().GetProperty(propertyName);
 			if (property == null)
@@ -424,7 +456,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanged Members
 
-		public PropertyChangedEventHandler PropertyChangedHandler {
+		public PropertyChangedEventHandler PropertyChangedHandler
+		{
 			get { return PropertyChanged; }
 		}
 
@@ -434,7 +467,8 @@ namespace mCubed.Core {
 
 		#region IExternalNotifyPropertyChanging Members
 
-		public PropertyChangingEventHandler PropertyChangingHandler {
+		public PropertyChangingEventHandler PropertyChangingHandler
+		{
 			get { return PropertyChanging; }
 		}
 
@@ -447,14 +481,17 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Dispose of the meta-data information object properly
 		/// </summary>
-		public void Dispose() {
+		public void Dispose()
+		{
 			// Unsubscribe others from its events
 			PropertyChanged = null;
 			PropertyChanging = null;
 
 			// Dispose all disposable references it created
-			if (Pictures != null) {
-				foreach (var pic in Pictures) {
+			if (Pictures != null)
+			{
+				foreach (var pic in Pictures)
+				{
 					pic.Dispose();
 				}
 			}
@@ -466,7 +503,8 @@ namespace mCubed.Core {
 		#endregion
 	}
 
-	public class MDITagLib : MetaDataInfo {
+	public class MDITagLib : MetaDataInfo
+	{
 		#region Bindable Properties
 
 		/// <summary>
@@ -482,14 +520,37 @@ namespace mCubed.Core {
 		/// Create a metadata information object from a specified file
 		/// </summary>
 		/// <param name="filePath">The path to the file to load the information from</param>
-		public MDITagLib(string filePath) {
+		public MDITagLib(string filePath)
+		{
 			FilePath = Path.GetFullPath(filePath);
 			FileInfo info = new FileInfo(FilePath);
-			if (info.Exists) {
+			if (info.Exists)
+			{
 				FileSizeBytes = info.Length;
 				Load();
-			} else {
+			}
+			else
+			{
 				throw new IOException("The specifed file does not exist");
+			}
+		}
+
+		#endregion
+
+		#region Helper Methods
+
+		/// <summary>
+		/// Checks to make sure the file at the given file path is write-able. If the file contains the read-only
+		/// file attribute, then that file attribute will be removed so that the file may be written to.
+		/// </summary>
+		/// <param name="filePath">The path to the file to make write-able.</param>
+		private void MakeWriteable(string filePath)
+		{
+			var attributes = File.GetAttributes(filePath);
+			if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+			{
+				attributes &= ~FileAttributes.ReadOnly;
+				File.SetAttributes(filePath, attributes);
 			}
 		}
 
@@ -501,13 +562,17 @@ namespace mCubed.Core {
 		/// Save the information back to the media it was created from
 		/// </summary>
 		/// <param name="obj">This object will ALWAYS be null for sake of overloading purposes</param>
-		protected override void Save(object obj) {
-			using (var tlFile = TagLib.File.Create(FilePath)) {
+		protected override void Save(object obj)
+		{
+			using (var tlFile = TagLib.File.Create(FilePath))
+			{
 				tlFile.RemoveTags(TagLib.TagTypes.Id3v1);
 				tlFile.RemoveTags(TagLib.TagTypes.Id3v2);
+				MakeWriteable(FilePath);
 				tlFile.Save();
 			}
-			using (var tlFile = TagLib.File.Create(FilePath)) {
+			using (var tlFile = TagLib.File.Create(FilePath))
+			{
 				tlFile.Tag.Album = Album;
 				tlFile.Tag.AlbumArtists = AlbumArtists;
 				tlFile.Tag.BeatsPerMinute = BeatsPerMinute;
@@ -533,8 +598,10 @@ namespace mCubed.Core {
 		/// <summary>
 		/// Load the information from the media
 		/// </summary>
-		protected override void Load() {
-			using (var tlFile = TagLib.File.Create(FilePath)) {
+		protected override void Load()
+		{
+			using (var tlFile = TagLib.File.Create(FilePath))
+			{
 				Album = tlFile.Tag.Album ?? string.Empty;
 				AlbumArtists = tlFile.Tag.AlbumArtists ?? new string[0];
 				AudioBitrate = tlFile.Properties.AudioBitrate;

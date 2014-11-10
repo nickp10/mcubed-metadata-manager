@@ -23,15 +23,6 @@ namespace mCubed
 				{
 					new App().Run();
 				}
-				catch (Exception e)
-				{
-					while (e != null)
-					{
-						Logger.Log(LogLevel.Exception, LogType.Application, e);
-						e = e.InnerException;
-					}
-					throw;
-				}
 				finally
 				{
 					SingleInstance<App>.Cleanup();
@@ -61,9 +52,25 @@ namespace mCubed
 		/// </summary>
 		/// <param name="sender">The sender object</param>
 		/// <param name="e">The event arguments</param>
-		void OnStartup(object sender, StartupEventArgs e)
+		private void OnStartup(object sender, StartupEventArgs e)
 		{
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnUnhandledException);
 			HandleCommandLineArgs(e.Args, true);
+		}
+
+		/// <summary>
+		/// Called when an unhandled exception has been encountered.
+		/// </summary>
+		/// <param name="sender">The sender object</param>
+		/// <param name="e">The event arguments</param>
+		private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			var exception = e.ExceptionObject as Exception;
+			while (exception != null)
+			{
+				Logger.Log(LogLevel.Exception, LogType.Application, exception);
+				exception = exception.InnerException;
+			}
 		}
 
 		/// <summary>
