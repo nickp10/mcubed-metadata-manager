@@ -24,7 +24,7 @@ namespace mCubed.Core
 		private TimeSpan _length;
 		private string _path;
 		private double _playbackSpeed = 1;
-		private MediaPlayer _player = new MediaPlayer { Volume = 1 };
+		private MediaPlayer _player = new MediaPlayer { Volume = 0 };
 		private TimeSpan _position;
 		private MediaObjectState _savedState;
 		private double _seekValue;
@@ -214,7 +214,6 @@ namespace mCubed.Core
 			// Invoke the event handlers
 			OnBalanceChanged();
 			OnPlaybackSpeedChanged();
-			OnVolumeChanged();
 			State = (string.IsNullOrEmpty(Path)) ? MediaState.Stop : State;
 			UpdatePosition();
 		}
@@ -231,6 +230,12 @@ namespace mCubed.Core
 
 			// Update the state
 			_state = newState;
+
+			// Update the volume
+			if (newState == MediaState.Play)
+			{
+				OnVolumeChanged();
+			}
 
 			// Retrieve the new state details
 			Action<MediaPlayer> action = null;

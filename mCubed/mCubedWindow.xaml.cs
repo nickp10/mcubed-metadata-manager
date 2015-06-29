@@ -121,10 +121,6 @@ namespace mCubed
 					var screen = ScreenUtilities.GetScreenFrom(this);
 					Utilities.MainSettings.MiniLocation = new Point(Left / screen.DeviceBounds.Width, Top / screen.DeviceBounds.Height);
 				}
-				else
-				{
-					Utilities.MainSettings.MiniLocation = null;
-				}
 				Utilities.MainSettings.Save();
 				GlobalKeyboardHook.Dispose();
 			}
@@ -176,6 +172,11 @@ namespace mCubed
 			// Show the full player fixing the window state and positioning
 			else
 			{
+				if (!double.IsNaN(Left) && !double.IsNaN(Top))
+				{
+					var screen = ScreenUtilities.GetScreenFrom(this);
+					Utilities.MainSettings.MiniLocation = new Point(Left / screen.DeviceBounds.Width, Top / screen.DeviceBounds.Height);
+				}
 				ResizeMode = ResizeMode.CanResize;
 				SizeToContent = SizeToContent.Manual;
 				WindowState = _fullState;
