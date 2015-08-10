@@ -305,8 +305,8 @@ namespace mCubed
 		#region Credits
 
 		private static readonly IEnumerable _credits = new[] {
-			new { Author = "Nick Paddock", Project = "mCubed Core", Version = "1.01", URL = "http://mcubed.dyndns.info/" },
-			new { Author = "Nick Paddock", Project = "mCubed UI", Version = "1.01", URL = "http://mcubed.dyndns.info/" },
+			new { Author = "Nick Paddock", Project = "mCubed Core", Version = "1.1.0.0", URL = "http://mcubed.ddns.net/" },
+			new { Author = "Nick Paddock", Project = "mCubed UI", Version = "1.1.0.0", URL = "http://mcubed.ddns.net/" },
 			new { Author = "Mark James", Project = "Silk Icon Set", Version = "1.3", URL = "http://www.famfamfam.com/lab/icons/silk/" },
 			new { Author = "Banshee Development Team", Project = "TagLib#", Version = "2.1.0.0", URL = "https://github.com/mono/taglib-sharp/" }
 		};
