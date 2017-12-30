@@ -68,7 +68,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>FA120F5B7B95A6A1214C8E17CF24217D88BCE170</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>76F370438B95486214BA69EF485B61F2C641A0EE</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>mCubed.pfx</ManifestKeyFile>
@@ -78,6 +78,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -88,8 +91,8 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="taglib-sharp">
-      <HintPath>..\ThirdParty\taglib-sharp.dll</HintPath>
+    <Reference Include="taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>..\packages\taglib.2.1.0.0\lib\taglib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
@@ -235,6 +238,7 @@
     <Compile Include="Core\Settings.cs" />
     <None Include="app.config" />
     <None Include="mCubed.pfx" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="AppIcon.ico" />
