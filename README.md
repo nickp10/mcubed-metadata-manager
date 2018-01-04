@@ -1,5 +1,9 @@
 # mcubed-metadata-manager
 
+Inactive
+----
+*NOTE* This project is not actively being worked on.
+
 Description
 ----
 Easily manage the metadata of audio files
@@ -19,11 +23,11 @@ Setting up a New Projects
 1. Click Yes to save the changes.
 1. Right click the project and choose "Edit <PROJECT-NAME>.cspoj".
 1. At the bottom of the file, add the following target:
-```
-  <Target Name="BeforePublish">
-    <Exec Command="&quot;$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.0A\Bin\signtool.exe&quot; sign /f &quot;$(ProjectDir)$(AssemblyName).pfx&quot; /p mCubed3Key /v &quot;$(ProjectDir)obj\x86\$(ConfigurationName)\$(TargetFileName)&quot;" />
-  </Target>
-```
+    ```
+      <Target Name="BeforePublish">
+        <Exec Command="&quot;$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.0A\Bin\signtool.exe&quot; sign /f &quot;$(ProjectDir)$(AssemblyName).pfx&quot; /p mCubed3Key /v &quot;$(ProjectDir)obj\x86\$(ConfigurationName)\$(TargetFileName)&quot;" />
+      </Target>
+    ```
 1. Right click the project and choose "Reload Project".
 1. Click Yes to close the file in the editor and Yes to save the changes.
 
