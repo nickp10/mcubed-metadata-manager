@@ -13,7 +13,7 @@ Creating New Projects
 1. Right click the project and choose Properties.
 1. Go to the Signing tab.
 1. Check "Sign the assembly".
-1. Click the "Choose a strong name key file" dropdown.
+1. Click the "Choose a strong name key file" drop-down.
 1. Click "<New...>".
 1. Enter the assembly name (e.g., mCubed) as the "Key file name".
 1. Check "Protect my key file with a password".
