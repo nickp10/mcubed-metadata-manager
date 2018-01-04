@@ -6,7 +6,7 @@ Inactive
 
 Description
 ----
-Easily manage the metadata of audio files
+Easily manage the metadata of audio files.
 
 Creating New Projects
 ----
