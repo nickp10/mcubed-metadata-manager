@@ -8,7 +8,7 @@ Description
 ----
 Easily manage the metadata of audio files
 
-Setting up a New Projects
+Creating New Projects
 ----
 1. Right click the project and choose Properties.
 1. Go to the Signing tab.
