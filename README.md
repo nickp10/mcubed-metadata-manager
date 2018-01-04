@@ -2,7 +2,7 @@
 
 Inactive
 ----
-*NOTE* This project is not actively being worked on.
+**NOTE** This project is not actively being worked on.
 
 Description
 ----
