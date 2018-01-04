@@ -40,4 +40,4 @@ Creating Releases
 1. Set the build mode to Release.
 1. Build the solution.
 1. Zip the bin/Release directory.
-1. Upload the zip file to github.
+1. Upload the zip file to GitHub.
