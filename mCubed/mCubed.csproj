@@ -59,9 +59,11 @@
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
-  <PropertyGroup />
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
@@ -222,13 +224,30 @@
     <Compile Include="Core\MetaDataInfo.cs" />
     <Compile Include="Core\MetaDataPic.cs" />
     <Compile Include="Core\Settings.cs" />
-    <None Include="app.config" />
-    <None Include="mCubed.pfx" />
-    <None Include="packages.config" />
-    <None Include="Properties\app.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="AppIcon.ico" />
+    <Resource Include="Icons\accept.png" />
+    <Resource Include="Icons\add.png" />
+    <Resource Include="Icons\arrow_down.png" />
+    <Resource Include="Icons\arrow_up.png" />
+    <Resource Include="Icons\delete.png" />
+    <Resource Include="Icons\disk.png" />
+    <Resource Include="Icons\page_copy.png" />
+    <Resource Include="Icons\pencil.png" />
+    <Resource Include="Icons\refresh.png" />
+    <Resource Include="Icons\taskbar_next.png" />
+    <Resource Include="Icons\taskbar_pause.png" />
+    <Resource Include="Icons\taskbar_play.png" />
+    <Resource Include="Icons\taskbar_previous.png" />
+    <Resource Include="Icons\taskbar_stop.png" />
+    <Resource Include="Images\Default.png" />
+    <Resource Include="Images\InvalidFormat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="mCubed.pfx" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -251,24 +270,6 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\accept.png" />
-    <Resource Include="Icons\add.png" />
-    <Resource Include="Icons\arrow_down.png" />
-    <Resource Include="Icons\arrow_up.png" />
-    <Resource Include="Icons\delete.png" />
-    <Resource Include="Icons\disk.png" />
-    <Resource Include="Icons\page_copy.png" />
-    <Resource Include="Icons\pencil.png" />
-    <Resource Include="Icons\refresh.png" />
-    <Resource Include="Icons\taskbar_next.png" />
-    <Resource Include="Icons\taskbar_pause.png" />
-    <Resource Include="Icons\taskbar_play.png" />
-    <Resource Include="Icons\taskbar_previous.png" />
-    <Resource Include="Icons\taskbar_stop.png" />
-    <Resource Include="Images\Default.png" />
-    <Resource Include="Images\InvalidFormat.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforePublish">
